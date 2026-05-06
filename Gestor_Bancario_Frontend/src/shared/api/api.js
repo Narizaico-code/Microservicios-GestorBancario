@@ -19,3 +19,4 @@ axiosAccount.interceptors.request.use((config) => {
 
 
 export { axiosAccount };
+export { ApiError, requestJson, requestFormData } from '../services/api-client.js'

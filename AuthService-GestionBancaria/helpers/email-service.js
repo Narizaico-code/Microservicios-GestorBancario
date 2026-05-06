@@ -10,18 +10,25 @@ const createTransporter = () => {
     return null;
   }
 
+  const smtpPort = Number(config.smtp.port) || 587;
+  // Gmail: puerto 465 => secure true, puerto 587 => secure false (STARTTLS)
+  const secure = smtpPort === 465;
+  // App passwords de Gmail suelen mostrarse con espacios para legibilidad
+  const normalizedPassword = (config.smtp.password || '').replace(/\s+/g, '');
+
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: 465,
-    secure: true, // true para 465, false para 587
+    host: config.smtp.host,
+    port: smtpPort,
+    secure,
     auth: {
-      user: process.env.SMTP_USERNAME,
-      pass: process.env.SMTP_PASSWORD,
+      user: config.smtp.username,
+      pass: normalizedPassword,
     },
     // Evitar que las peticiones HTTP queden colgadas si SMTP no responde
     connectionTimeout: 10_000, // 10s
     greetingTimeout: 10_000, // 10s
     socketTimeout: 10_000, // 10s
+    requireTLS: !secure,
     tls: {
       rejectUnauthorized: false,
     },
@@ -37,10 +44,9 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
 
   try {
     const frontendUrl = config.app.frontendUrl || 'http://localhost:3000';
-    const backendUrl = config.app.backendUrl;
-    const verificationUrl = backendUrl
-      ? `${backendUrl}/api/v1/auth/verify-email?token=${verificationToken}`
-      : `${frontendUrl}/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${frontendUrl}/auth/verify-email?token=${encodeURIComponent(
+      verificationToken
+    )}`;
 
     const mailOptions = {
       from: `${config.smtp.fromName} <${config.smtp.fromEmail}>`,
@@ -59,7 +65,15 @@ export const sendVerificationEmail = async (email, name, verificationToken) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    if (info.rejected?.length) {
+      throw new Error(`SMTP rechazó destinatarios: ${info.rejected.join(', ')}`);
+    }
+    console.log(
+      `Verification email queued. MessageId=${info.messageId}, accepted=${
+        info.accepted?.join(', ') || 'none'
+      }`
+    );
   } catch (error) {
     console.error('Error al enviar el correo de verificación:', error);
     throw error;
@@ -73,7 +87,9 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
 
   try {
     const frontendUrl = config.app.frontendUrl || 'http://localhost:3000';
-    const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
+    const resetUrl = `${frontendUrl}/auth/reset-password?token=${encodeURIComponent(
+      resetToken
+    )}`;
 
     const mailOptions = {
       from: `${config.smtp.fromName} <${config.smtp.fromEmail}>`,
@@ -93,7 +109,15 @@ export const sendPasswordResetEmail = async (email, name, resetToken) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    if (info.rejected?.length) {
+      throw new Error(`SMTP rechazó destinatarios: ${info.rejected.join(', ')}`);
+    }
+    console.log(
+      `Password reset email queued. MessageId=${info.messageId}, accepted=${
+        info.accepted?.join(', ') || 'none'
+      }`
+    );
   } catch (error) {
     console.error('Error al enviar el correo de restablecimiento de contraseña:', error);
     throw error;
@@ -119,7 +143,15 @@ export const sendWelcomeEmail = async (email, name) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    if (info.rejected?.length) {
+      throw new Error(`SMTP rechazó destinatarios: ${info.rejected.join(', ')}`);
+    }
+    console.log(
+      `Welcome email queued. MessageId=${info.messageId}, accepted=${
+        info.accepted?.join(', ') || 'none'
+      }`
+    );
   } catch (error) {
     console.error('Error al enviar el correo de bienvenida:', error);
     throw error;
@@ -145,7 +177,15 @@ export const sendPasswordChangedEmail = async (email, name) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    if (info.rejected?.length) {
+      throw new Error(`SMTP rechazó destinatarios: ${info.rejected.join(', ')}`);
+    }
+    console.log(
+      `Password changed email queued. MessageId=${info.messageId}, accepted=${
+        info.accepted?.join(', ') || 'none'
+      }`
+    );
   } catch (error) {
     console.error('Error al enviar el correo de cambio de contraseña:', error);
     throw error;

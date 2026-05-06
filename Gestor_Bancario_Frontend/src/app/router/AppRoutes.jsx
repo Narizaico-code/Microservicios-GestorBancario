@@ -9,7 +9,7 @@ import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage.jsx'
 import UnauthorizedPage from '../../features/auth/pages/UnauthorizedPage.jsx'
 import ProtectedRoute from './ProtectedRoute.jsx'
 import RoleGuard from './RoleGuard.jsx'
-import DashboardPage from '../../pages/DashboardPage.jsx'
+import { DashboardPage } from '../../app/layouts/DashboardPages.jsx'
 import ClientPage from '../../pages/ClientPage.jsx'
 
 function DashboardRedirect() {
@@ -20,9 +20,7 @@ function DashboardRedirect() {
 export default function AppRoutes() {
   return (
     <Routes>
-        <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/auth/login" element={<AuthPage />} />
         <Route path="/auth/register" element={<RegisterPage />} />
         <Route path="/auth/signup-request" element={<SignupRequestPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />

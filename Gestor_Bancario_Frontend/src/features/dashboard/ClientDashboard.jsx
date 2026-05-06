@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import DashboardHeader from './DashboardHeader.jsx'
 import { clearSession } from '../../shared/utils/session-storage.js'
-import { getBankHealth, getRecentAccounts } from '../../shared/services/bank.service.js'
+import { getBankHealth, getRecentAccounts } from '../../shared/api/bank.js'
 
 export default function ClientDashboard({ session, onLogout }) {
   const [healthLoading, setHealthLoading] = useState(true)

@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { loginWithAuthService } from '../../../shared/services/auth.service.js'
-import { registerWithAuthService } from '../../../shared/services/auth.service.js'
-import { forgotPasswordWithAuthService } from '../../../shared/services/auth.service.js'
-import { resendVerificationWithAuthService } from '../../../shared/services/auth.service.js'
+import {
+  forgotPasswordWithAuthService,
+  loginWithAuthService,
+  registerWithAuthService,
+  resendVerificationWithAuthService,
+} from '../../../shared/api/auth.js'
 import { useAuthStore } from '../store/authStore.js'
+import cerditoFondoBlanco from '../../../assets/CerditoFondoBlanco.png'
 
 const MODE = {
   LOGIN: 'login',
@@ -172,93 +175,132 @@ export default function UnifiedAuthForm() {
   }
 
   const renderLoginMode = () => (
-    <form onSubmit={handleSubmitLogin} className="space-y-4">
+    <form onSubmit={handleSubmitLogin} className="space-y-7">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
-          placeholder="tu@email.com"
-        />
+        <h2 className="text-4xl font-black tracking-tight text-[#011743]">Inicia sesión</h2>
+        <p className="mt-3 text-xl text-[#011743]/75">Accede al sistema bancario</p>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
-          placeholder="••••••••"
-        />
-      </div>
+      <div className="rounded-[2rem] border border-[#011743]/8 bg-white px-8 py-7 shadow-[0_18px_40px_rgba(1,23,67,0.10)]">
+        <div className="flex justify-center">
+          <img
+            src={cerditoFondoBlanco}
+            alt="Cerdito bancario"
+            className="h-32 w-auto object-contain"
+          />
+        </div>
+      
+        <div className="mt-8 space-y-5">
+          <label className="relative block">
+            <span className="sr-only">Email</span>
+            <svg className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#011743]" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a4 4 0 100 8 4 4 0 000-8zM2 16a6 6 0 1112 0H2z" />
+            </svg>
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              className="w-full rounded-2xl border border-[#011743]/30 bg-white py-4 pl-14 pr-4 text-lg text-[#011743] outline-none transition focus:border-[#011743] focus:ring-4 focus:ring-[#011743]/10"
+              placeholder="admin@gestor.local"
+            />
+          </label>
 
-      {error && <div className="whitespace-pre-line rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
-      {success && <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600">{success}</div>}
+          <label className="relative block">
+            <span className="sr-only">Contraseña</span>
+            <svg className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#011743]" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 8V6a5 5 0 1110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2a3 3 0 10-6 0v2h6V6z" clipRule="evenodd" />
+            </svg>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="w-full rounded-2xl border border-[#011743]/30 bg-white py-4 pl-14 pr-4 text-lg text-[#011743] outline-none transition focus:border-[#011743] focus:ring-4 focus:ring-[#011743]/10"
+              placeholder="••••••••"
+            />
+          </label>
+        </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-lg bg-cyan-600 py-3 font-semibold text-white transition hover:bg-cyan-700 disabled:opacity-50"
-      >
-        {loading ? 'Iniciando sesión...' : 'Ingresar'}
-      </button>
+        {error && <div className="mt-5 whitespace-pre-line rounded-2xl border border-[#d55353]/30 bg-[#d55353]/8 px-4 py-3 text-sm text-[#d55353]">{error}</div>}
+        {success && <div className="mt-5 rounded-2xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{success}</div>}
 
-      <div className="space-y-2 text-sm">
         <button
-          type="button"
-          onClick={() => setModeWithReset(MODE.FORGOT_PASSWORD)}
-          className="block w-full text-center text-cyan-600 hover:text-cyan-700 font-medium"
+          type="submit"
+          disabled={loading}
+          className="mt-6 w-full rounded-2xl bg-[#d55353] py-4 text-xl font-bold text-white transition hover:bg-[#c4454e] disabled:opacity-50"
         >
-          ¿Olvidaste tu contraseña?
+          {loading ? 'Iniciando sesión...' : 'Ingresar'}
         </button>
-        <button
-          type="button"
-          onClick={() => setModeWithReset(MODE.REGISTER)}
-          className="block w-full text-center text-slate-600 hover:text-slate-700"
-        >
-          ¿No tienes cuenta? <span className="font-semibold text-cyan-600">Crear una</span>
-        </button>
+
+        <div className="mt-6 space-y-3 text-center text-lg">
+          <button
+            type="button"
+            onClick={() => setModeWithReset(MODE.FORGOT_PASSWORD)}
+            className="block w-full text-[#011743] transition hover:text-[#02235f]"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+          <button
+            type="button"
+            onClick={() => setModeWithReset(MODE.REGISTER)}
+            className="block w-full text-[#011743] transition hover:text-[#02235f]"
+          >
+            Crear una cuenta
+          </button>
+        </div>
       </div>
+
+      <div className="flex items-center gap-5 px-2 pt-3 text-[#011743]/70">
+        <div className="h-px flex-1 bg-[#011743]/30" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#011743]/25 bg-white shadow-sm">
+          <svg className="h-6 w-6 text-[#011743]" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M5 8V6a5 5 0 1110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2a3 3 0 10-6 0v2h6V6z" clipRule="evenodd" />
+          </svg>
+        </div>
+        <div className="h-px flex-1 bg-[#011743]/30" />
+      </div>
+      <p className="text-center text-lg text-[#011743]/75">Tu seguridad es nuestra prioridad</p>
     </form>
   )
 
   const renderRegisterMode = () => (
-    <form onSubmit={handleSubmitRegister} className="space-y-4">
+    <form onSubmit={handleSubmitRegister} className="space-y-5 rounded-[2rem] border border-[#011743]/8 bg-white px-8 py-7 shadow-[0_18px_40px_rgba(1,23,67,0.10)]">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
+        <h2 className="text-4xl font-black tracking-tight text-[#011743]">Crear cuenta</h2>
+        <p className="mt-3 text-lg text-[#011743]/75">Únete a nuestro sistema bancario</p>
+      </div>
+      
+      <div>
+        <label className="block text-sm font-semibold text-[#011743] mb-2">Nombre</label>
         <input
           type="text"
           name="name"
           value={form.name}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
+          className="w-full rounded-lg border-2 border-[#011743]/30 bg-white px-4 py-3 text-[#011743] outline-none transition focus:border-[#d55353] focus:ring-2 focus:ring-[#d55353]/20"
           placeholder="Tu nombre completo"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+        <label className="block text-sm font-semibold text-[#011743] mb-2">Email</label>
         <input
           type="email"
           name="email"
           value={form.email}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
+          className="w-full rounded-lg border-2 border-[#011743]/30 bg-white px-4 py-3 text-[#011743] outline-none transition focus:border-[#d55353] focus:ring-2 focus:ring-[#d55353]/20"
           placeholder="tu@email.com"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Teléfono</label>
+        <label className="block text-sm font-semibold text-[#011743] mb-2">Teléfono</label>
         <input
           type="tel"
           name="phone"
@@ -266,13 +308,13 @@ export default function UnifiedAuthForm() {
           onChange={handleChange}
           required
           pattern="\d{8}"
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
+          className="w-full rounded-lg border-2 border-[#011743]/30 bg-white px-4 py-3 text-[#011743] outline-none transition focus:border-[#d55353] focus:ring-2 focus:ring-[#d55353]/20"
           placeholder="12345678"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+        <label className="block text-sm font-semibold text-[#011743] mb-2">Contraseña</label>
         <input
           type="password"
           name="password"
@@ -280,29 +322,29 @@ export default function UnifiedAuthForm() {
           onChange={handleChange}
           required
           minLength="8"
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
+          className="w-full rounded-lg border-2 border-[#011743]/30 bg-white px-4 py-3 text-[#011743] outline-none transition focus:border-[#d55353] focus:ring-2 focus:ring-[#d55353]/20"
           placeholder="Mínimo 8 caracteres"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Foto de perfil (opcional)</label>
+        <label className="block text-sm font-semibold text-[#011743] mb-2">Foto de perfil (opcional)</label>
         <input
           type="file"
           name="profilePicture"
           onChange={handleChange}
           accept="image/*"
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
+          className="w-full rounded-lg border-2 border-[#011743]/30 bg-white px-4 py-3 text-[#011743] outline-none transition focus:border-[#d55353] focus:ring-2 focus:ring-[#d55353]/20"
         />
       </div>
 
-      {error && <div className="whitespace-pre-line rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
-      {success && <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600">{success}</div>}
+      {error && <div className="whitespace-pre-line rounded-2xl border border-[#d55353]/30 bg-[#d55353]/8 p-3 text-sm text-[#d55353]">{error}</div>}
+      {success && <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-700">{success}</div>}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-cyan-600 py-3 font-semibold text-white transition hover:bg-cyan-700 disabled:opacity-50"
+        className="w-full rounded-lg bg-[#d55353] py-3 font-semibold text-white transition hover:bg-[#c4454e] disabled:opacity-50"
       >
         {loading ? 'Creando cuenta...' : 'Crear cuenta'}
       </button>
@@ -314,47 +356,51 @@ export default function UnifiedAuthForm() {
             setForm((current) => ({ ...current, email: current.email || registeredEmail }))
             setModeWithReset(MODE.RESEND_VERIFICATION)
           }}
-          className="block w-full text-center text-cyan-600 hover:text-cyan-700 font-medium"
+          className="block w-full text-center text-[#011743]/70 hover:text-[#011743] font-medium"
         >
           ¿No te llegó el correo de verificación?
         </button>
         <button
           type="button"
           onClick={() => setModeWithReset(MODE.LOGIN)}
-          className="block w-full text-center text-slate-600 hover:text-slate-700"
+          className="block w-full text-center text-[#011743]/70 hover:text-[#011743]"
         >
-          ¿Ya tienes cuenta? <span className="font-semibold text-cyan-600">Inicia sesión</span>
+          ¿Ya tienes cuenta? <span className="font-semibold text-[#d55353]">Inicia sesión</span>
         </button>
       </div>
     </form>
   )
 
   const renderForgotPasswordMode = () => (
-    <form onSubmit={handleSubmitForgotPassword} className="space-y-4">
-      <div className="rounded-lg bg-cyan-50 p-4 text-sm text-cyan-800">
+    <form onSubmit={handleSubmitForgotPassword} className="space-y-5 rounded-[2rem] border border-[#011743]/8 bg-white px-8 py-7 shadow-[0_18px_40px_rgba(1,23,67,0.10)]">
+      <div>
+        <h2 className="text-4xl font-black tracking-tight text-[#011743]">Recuperar contraseña</h2>
+        <p className="mt-3 text-lg text-[#011743]/75">Recupera acceso a tu cuenta</p>
+      </div>
+      <div className="rounded-2xl border border-[#011743]/10 bg-[#011743]/4 p-4 text-sm text-[#011743]/80">
         Ingresa tu email y te enviaremos un enlace para recuperar tu contraseña.
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+        <label className="block text-sm font-medium text-[#011743] mb-1">Email</label>
         <input
           type="email"
           name="email"
           value={form.email}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
+          className="w-full rounded-lg border-2 border-[#011743]/30 bg-white px-4 py-3 text-[#011743] outline-none transition focus:border-[#d55353] focus:ring-2 focus:ring-[#d55353]/20"
           placeholder="tu@email.com"
         />
       </div>
 
-      {error && <div className="whitespace-pre-line rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
-      {success && <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600">{success}</div>}
+      {error && <div className="whitespace-pre-line rounded-2xl border border-[#d55353]/30 bg-[#d55353]/8 p-3 text-sm text-[#d55353]">{error}</div>}
+      {success && <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-700">{success}</div>}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-cyan-600 py-3 font-semibold text-white transition hover:bg-cyan-700 disabled:opacity-50"
+        className="w-full rounded-lg bg-[#d55353] py-3 font-semibold text-white transition hover:bg-[#c4454e] disabled:opacity-50"
       >
         {loading ? 'Enviando...' : 'Enviar enlace'}
       </button>
@@ -362,7 +408,7 @@ export default function UnifiedAuthForm() {
       <button
         type="button"
         onClick={() => setModeWithReset(MODE.LOGIN)}
-        className="w-full text-center text-slate-600 hover:text-slate-700 font-medium"
+        className="w-full text-center text-[#011743]/70 hover:text-[#011743] font-medium"
       >
         Volver al inicio de sesión
       </button>
@@ -370,31 +416,35 @@ export default function UnifiedAuthForm() {
   )
 
   const renderResendVerificationMode = () => (
-    <form onSubmit={handleSubmitResendVerification} className="space-y-4">
-      <div className="rounded-lg bg-cyan-50 p-4 text-sm text-cyan-800">
+    <form onSubmit={handleSubmitResendVerification} className="space-y-5 rounded-[2rem] border border-[#011743]/8 bg-white px-8 py-7 shadow-[0_18px_40px_rgba(1,23,67,0.10)]">
+      <div>
+        <h2 className="text-4xl font-black tracking-tight text-[#011743]">Reenviar verificación</h2>
+        <p className="mt-3 text-lg text-[#011743]/75">Verifica tu email nuevamente</p>
+      </div>
+      <div className="rounded-2xl border border-[#011743]/10 bg-[#011743]/4 p-4 text-sm text-[#011743]/80">
         Si no recibiste el email de verificación, ingresa tu email y te lo reenviamos.
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+        <label className="block text-sm font-medium text-[#011743] mb-1">Email</label>
         <input
           type="email"
           name="email"
           value={form.email}
           onChange={handleChange}
           required
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-950 outline-none transition focus:border-cyan-500 focus:bg-white focus:ring-2 focus:ring-cyan-500/20"
+          className="w-full rounded-lg border-2 border-[#011743]/30 bg-white px-4 py-3 text-[#011743] outline-none transition focus:border-[#d55353] focus:ring-2 focus:ring-[#d55353]/20"
           placeholder="tu@email.com"
         />
       </div>
 
-      {error && <div className="whitespace-pre-line rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
-      {success && <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600">{success}</div>}
+      {error && <div className="whitespace-pre-line rounded-2xl border border-[#d55353]/30 bg-[#d55353]/8 p-3 text-sm text-[#d55353]">{error}</div>}
+      {success && <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-700">{success}</div>}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-cyan-600 py-3 font-semibold text-white transition hover:bg-cyan-700 disabled:opacity-50"
+        className="w-full rounded-lg bg-[#d55353] py-3 font-semibold text-white transition hover:bg-[#c4454e] disabled:opacity-50"
       >
         {loading ? 'Enviando...' : 'Reenviar verificación'}
       </button>
@@ -402,7 +452,7 @@ export default function UnifiedAuthForm() {
       <button
         type="button"
         onClick={() => setModeWithReset(MODE.REGISTER)}
-        className="w-full text-center text-slate-600 hover:text-slate-700 font-medium"
+        className="w-full text-center text-[#011743]/70 hover:text-[#011743] font-medium"
       >
         Volver a crear cuenta
       </button>
@@ -410,8 +460,12 @@ export default function UnifiedAuthForm() {
   )
 
   const renderWaitingVerificationMode = () => (
-    <div className="space-y-4">
-      <div className="rounded-xl border border-cyan-200 bg-cyan-50 p-4 text-sm text-cyan-900">
+    <div className="space-y-5 rounded-[2rem] border border-[#011743]/8 bg-white px-8 py-7 shadow-[0_18px_40px_rgba(1,23,67,0.10)]">
+      <div>
+        <h2 className="text-4xl font-black tracking-tight text-[#011743]">Verifica tu correo</h2>
+        <p className="mt-3 text-lg text-[#011743]/75">Tu cuenta está pendiente de activación</p>
+      </div>
+      <div className="rounded-xl border border-[#011743]/10 bg-[#011743]/4 p-4 text-sm text-[#011743]/85">
         <p className="font-semibold">Cuenta creada correctamente</p>
         <p className="mt-1">
           Estamos esperando la verificación del correo:
@@ -419,21 +473,21 @@ export default function UnifiedAuthForm() {
         </p>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <div className="rounded-xl border border-[#011743]/10 bg-[#011743]/4 p-4">
         <div className="flex items-center gap-3">
-          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-cyan-300 border-t-cyan-700" />
-          <p className="text-sm text-slate-700">Pendiente de verificación. Revisa bandeja de entrada y spam.</p>
+          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-[#011743] border-t-transparent" />
+          <p className="text-sm text-[#011743]/85">Pendiente de verificación. Revisa bandeja de entrada y spam.</p>
         </div>
       </div>
 
-      {error && <div className="whitespace-pre-line rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
-      {success && <div className="rounded-lg bg-green-50 p-3 text-sm text-green-600">{success}</div>}
+      {error && <div className="whitespace-pre-line rounded-2xl border border-[#d55353]/30 bg-[#d55353]/8 p-3 text-sm text-[#d55353]">{error}</div>}
+      {success && <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-700">{success}</div>}
 
       <button
         type="button"
         onClick={handleResendFromWaiting}
         disabled={loading}
-        className="w-full rounded-lg bg-cyan-600 py-3 font-semibold text-white transition hover:bg-cyan-700 disabled:opacity-50"
+        className="w-full rounded-lg bg-[#d55353] py-3 font-semibold text-white transition hover:bg-[#c4454e] disabled:opacity-50"
       >
         {loading ? 'Reenviando...' : 'Reenviar correo de verificación'}
       </button>
@@ -441,7 +495,7 @@ export default function UnifiedAuthForm() {
       <button
         type="button"
         onClick={() => setModeWithReset(MODE.LOGIN)}
-        className="w-full text-center text-slate-600 hover:text-slate-700 font-medium"
+        className="w-full text-center text-[#011743]/70 hover:text-[#011743] font-medium"
       >
         Ya verifiqué mi correo, ir a iniciar sesión
       </button>
@@ -449,7 +503,7 @@ export default function UnifiedAuthForm() {
       <button
         type="button"
         onClick={() => setModeWithReset(MODE.RESEND_VERIFICATION)}
-        className="w-full text-center text-cyan-700 hover:text-cyan-800 text-sm"
+        className="w-full text-center text-[#011743]/60 hover:text-[#011743] text-sm"
       >
         Usar otro correo para reenviar verificación
       </button>
@@ -457,33 +511,12 @@ export default function UnifiedAuthForm() {
   )
 
   return (
-    <div className="w-full max-w-md mx-auto space-y-6">
-      {/* Header */}
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold text-slate-950">
-          {mode === MODE.LOGIN && 'Inicia sesión'}
-          {mode === MODE.REGISTER && 'Crear cuenta'}
-          {mode === MODE.FORGOT_PASSWORD && 'Recuperar contraseña'}
-          {mode === MODE.RESEND_VERIFICATION && 'Reenviar verificación'}
-          {mode === MODE.WAITING_VERIFICATION && 'Verifica tu correo'}
-        </h2>
-        <p className="text-slate-600">
-          {mode === MODE.LOGIN && 'Accede al sistema bancario'}
-          {mode === MODE.REGISTER && 'Únete a nuestro sistema'}
-          {mode === MODE.FORGOT_PASSWORD && 'Recupera acceso a tu cuenta'}
-          {mode === MODE.RESEND_VERIFICATION && 'Verifica tu email nuevamente'}
-          {mode === MODE.WAITING_VERIFICATION && 'Tu cuenta está pendiente de activación por correo'}
-        </p>
-      </div>
-
-      {/* Form */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg">
-        {mode === MODE.LOGIN && renderLoginMode()}
-        {mode === MODE.REGISTER && renderRegisterMode()}
-        {mode === MODE.FORGOT_PASSWORD && renderForgotPasswordMode()}
-        {mode === MODE.RESEND_VERIFICATION && renderResendVerificationMode()}
-        {mode === MODE.WAITING_VERIFICATION && renderWaitingVerificationMode()}
-      </div>
+    <div className="mx-auto w-full max-w-[540px]">
+      {mode === MODE.LOGIN && renderLoginMode()}
+      {mode === MODE.REGISTER && renderRegisterMode()}
+      {mode === MODE.FORGOT_PASSWORD && renderForgotPasswordMode()}
+      {mode === MODE.RESEND_VERIFICATION && renderResendVerificationMode()}
+      {mode === MODE.WAITING_VERIFICATION && renderWaitingVerificationMode()}
     </div>
   )
 }

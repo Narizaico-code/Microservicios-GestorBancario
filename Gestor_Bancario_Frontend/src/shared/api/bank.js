@@ -1,5 +1,4 @@
-import { API_CONFIG } from '../config/api.js'
-import { requestJson } from './api-client.js'
+import { API_CONFIG, requestJson } from './api.js'
 
 export async function getBankHealth() {
   return requestJson(API_CONFIG.bankHealthUrl)

@@ -28,7 +28,6 @@
     transform: translateY(0);
   }
 }
-@import "tailwindcss";
 
 @layer base {
   :root {
@@ -42,6 +41,24 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  body {
+    @apply min-h-screen bg-slate-950;
+    margin: 0;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  a {
+    @apply transition-colors;
+  }
+}
 
 .animate-fadeIn {
   animation: fadeIn 0.15s ease-out;
@@ -66,20 +83,4 @@
   );
   filter: blur(1.5px);
   z-index: 1;
-  body {
-    @apply min-h-screen bg-slate-950;
-    margin: 0;
-  }
-
-  #root {
-    min-height: 100vh;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  a {
-    @apply transition-colors;
-  }
 }

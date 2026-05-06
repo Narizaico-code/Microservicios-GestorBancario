@@ -1,5 +1,5 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { AuthProvider, useAuthStore } from '../../features/auth/store/authStore.js'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { useAuthStore } from '../../features/auth/store/authStore.js'
 import AuthPage from '../../features/auth/pages/AuthPage.jsx'
 import RegisterPage from '../../features/auth/pages/RegisterPage.jsx'
 import SignupRequestPage from '../../features/auth/pages/SignupRequestPage.jsx'
@@ -19,32 +19,28 @@ function DashboardRedirect() {
 
 export default function AppRoutes() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/auth" replace />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/auth/login" element={<AuthPage />} />
-          <Route path="/auth/register" element={<RegisterPage />} />
-          <Route path="/auth/signup-request" element={<SignupRequestPage />} />
-          <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+    <Routes>
+      <Route path="/" element={<Navigate to="/auth" replace />} />
+      <Route path="/auth" element={<AuthPage />} />
+      <Route path="/auth/login" element={<AuthPage />} />
+      <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/auth/signup-request" element={<SignupRequestPage />} />
+      <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route element={<RoleGuard allowedRoles={["ADMIN_ROLE"]} />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
-            </Route>
-            <Route element={<RoleGuard allowedRoles={["USER_ROLE", "CLIENT_ROLE"]} />}>
-              <Route path="/client" element={<ClientPage />} />
-            </Route>
-            <Route path="/home" element={<DashboardRedirect />} />
-          </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route element={<RoleGuard allowedRoles={["ADMIN_ROLE"]} />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
+        <Route element={<RoleGuard allowedRoles={["USER_ROLE", "CLIENT_ROLE"]} />}>
+          <Route path="/client" element={<ClientPage />} />
+        </Route>
+        <Route path="/home" element={<DashboardRedirect />} />
+      </Route>
 
-          <Route path="*" element={<Navigate to="/auth" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      <Route path="*" element={<Navigate to="/auth" replace />} />
+    </Routes>
   )
 }

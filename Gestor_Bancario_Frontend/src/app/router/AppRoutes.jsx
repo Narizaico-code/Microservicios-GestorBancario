@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { AuthProvider, useAuthStore } from '../../features/auth/store/authStore.js'
+import { useAuthStore } from '../../features/auth/store/authStore.js'
 import AuthPage from '../../features/auth/pages/AuthPage.jsx'
 import RegisterPage from '../../features/auth/pages/RegisterPage.jsx'
 import SignupRequestPage from '../../features/auth/pages/SignupRequestPage.jsx'
@@ -19,8 +19,7 @@ function DashboardRedirect() {
 
 export default function AppRoutes() {
   return (
-    <AuthProvider>
-      <Routes>
+    <Routes>
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/auth/login" element={<AuthPage />} />
@@ -43,6 +42,5 @@ export default function AppRoutes() {
 
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
-    </AuthProvider>
   )
 }

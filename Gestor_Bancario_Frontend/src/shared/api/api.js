@@ -1,27 +1,20 @@
-<<<<<<< HEAD
-import axios from "axios";
+import axios from 'axios'
 
-const axiosAccount = axios.create({
-  baseURL: import.meta.env.VITE_ACCOUNT_URL,
-  timeout: 8000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-/*
-axiosAccount.interceptors.request.use((config) => {
-    const token = useAuthStore.getState().token;
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});*/
-
-
-export { axiosAccount };
-=======
 const stripTrailingSlash = (value = '') => value.replace(/\/+$/, '')
+
+const getAuthToken = () => {
+	const tokenKeys = ['token', 'authToken', 'accessToken', 'x-token']
+
+	for (const key of tokenKeys) {
+		const localToken = localStorage.getItem(key)
+		if (localToken) return localToken
+
+		const sessionToken = sessionStorage.getItem(key)
+		if (sessionToken) return sessionToken
+	}
+
+	return import.meta.env.VITE_AUTH_TOKEN || null
+}
 
 export const API_CONFIG = {
   authBaseUrl: stripTrailingSlash(
@@ -35,6 +28,35 @@ export const API_CONFIG = {
   ),
 }
 
+export const axiosAccount = axios.create({
+  baseURL: import.meta.env.VITE_ACCOUNT_URL || API_CONFIG.bankBaseUrl,
+  timeout: 8000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+export const axiosTransaction = axios.create({
+  baseURL: import.meta.env.VITE_TRANSACTION_URL || API_CONFIG.bankBaseUrl,
+  timeout: 8000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+for (const instance of [axiosAccount, axiosTransaction]) {
+  instance.interceptors.request.use((config) => {
+    const token = getAuthToken()
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+      config.headers['x-token'] = token
+    }
+
+    return config
+  })
+}
+
 export class ApiError extends Error {
 	constructor(message, status, payload) {
 		super(message)
@@ -46,11 +68,13 @@ export class ApiError extends Error {
 
 export async function requestJson(url, options = {}) {
 	const { body, headers, method = 'GET' } = options
+	const token = getAuthToken()
 
 	const response = await fetch(url, {
 		method,
 		headers: {
 			Accept: 'application/json',
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
 			...(body ? { 'Content-Type': 'application/json' } : {}),
 			...headers,
 		},
@@ -70,6 +94,7 @@ export async function requestJson(url, options = {}) {
 
 export async function requestFormData(url, options = {}) {
 	const { body, headers, method = 'POST' } = options
+	const token = getAuthToken()
 
 	const formData = body instanceof FormData ? body : new FormData()
 
@@ -85,6 +110,7 @@ export async function requestFormData(url, options = {}) {
 		method,
 		headers: {
 			Accept: 'application/json',
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
 			...headers,
 		},
 		body: formData,
@@ -100,4 +126,5 @@ export async function requestFormData(url, options = {}) {
 
 	return payload
 }
->>>>>>> f28a5200080534d21ee33e7e2e3039127cfb24e0
+
+export { axiosAccount as default }

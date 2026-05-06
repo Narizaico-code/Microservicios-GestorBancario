@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import { Routes, Route } from "react-router-dom"
-import { DashboardPage } from "../layouts/DashboardPages.jsx"
-
-
-export const AppRoutes = () => {
-    return (
-        <Routes>
-            <Route path="/" element={<DashboardPage />} />
-        </Routes>
-    )
-=======
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuthStore } from '../../features/auth/store/authStore.js'
 import AuthPage from '../../features/auth/pages/AuthPage.jsx'
@@ -29,7 +17,7 @@ function DashboardRedirect() {
   return <Navigate to={session?.user?.role === 'ADMIN_ROLE' ? '/dashboard' : '/client'} replace />
 }
 
-export default function AppRoutes() {
+export function AppRoutes() {
   return (
     <Routes>
         <Route path="/" element={<Navigate to="/auth" replace />} />
@@ -55,5 +43,4 @@ export default function AppRoutes() {
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
   )
->>>>>>> f28a5200080534d21ee33e7e2e3039127cfb24e0
 }

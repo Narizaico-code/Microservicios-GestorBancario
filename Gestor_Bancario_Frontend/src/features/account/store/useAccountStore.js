@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { getAccounts } from "../../../shared/api/account";
 
-export const useAccountStore = create((set, get) => ({
+export const useAccountStore = create((set) => ({
     accounts: [],
     loading: false,
     error: null,
@@ -10,9 +10,8 @@ export const useAccountStore = create((set, get) => ({
         try {
             set({ loading: true, error: null });
             const response = await getAccounts();
-            console.log(response);
 
-            set({ accounts: response.data, loading: false });
+            set({ accounts: response.data?.data || [], loading: false });
         } catch (error) {
             set({ error: error.response?.data || error.message || "Error al obtener las cuentas", 
                 loading: false 

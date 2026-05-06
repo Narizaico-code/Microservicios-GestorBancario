@@ -1,4 +1,5 @@
 import axios from "axios";
+import { loadSession } from "../utils/session-storage.js";
 
 const axiosAccount = axios.create({
   baseURL: import.meta.env.VITE_ACCOUNT_URL,
@@ -8,14 +9,15 @@ const axiosAccount = axios.create({
   },
 });
 
-/*
+
 axiosAccount.interceptors.request.use((config) => {
-    const token = useAuthStore.getState().token;
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});*/
+	const session = loadSession();
+	const token = session?.token;
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+	return config;
+});
 
 
 export { axiosAccount };

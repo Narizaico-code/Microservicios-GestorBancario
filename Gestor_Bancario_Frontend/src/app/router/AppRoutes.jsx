@@ -9,8 +9,9 @@ import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage.jsx'
 import UnauthorizedPage from '../../features/auth/pages/UnauthorizedPage.jsx'
 import ProtectedRoute from './ProtectedRoute.jsx'
 import RoleGuard from './RoleGuard.jsx'
-import { DashboardPage } from '../../app/layouts/DashboardPages.jsx'
+import { DashboardPage  } from '../../app/layouts/DashboardPages.jsx'
 import ClientPage from '../../pages/ClientPage.jsx'
+import { Accounts } from '../../features/account/components/Accounts.jsx'
 
 function DashboardRedirect() {
   const { session } = useAuthStore()
@@ -28,17 +29,22 @@ export default function AppRoutes() {
         <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route element={<RoleGuard allowedRoles={["ADMIN_ROLE"]} />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<RoleGuard allowedRoles={['ADMIN_ROLE']} />}>
+              <Route path="/dashboard" element={<DashboardPage />}>
+                <Route path="cuentas" element={<Accounts />} />
+                <Route path="perfil" element={<div>Perfil</div>} />
+                <Route path="ayuda" element={<div>Ayuda</div>} />
+              </Route>
+            </Route>
+            <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
+              <Route path="/client" element={<ClientPage />} />
+            </Route>
+            <Route path="/home" element={<DashboardRedirect />} />
           </Route>
-          <Route element={<RoleGuard allowedRoles={["USER_ROLE", "CLIENT_ROLE"]} />}>
-            <Route path="/client" element={<ClientPage />} />
-          </Route>
-          <Route path="/home" element={<DashboardRedirect />} />
-        </Route>
 
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
   )
 }
+

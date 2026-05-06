@@ -8,10 +8,11 @@ export const Navbar = () => {
 
 
     const items = [
-        { label: "Inicio", to: "/dashboard" },
-        { label: "Cuentas", to: "cuentas" },
+
+        { label: "Cuentas", to: "/dashboard/cuentas" },
         { label: "Perfil", to: "/dashboard/perfil" },
-        { label: "Ayuda", to: "/dashboard/ayuda" }
+        { label: "Ayuda", to: "/dashboard/ayuda" },
+        { label: "Cerrar Sesión", to: "/auth" }
     ]
     return (
         <nav className="bg-white shadow-md sticky top-0 z-10">
@@ -28,7 +29,7 @@ export const Navbar = () => {
                         KINAL BANC
                     </Typography>
                 </div>
-        
+
                 <div>
                     {/* secondary dark nav (like the attached image) */}
                     <div >
@@ -36,19 +37,23 @@ export const Navbar = () => {
                             <ul className="flex items-center justify-end gap-8 h-12 md:h-14">
                                 {items.map((item) => {
                                     const active = location.pathname.startsWith(item.to);
+                                    const isLogout = item.label === "Cerrar Sesión";
+
                                     return (
                                         <li key={item.to}>
                                             <Link
                                                 to={item.to}
-                                                className={`block px-4 py-2 rounded-lg font-medium transition-colors sidebar-underline${active
-                                                        ? ' active text-main-blue'  
-                                                        : ' text-gray-700 hover:bg-[#0b3a63] hover:text-white'
+                                                className={`block px-4 py-2 rounded-lg font-medium border-b-2 transition-all duration-200 ${isLogout
+                                                        ? 'text-red-600 border-transparent hover:bg-red-600 hover:text-white'
+                                                        : active
+                                                            ? 'text-main-blue border-main-blue'
+                                                            : 'text-gray-700 border-transparent hover:text-white hover:bg-[#0b3a63]'
                                                     }`}
                                             >
                                                 {item.label}
                                             </Link>
                                         </li>
-                                    )
+                                    );
                                 })}
                             </ul>
                         </div>

@@ -9,6 +9,7 @@ export const Navbar = () => {
 
     const items = [
         { label: "Inicio", to: "/dashboard" },
+        { label: "Cuentas", to: "cuentas" },
         { label: "Perfil", to: "/dashboard/perfil" },
         { label: "Ayuda", to: "/dashboard/ayuda" }
     ]

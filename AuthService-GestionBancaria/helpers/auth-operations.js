@@ -344,17 +344,22 @@ export const forgotPasswordHelper = async (email) => {
     // Actualizar token en la base de datos
     await updatePasswordResetToken(user.Id, resetToken, tokenExpiry);
 
-    // Enviar email de reset
+    // Enviar email de reset de forma síncrona para poder reportar fallo real
     const { sendPasswordResetEmail } = await import('./email-service.js');
-    // Enviar email en background; no bloquear la respuesta
-    Promise.resolve()
-      .then(() => sendPasswordResetEmail(user.Email, user.Name, resetToken))
-      .catch((emailError) => {
-        console.error(
-          `Failed to send password reset email to ${email}:`,
-          emailError
-        );
-      });
+    try {
+      await sendPasswordResetEmail(user.Email, user.Name, resetToken);
+    } catch (emailError) {
+      console.error(
+        `Failed to send password reset email to ${email}:`,
+        emailError
+      );
+      return {
+        success: false,
+        message:
+          'No se pudo enviar el correo de recuperación en este momento. Intenta nuevamente más tarde.',
+        data: { email, initiated: false },
+      };
+    }
 
     // EmailResponseDto equivalent structure
     return {
@@ -364,12 +369,12 @@ export const forgotPasswordHelper = async (email) => {
     };
   } catch (error) {
     console.error('Error en forgotPasswordHelper:', error);
-    // Por seguridad, no revelamos errores internos
-    // EmailResponseDto equivalent structure
+    // Por seguridad mantenemos mensaje genérico
     return {
-      success: true,
-      message: 'Si el email existe, se ha enviado un enlace de recuperación',
-      data: { email, initiated: true },
+      success: false,
+      message:
+        'No se pudo procesar la recuperación de contraseña en este momento. Intenta nuevamente más tarde.',
+      data: { email, initiated: false },
     };
   }
 };

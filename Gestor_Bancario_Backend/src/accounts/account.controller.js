@@ -83,9 +83,10 @@ export const getAccounts = async (req, res) => {
         const total = await Account.countDocuments(filter);
 
         // Sanitizar datos sensibles
+        const isAdmin = req.userRole === 'ADMIN_ROLE';
         const sanitizedAccounts = accounts.map(account => {
-            // Si el usuario autenticado no es el dueño de la cuenta, ocultamos el saldo
-            if (String(account.userId) !== String(req.userId)) {
+            // Si el usuario autenticado no es el dueño de la cuenta y no es admin, ocultamos el saldo
+            if (!isAdmin && String(account.userId) !== String(req.userId)) {
                 delete account.saldo;
             }
             return account;

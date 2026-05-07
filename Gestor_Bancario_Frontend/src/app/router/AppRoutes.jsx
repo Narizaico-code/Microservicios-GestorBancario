@@ -12,6 +12,7 @@ import RoleGuard from './RoleGuard.jsx'
 import { DashboardPage  } from '../../app/layouts/DashboardPages.jsx'
 import ClientPage from '../../pages/ClientPage.jsx'
 import { Accounts } from '../../features/account/components/Accounts.jsx'
+import { Help } from '../../shared/components/layout/Help.jsx'
 
 function DashboardRedirect() {
   const { session } = useAuthStore()
@@ -34,7 +35,7 @@ export default function AppRoutes() {
               <Route path="/dashboard" element={<DashboardPage />}>
                 <Route path="cuentas" element={<Accounts />} />
                 <Route path="perfil" element={<div>Perfil</div>} />
-                <Route path="ayuda" element={<div>Ayuda</div>} />
+                <Route path="ayuda" element={<Help />} />
               </Route>
             </Route>
             <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>

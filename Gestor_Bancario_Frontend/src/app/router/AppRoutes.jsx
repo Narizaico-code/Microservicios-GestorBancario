@@ -11,7 +11,7 @@ import ProtectedRoute from './ProtectedRoute.jsx'
 import RoleGuard from './RoleGuard.jsx'
 import { DashboardPage  } from '../../app/layouts/DashboardPages.jsx'
 import ClientPage from '../../pages/ClientPage.jsx'
-import { Accounts } from '../../features/account/components/Accounts.jsx'
+import { AdminAccounts } from '../../features/account/components/AdminAccounts.jsx'
 import { Help } from '../../shared/components/layout/Help.jsx'
 
 function DashboardRedirect() {
@@ -33,7 +33,7 @@ export default function AppRoutes() {
           <Route element={<ProtectedRoute />}>
             <Route element={<RoleGuard allowedRoles={['ADMIN_ROLE']} />}>
               <Route path="/dashboard" element={<DashboardPage />}>
-                <Route path="cuentas" element={<Accounts />} />
+                <Route path="cuentas" element={<AdminAccounts />} />
                 <Route path="perfil" element={<div>Perfil</div>} />
                 <Route path="ayuda" element={<Help />} />
               </Route>

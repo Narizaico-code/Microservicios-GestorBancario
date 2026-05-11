@@ -1,41 +1,11 @@
 import axios from "axios";
 import { loadSession } from "../utils/session-storage.js";
 
-const axiosAccount = axios.create({
-  baseURL: import.meta.env.VITE_ACCOUNT_URL,
-  timeout: 8000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-
-axiosAccount.interceptors.request.use((config) => {
-	const session = loadSession();
-	const token = session?.token;
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
-	}
-	return config;
-});
-
-
-export { axiosAccount };
-// ... existing code ...
 const stripTrailingSlash = (value = '') => value.replace(/\/+$/, '')
 
 const getAuthToken = () => {
-	const tokenKeys = ['token', 'authToken', 'accessToken', 'x-token']
-
-	for (const key of tokenKeys) {
-		const localToken = localStorage.getItem(key)
-		if (localToken) return localToken
-
-		const sessionToken = sessionStorage.getItem(key)
-		if (sessionToken) return sessionToken
-	}
-
-	return import.meta.env.VITE_AUTH_TOKEN || null
+  const session = loadSession()
+  return session?.token || null
 }
 
 export const API_CONFIG = {

@@ -66,12 +66,18 @@ export default function ClientDashboard({ session, onLogout }) {
           onLogout={handleLogout}
         />
 
-        <div className="flex justify-end">
+        <div className="flex flex-wrap justify-end gap-3">
           <Link
             to="/client/perfil"
             className="rounded-full border border-cyan-200/40 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
           >
             Ver mi perfil
+          </Link>
+          <Link
+            to="/client/favoritos"
+            className="rounded-full border border-cyan-200/40 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+          >
+            Ver favoritos
           </Link>
         </div>
 
@@ -79,45 +85,27 @@ export default function ClientDashboard({ session, onLogout }) {
           <article className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-950/20 backdrop-blur-xl">
             <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Bienvenido</p>
             <h2 className="mt-4 text-4xl font-bold tracking-tight text-white">
-              Tu información bancaria, en una sola pantalla.
+              Gestiona tus cuentas y finanzas de forma simple.
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
-              Este panel muestra una vista simplificada para cliente, consumiendo el
-              AuthService y el backend bancario con el mismo JWT.
+              Aquí puedes revisar los movimientos de tus cuentas, verificar tu saldo y
+              acceder a tus configuraciones principales.
             </p>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <p className="text-sm text-slate-400">Usuario</p>
                 <p className="mt-2 text-lg font-semibold text-white">{session.user?.name || 'Cliente'}</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-slate-400">Rol</p>
-                <p className="mt-2 text-lg font-semibold text-white">{session.user?.role || 'USER_ROLE'}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-slate-400">Cuentas recientes</p>
+                <p className="text-sm text-slate-400">Cuentas activas</p>
                 <p className="mt-2 text-lg font-semibold text-white">{accounts.length}</p>
               </div>
             </div>
           </article>
 
           <article className="rounded-[2rem] border border-white/10 bg-white/95 p-6 text-slate-900 shadow-2xl shadow-slate-950/30 backdrop-blur-xl">
-            <h3 className="text-2xl font-bold text-slate-950">Mis cuentas</h3>
-            {healthLoading ? (
-              <p className="mt-4 text-sm text-slate-500">Consultando salud...</p>
-            ) : null}
-            {healthError ? (
-              <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                {healthError}
-              </div>
-            ) : null}
-            {health ? (
-              <div className="mt-4 rounded-2xl bg-cyan-50 px-4 py-3 text-sm text-cyan-900">
-                <p className="font-semibold">Health</p>
-                <p className="mt-1 break-all text-xs">{JSON.stringify(health)}</p>
-              </div>
-            ) : null}
+            <h3 className="text-2xl font-bold text-slate-950">Mis cuentas recientes</h3>
 
             <div className="mt-6 space-y-3">
               {accountsError ? (
@@ -128,16 +116,23 @@ export default function ClientDashboard({ session, onLogout }) {
               {accountsLoading ? (
                 <p className="text-sm text-slate-500">Cargando cuentas...</p>
               ) : null}
-              {accounts.slice(0, 5).map((account, index) => (
-                <div key={account._id || account.id || index} className="rounded-2xl bg-slate-50 px-4 py-3">
-                  <p className="text-sm font-medium text-slate-700">Cuenta #{index + 1}</p>
-                  <p className="text-xs text-slate-500">Usuario: {account.userId || 'N/D'}</p>
-                  <p className="text-xs text-slate-500">Estado: {String(account.estado)}</p>
+              {accounts.slice(0, 5).map((account) => (
+                <div key={account._id || account.id || account.numeroCuenta} className="rounded-2xl bg-slate-50 px-4 py-3 border border-slate-100 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">Cuenta {account.tipoCuenta ? account.tipoCuenta.toLowerCase() : ''}</p>
+                    <p className="text-xs text-slate-500 font-mono mt-0.5">{account.numeroCuenta || 'Sin numero'}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-slate-900">
+                      {account.moneda || 'GTQ'} {account.saldo}
+                    </p>
+                    <p className="text-xs text-emerald-600 font-medium">Activa</p>
+                  </div>
                 </div>
               ))}
               {!accountsLoading && accounts.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
-                  No tienes cuentas visibles todavía.
+                <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500 text-center">
+                  Aún no tienes cuentas registradas o activas.
                 </div>
               ) : null}
             </div>

@@ -16,6 +16,7 @@ import { Help } from '../../shared/components/layout/Help.jsx'
 import ProfilePage from '../../features/profile/pages/ProfilePage.jsx'
 import ClientProfilePage from '../../features/profile/pages/ClientProfilePage.jsx'
 import AdminAuthPage from '../../features/admin/pages/AdminAuthPage.jsx'
+import ClientFavoritesPage from '../../features/favorites/pages/ClientFavoritesPage.jsx'
 
 function DashboardRedirect() {
   const { session } = useAuthStore()
@@ -46,6 +47,7 @@ export default function AppRoutes() {
             <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
               <Route path="/client" element={<ClientPage />} />
               <Route path="/client/perfil" element={<ClientProfilePage />} />
+              <Route path="/client/favoritos" element={<ClientFavoritesPage />} />
             </Route>
             <Route path="/home" element={<DashboardRedirect />} />
           </Route>

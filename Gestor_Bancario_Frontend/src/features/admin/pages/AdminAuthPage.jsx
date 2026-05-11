@@ -12,12 +12,11 @@ import {
 } from 'lucide-react'
 import { useAuthStore } from '../../auth/store/authStore.js'
 import {
-  approveUpdateRequestWithAuthService,
+  approveSignupRequestWithAuthService,
   getAllUsersWithAuthService,
   getProfileByIdWithAuthService,
-  getUpdateRequestsWithAuthService,
+  getSignupRequestsWithAuthService,
   registerWithAuthService,
-  rejectUpdateRequestWithAuthService,
 } from '../../../shared/api/auth.js'
 
 const initialRegisterForm = {
@@ -75,7 +74,6 @@ export default function AdminAuthPage() {
   const [requestsLoading, setRequestsLoading] = useState(true)
   const [requestsError, setRequestsError] = useState('')
   const [requestsActionError, setRequestsActionError] = useState('')
-  const [requestsFilter, setRequestsFilter] = useState('PENDING')
   const [requestsActionId, setRequestsActionId] = useState('')
 
   useEffect(() => {
@@ -114,8 +112,7 @@ export default function AdminAuthPage() {
       try {
         setRequestsLoading(true)
         setRequestsError('')
-        const statusParam = requestsFilter === 'ALL' ? null : requestsFilter
-        const response = await getUpdateRequestsWithAuthService(session?.token, statusParam)
+        const response = await getSignupRequestsWithAuthService(session?.token)
         if (!isMounted) return
         setRequests(Array.isArray(response?.data) ? response.data : [])
       } catch (error) {
@@ -135,7 +132,7 @@ export default function AdminAuthPage() {
     return () => {
       isMounted = false
     }
-  }, [requestsFilter, session?.token])
+  }, [session?.token])
 
   const filteredUsers = useMemo(() => {
     const normalized = userSearch.trim().toLowerCase()
@@ -202,25 +199,10 @@ export default function AdminAuthPage() {
       setRequestsActionId(requestId)
       setRequestsActionError('')
       if (action === 'approve') {
-        await approveUpdateRequestWithAuthService(session?.token, requestId)
-      } else {
-        await rejectUpdateRequestWithAuthService(session?.token, requestId)
+        await approveSignupRequestWithAuthService(session?.token, requestId)
       }
 
-      setRequests((current) => {
-        if (requestsFilter === 'PENDING') {
-          return current.filter((item) => item.Id !== requestId)
-        }
-        return current.map((item) =>
-          item.Id === requestId
-            ? {
-                ...item,
-                Status: action === 'approve' ? 'APPROVED' : 'REJECTED',
-                ApprovedAt: new Date().toISOString(),
-              }
-            : item
-        )
-      })
+      setRequests((current) => current.filter((item) => item.Id !== requestId))
     } catch (error) {
       setRequestsActionError(error.message || 'No fue posible procesar la solicitud')
     } finally {
@@ -233,7 +215,6 @@ export default function AdminAuthPage() {
     if (request.Email) fields.push('Correo')
     if (request.Phone) fields.push('Telefono')
     if (request.ProfilePicture) fields.push('Foto')
-    if (request.PasswordHash) fields.push('Contrasena')
     return fields.length ? fields : ['Sin cambios detectados']
   }
 
@@ -447,21 +428,10 @@ export default function AdminAuthPage() {
           <div className="flex items-center gap-2 text-slate-900">
             <ClipboardCheck className="h-5 w-5 text-emerald-600" />
             <div>
-              <h2 className="text-lg font-semibold">Solicitudes de edicion de perfil</h2>
-              <p className="text-sm text-slate-500">Aprobaciones pendientes del sistema</p>
+              <h2 className="text-lg font-semibold">Solicitudes de acceso</h2>
+              <p className="text-sm text-slate-500">Solicitudes pendientes para aprobar o rechazar</p>
             </div>
           </div>
-
-          <select
-            value={requestsFilter}
-            onChange={(event) => setRequestsFilter(event.target.value)}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none"
-          >
-            <option value="ALL">Todas</option>
-            <option value="PENDING">Pendientes</option>
-            <option value="APPROVED">Aprobadas</option>
-            <option value="REJECTED">Rechazadas</option>
-          </select>
         </div>
 
         {requestsLoading ? <p className="mt-4 text-sm text-slate-500">Cargando solicitudes...</p> : null}
@@ -483,34 +453,36 @@ export default function AdminAuthPage() {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm font-semibold text-slate-900">Solicitud #{request.Id}</p>
-                    <p className="text-xs text-slate-500">Usuario: {request.UserId}</p>
+                    <p className="text-xs text-slate-500">Correo: {request.Email}</p>
                   </div>
                   <span
                     className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${
                       request.Status === 'APPROVED'
                         ? 'bg-emerald-100 text-emerald-700'
-                        : request.Status === 'REJECTED'
-                        ? 'bg-rose-100 text-rose-700'
                         : 'bg-amber-100 text-amber-700'
                     }`}
                   >
-                    {request.Status === 'APPROVED' ? (
-                      <CheckCircle2 className="h-4 w-4" />
-                    ) : (
-                      <Loader2 className="h-4 w-4" />
-                    )}
-                    {request.Status}
+                    <Loader2 className="h-4 w-4" />
+                    {request.Status || 'PENDING'}
                   </span>
                 </div>
 
                 <div className="mt-3 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
                   <div>
-                    <p className="font-semibold text-slate-700">Campos solicitados</p>
+                    <p className="font-semibold text-slate-700">Solicitante</p>
+                    <p>{request.Name}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-700">Campos enviados</p>
                     <p>{getRequestedFields(request).join(', ')}</p>
                   </div>
                   <div>
                     <p className="font-semibold text-slate-700">Fecha de solicitud</p>
                     <p>{formatDate(request.created_at || request.createdAt)}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-700">Estado</p>
+                    <p>{request.Status || 'PENDING'}</p>
                   </div>
                 </div>
 
@@ -523,14 +495,6 @@ export default function AdminAuthPage() {
                       className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-70"
                     >
                       {requestsActionId === request.Id ? 'Procesando...' : 'Aprobar'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleRequestAction(request.Id, 'reject')}
-                      disabled={requestsActionId === request.Id}
-                      className="rounded-xl border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-rose-600 transition hover:bg-rose-50 disabled:opacity-70"
-                    >
-                      Rechazar
                     </button>
                   </div>
                 ) : null}

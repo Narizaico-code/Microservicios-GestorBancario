@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuthStore } from '../../features/auth/store/authStore.js'
 import AuthPage from '../../features/auth/pages/AuthPage.jsx'
-import RegisterPage from '../../features/auth/pages/RegisterPage.jsx'
 import SignupRequestPage from '../../features/auth/pages/SignupRequestPage.jsx'
 import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage.jsx'
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage.jsx'
@@ -27,7 +26,7 @@ export default function AppRoutes() {
   return (
     <Routes>
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/auth/register" element={<Navigate to="/auth/signup-request" replace />} />
         <Route path="/auth/signup-request" element={<SignupRequestPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password" element={<ResetPasswordPage />} />

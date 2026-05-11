@@ -14,6 +14,22 @@ export function AuthProvider({ children }) {
         saveSession(nextSession)
         setSession(nextSession)
       },
+      updateUser(userPatch) {
+        setSession((current) => {
+          if (!current) {
+            return current
+          }
+          const nextSession = {
+            ...current,
+            user: {
+              ...current.user,
+              ...userPatch,
+            },
+          }
+          saveSession(nextSession)
+          return nextSession
+        })
+      },
       logout() {
         clearSession()
         setSession(null)

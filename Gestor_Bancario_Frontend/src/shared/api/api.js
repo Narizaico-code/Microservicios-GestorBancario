@@ -29,7 +29,7 @@ export const API_CONFIG = {
     import.meta.env.VITE_AUTH_API_URL || 'http://localhost:3006/api/v1'
   ),
   bankBaseUrl: stripTrailingSlash(
-    import.meta.env.VITE_BANK_API_URL || 'http://localhost:3005/gestionBancaria/api/v1'
+    import.meta.env.VITE_BANK_API_URL || 'http://localhost:3006/gestionBancaria/api/v1'
   ),
   bankHealthUrl: stripTrailingSlash(
     import.meta.env.VITE_BANK_HEALTH_URL || 'http://localhost:3005/health'

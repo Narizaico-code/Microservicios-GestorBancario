@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { Search, Filter, Download, AlertCircle, Eye, ToggleRight, ToggleLeft } from "lucide-react"
-import { getAllAccountsAdmin } from "../../../shared/api/account"
+import { getAllAccountsAdmin, updateAccountStatus } from "../../../shared/api/account"
 import { Spinner } from "../../../shared/components/layout/Spinner.jsx"
 import { AccountModal } from "./AccountModal.jsx"
 
@@ -8,6 +8,8 @@ export const AdminAccounts = () => {
   const [accounts, setAccounts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [actionError, setActionError] = useState("")
+  const [actionId, setActionId] = useState("")
   const [selectedAccount, setSelectedAccount] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -24,71 +26,9 @@ export const AdminAccounts = () => {
       try {
         setLoading(true)
         setError(null)
-        
-        // Mock data temporal para desarrollo
-        const mockData = [
-          {
-            "_id": "507f1f77bcf86cd799439011",
-            "numeroCuenta": "1001234567890",
-            "userId": "user1@example.com",
-            "tipoCuenta": "AHORRO",
-            "saldo": 15500.50,
-            "moneda": "GTQ",
-            "estado": true,
-            "createdAt": "2026-05-01T10:30:00Z",
-            "updatedAt": "2026-05-10T14:20:00Z"
-          },
-          {
-            "_id": "507f1f77bcf86cd799439012",
-            "numeroCuenta": "1001234567891",
-            "userId": "user2@example.com",
-            "tipoCuenta": "MONETARIA",
-            "saldo": 45200.75,
-            "moneda": "USD",
-            "estado": true,
-            "createdAt": "2026-04-15T09:15:00Z",
-            "updatedAt": "2026-05-09T16:45:00Z"
-          },
-          {
-            "_id": "507f1f77bcf86cd799439013",
-            "numeroCuenta": "1001234567892",
-            "userId": "user3@example.com",
-            "tipoCuenta": "AHORRO",
-            "saldo": 8900.00,
-            "moneda": "GTQ",
-            "estado": false,
-            "createdAt": "2026-03-20T11:00:00Z",
-            "updatedAt": "2026-05-08T08:30:00Z"
-          },
-          {
-            "_id": "507f1f77bcf86cd799439014",
-            "numeroCuenta": "1001234567893",
-            "userId": "user4@example.com",
-            "tipoCuenta": "MONETARIA",
-            "saldo": 125600.25,
-            "moneda": "EUR",
-            "estado": true,
-            "createdAt": "2026-02-10T14:45:00Z",
-            "updatedAt": "2026-05-10T12:10:00Z"
-          },
-          {
-            "_id": "507f1f77bcf86cd799439015",
-            "numeroCuenta": "1001234567894",
-            "userId": "user5@example.com",
-            "tipoCuenta": "AHORRO",
-            "saldo": 32400.50,
-            "moneda": "MXN",
-            "estado": true,
-            "createdAt": "2026-05-05T07:20:00Z",
-            "updatedAt": "2026-05-09T19:00:00Z"
-          }
-        ]
-        
-        setAccounts(mockData)
-        
-        // Descomenta cuando el backend esté listo:
-        // const response = await getAllAccountsAdmin()
-        // setAccounts(Array.isArray(response?.data?.data) ? response.data.data : [])
+
+        const response = await getAllAccountsAdmin(1, 100, 'all')
+        setAccounts(Array.isArray(response?.data?.data) ? response.data.data : [])
       } catch (err) {
         setError(err.message || "Error al cargar las cuentas")
       } finally {
@@ -152,8 +92,24 @@ export const AdminAccounts = () => {
   }
 
   const handleToggleStatus = async (account) => {
-    // TODO: Implement toggle status API call
-    console.log("Toggle status for account:", account.numeroCuenta)
+    try {
+      setActionId(account.numeroCuenta)
+      setActionError("")
+      const nextEstado = !account.estado
+      await updateAccountStatus(account.numeroCuenta, nextEstado)
+
+      setAccounts((current) =>
+        current.map((item) =>
+          item.numeroCuenta === account.numeroCuenta
+            ? { ...item, estado: nextEstado }
+            : item
+        )
+      )
+    } catch (err) {
+      setActionError(err.message || "No fue posible actualizar la cuenta")
+    } finally {
+      setActionId("")
+    }
   }
 
   const handleDownloadReport = () => {
@@ -349,6 +305,12 @@ export const AdminAccounts = () => {
           <p className="text-sm text-rose-700">{error}</p>
         </div>
       )}
+      {actionError ? (
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 flex gap-3">
+          <AlertCircle className="h-5 w-5 text-rose-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-rose-700">{actionError}</p>
+        </div>
+      ) : null}
 
       {/* Table */}
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
@@ -417,6 +379,7 @@ export const AdminAccounts = () => {
                         </button>
                         <button
                           onClick={() => handleToggleStatus(account)}
+                          disabled={actionId === account.numeroCuenta}
                           className={`inline-flex items-center justify-center p-2 rounded-lg transition ${
                             account.estado
                               ? "text-orange-600 hover:bg-orange-50"

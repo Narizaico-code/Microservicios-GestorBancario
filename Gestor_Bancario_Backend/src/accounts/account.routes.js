@@ -6,7 +6,8 @@ const router = Router();
 
 import {
     createAccount,
-    getAccounts
+    getAccounts,
+    updateAccountStatus
 } from './account.controller.js';
 
 import { validateCreateAccount } from '../../middlewares/validateCreateAccount.js';
@@ -28,6 +29,13 @@ router.get(
     '/account/get',
     validateJWT,
     getAccounts
+);
+
+router.patch(
+    '/account/:numeroCuenta/status',
+    validateJWT,
+    isAdmin,
+    updateAccountStatus
 );
 
 export default router;

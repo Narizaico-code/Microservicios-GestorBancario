@@ -45,19 +45,20 @@ export const createAccount = async (req, res) => {
 export const getAccounts = async (req, res) => {
     try {
 
-        const { page = 1, limit = 10, estado = true, misCuentas } = req.query;
+        const { page = 1, limit = 10, estado, misCuentas } = req.query;
 
         const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
         const limitNumber = Math.max(parseInt(limit, 10) || 10, 1);
 
-        const estadoValue = typeof estado === 'string'
-            ? estado.toLowerCase() === 'true'
-            : estado;
+        const normalizedEstado = typeof estado === 'string' ? estado.toLowerCase() : estado;
+        const filter = {};
 
-        // Filtro base
-        const filter = {
-            estado: estadoValue
-        };
+        if (normalizedEstado !== 'all') {
+            const estadoValue = typeof normalizedEstado === 'string'
+                ? normalizedEstado === 'true'
+                : normalizedEstado;
+            filter.estado = estadoValue === undefined ? true : estadoValue;
+        }
 
         // Si el usuario quiere ver solo sus cuentas
         if (misCuentas === 'true') {
@@ -111,6 +112,51 @@ export const getAccounts = async (req, res) => {
             error: error.message
         });
 
+    }
+};
+
+/**
+ * ACTUALIZAR ESTADO DE CUENTA
+ */
+export const updateAccountStatus = async (req, res) => {
+    try {
+        const { numeroCuenta } = req.params;
+        const { estado } = req.body || {};
+
+        if (!numeroCuenta) {
+            return res.status(400).json({
+                success: false,
+                message: 'El numero de cuenta es requerido',
+            });
+        }
+
+        const account = await Account.findOne({ numeroCuenta });
+
+        if (!account) {
+            return res.status(404).json({
+                success: false,
+                message: 'Cuenta no encontrada',
+            });
+        }
+
+        const nextEstado = typeof estado === 'boolean' ? estado : !account.estado;
+        account.estado = nextEstado;
+        await account.save();
+
+        const accountResponse = account.toObject();
+        delete accountResponse._id;
+
+        return res.status(200).json({
+            success: true,
+            message: 'Estado de cuenta actualizado',
+            data: accountResponse,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Error al actualizar la cuenta',
+            error: error.message,
+        });
     }
 };
 

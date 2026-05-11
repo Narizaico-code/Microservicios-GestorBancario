@@ -13,6 +13,9 @@ import { DashboardPage  } from '../../app/layouts/DashboardPages.jsx'
 import ClientPage from '../../pages/ClientPage.jsx'
 import { AdminAccounts } from '../../features/account/components/AdminAccounts.jsx'
 import { Help } from '../../shared/components/layout/Help.jsx'
+import ProfilePage from '../../features/profile/pages/ProfilePage.jsx'
+import ClientProfilePage from '../../features/profile/pages/ClientProfilePage.jsx'
+import AdminAuthPage from '../../features/admin/pages/AdminAuthPage.jsx'
 
 function DashboardRedirect() {
   const { session } = useAuthStore()
@@ -33,13 +36,16 @@ export default function AppRoutes() {
           <Route element={<ProtectedRoute />}>
             <Route element={<RoleGuard allowedRoles={['ADMIN_ROLE']} />}>
               <Route path="/dashboard" element={<DashboardPage />}>
+                <Route index element={<Navigate to="cuentas" replace />} />
                 <Route path="cuentas" element={<AdminAccounts />} />
-                <Route path="perfil" element={<div>Perfil</div>} />
+                <Route path="usuarios" element={<AdminAuthPage />} />
+                <Route path="perfil" element={<ProfilePage />} />
                 <Route path="ayuda" element={<Help />} />
               </Route>
             </Route>
             <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
               <Route path="/client" element={<ClientPage />} />
+              <Route path="/client/perfil" element={<ClientProfilePage />} />
             </Route>
             <Route path="/home" element={<DashboardRedirect />} />
           </Route>

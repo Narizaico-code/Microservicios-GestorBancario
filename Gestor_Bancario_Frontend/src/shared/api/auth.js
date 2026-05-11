@@ -70,3 +70,48 @@ export async function getProfileByIdWithAuthService(token, userId) {
     body: { userId },
   })
 }
+
+export async function updateProfileWithAuthService(token, formData) {
+  return requestFormData(`${API_CONFIG.authBaseUrl}/users/me`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+}
+
+export async function getUpdateRequestsWithAuthService(token, status) {
+  const statusQuery = status ? `?status=${encodeURIComponent(status)}` : ''
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/update-requests${statusQuery}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function approveUpdateRequestWithAuthService(token, requestId) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/update-requests/${requestId}/approve`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function rejectUpdateRequestWithAuthService(token, requestId) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/update-requests/${requestId}/reject`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function getAllUsersWithAuthService(token) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}

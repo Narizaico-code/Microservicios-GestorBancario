@@ -15,22 +15,21 @@ export const seedData = async () => {
     });
   }
 
-  // Verificar si ya existe algún usuario
-  const userCount = await User.count();
-  if (userCount === 0) {
+  const adminEmail = 'adminb@gestor.local';
+  const existingAdmin = await User.findOne({ where: { Email: adminEmail } });
+  if (!existingAdmin) {
     const adminRole = await Role.findOne({ where: { Name: ADMIN_ROLE } });
     if (adminRole) {
       const userId = generateUserId();
       const profileId = generateUserId();
       const emailId = generateUserId();
       const userRoleId = generateUserId();
-      const password = await hashPassword('Admin1234!');
+      const password = await hashPassword('ADMINB');
 
-      // Crear usuario admin
-      const adminUser = await User.create({
+      await User.create({
         Id: userId,
         Name: 'Admin',
-        Email: 'admin@gestor.local',
+        Email: adminEmail,
         Password: password,
         IsActive: true,
       });

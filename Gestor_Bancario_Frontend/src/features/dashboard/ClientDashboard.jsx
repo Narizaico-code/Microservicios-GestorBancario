@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import DashboardHeader from './DashboardHeader.jsx'
 import { clearSession } from '../../shared/utils/session-storage.js'
 import { getBankHealth, getRecentAccounts } from '../../shared/api/bank.js'
@@ -64,6 +65,15 @@ export default function ClientDashboard({ session, onLogout }) {
           userRole={session.user?.role || 'USER_ROLE'}
           onLogout={handleLogout}
         />
+
+        <div className="flex justify-end">
+          <Link
+            to="/client/perfil"
+            className="rounded-full border border-cyan-200/40 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+          >
+            Ver mi perfil
+          </Link>
+        </div>
 
         <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           <article className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-950/20 backdrop-blur-xl">

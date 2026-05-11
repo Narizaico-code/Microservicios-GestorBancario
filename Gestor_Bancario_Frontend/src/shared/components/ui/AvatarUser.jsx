@@ -55,14 +55,10 @@ export const AvatarUser = () => {
                         <p className="text-sm text-gray-500 truncate">{user?.email}</p>
                     </div>
                     <ul className="p-2 text-sm text-gray-700 font-medium">
+                        
                         <li>
-                            <Link to="/dashboard" className="block w-full p-2 rounded-md hover:bg-gray-100">
-                                Dashboard
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/dashboard/cuentas" className="block w-full p-2 rounded-md hover:bg-gray-100">
-                                Cuentas
+                            <Link to="/dashboard/perfil" className="block w-full p-2 rounded-md hover:bg-gray-100">
+                                Perfil
                             </Link>
                         </li>
 

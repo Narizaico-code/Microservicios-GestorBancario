@@ -23,7 +23,7 @@ function DashboardRedirect() {
   return <Navigate to={session?.user?.role === 'ADMIN_ROLE' ? '/dashboard' : '/client'} replace />
 }
 
-export default function AppRoutes() {
+export function AppRoutes() {
   return (
     <Routes>
         <Route path="/auth" element={<AuthPage />} />
@@ -56,4 +56,3 @@ export default function AppRoutes() {
       </Routes>
   )
 }
-

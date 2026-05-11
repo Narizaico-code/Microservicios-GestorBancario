@@ -29,6 +29,31 @@
   }
 }
 
+.animate-fadeIn {
+  animation: fadeIn 0.15s ease-out;
+}
+
+.sidebar-underline {
+  position: relative;
+}
+.sidebar-underline.active::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 6px;
+  height: 5px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(8, 49, 109, 0.18) 0%,
+    #08316d 50%,
+    rgba(8, 49, 109, 0.18) 100%
+  );
+  filter: blur(1.5px);
+  z-index: 1;
+}
+
 @layer base {
   :root {
     color-scheme: dark;

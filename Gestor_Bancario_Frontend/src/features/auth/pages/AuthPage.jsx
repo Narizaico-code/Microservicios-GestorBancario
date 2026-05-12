@@ -3,48 +3,68 @@ import cerditoFondoAzul from '../../../assets/CerditoFondoAzul.png'
 
 export default function AuthPage() {
   return (
-    <main className="min-h-screen bg-white px-5 py-6 text-[#011743] lg:px-8 lg:py-10">
-      <div className="mx-auto grid min-h-[calc(100vh-3rem)] w-full max-w-[1600px] overflow-hidden rounded-[2rem] border border-[#011743]/15 bg-white shadow-[0_30px_80px_rgba(1,23,67,0.14)] lg:grid-cols-[1.05fr_0.95fr]">
-        <section className="flex flex-col justify-between bg-[#011743] px-7 py-8 text-white lg:px-10 lg:py-12">
+    <main className="min-h-screen bg-white px-3 py-3 text-[#011743] sm:px-5 sm:py-5 lg:px-8 lg:py-7">
+      <div className="mx-auto grid min-h-[calc(100vh-2.5rem)] w-full max-w-[1250px] gap-5 overflow-hidden rounded-[1.6rem] border border-[#011743]/10 bg-white shadow-[0_18px_45px_rgba(1,23,67,0.10)] lg:min-h-[92vh] lg:grid-cols-[1fr_0.95fr] lg:gap-0">
+        
+        {/* Panel izquierdo */}
+  <section className="order-2 flex flex-col justify-between bg-[#011743] px-5 py-5 text-white sm:px-6 sm:py-6 lg:order-1 lg:px-7 lg:py-7">
+          
           <div>
-            <h1 className="mt-8 max-w-xl text-5xl font-black leading-[1.02] tracking-tight lg:text-7xl">
+            <h1 className="mt-4 max-w-xl text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-5xl">
               Tu portal bancario seguro.
             </h1>
-            <p className="mt-8 max-w-2xl text-lg leading-9 text-white/88 lg:text-[1.55rem]">
+
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/85 sm:text-base sm:leading-7 lg:mt-5 lg:text-xl">
               Inicia sesión, crea una cuenta, recupera tu contraseña o reenvía tu email de verificación en un único lugar.
             </p>
           </div>
 
-          <div className="flex justify-center py-6 lg:py-10">
+          {/* Imagen */}
+          <div className="flex justify-center py-4 lg:py-4">
             <img
               src={cerditoFondoAzul}
               alt="Ilustración de ahorro bancario"
-              className="w-full max-w-[340px] object-contain drop-shadow-[0_18px_30px_rgba(0,0,0,0.18)] lg:max-w-[430px]"
+              className="w-full max-w-[170px] object-contain sm:max-w-[210px] lg:max-w-[240px]"
             />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-white/35 bg-white/[0.03] px-5 py-5">
-              <p className="text-3xl font-bold">Acceso seguro</p>
-              <p className="mt-2 text-sm text-white/75">Ingresa a tu banca en línea de forma protegida.</p>
+          {/* Cards */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
+              <p className="text-lg font-bold sm:text-xl">Acceso seguro</p>
+              <p className="mt-1 text-xs text-white/75 sm:text-sm">
+                Ingresa a tu banca en línea.
+              </p>
             </div>
-            <div className="rounded-3xl border border-white/35 bg-white/[0.03] px-5 py-5">
-              <p className="text-3xl font-bold">Apertura de cuenta</p>
-              <p className="mt-2 text-sm text-white/75">Crea tu perfil y comienza a gestionar tus finanzas.</p>
+
+            <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
+              <p className="text-lg font-bold sm:text-xl">Apertura de cuenta</p>
+              <p className="mt-1 text-xs text-white/75 sm:text-sm">
+                Crea tu perfil rápidamente.
+              </p>
             </div>
-            <div className="rounded-3xl border border-white/35 bg-white/[0.03] px-5 py-5">
-              <p className="text-3xl font-bold">Recupera tu acceso</p>
-              <p className="mt-2 text-sm text-white/75">Restablece tu contraseña en pocos pasos.</p>
+
+            <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
+              <p className="text-lg font-bold sm:text-xl">Recupera acceso</p>
+              <p className="mt-1 text-xs text-white/75 sm:text-sm">
+                Restablece tu contraseña.
+              </p>
             </div>
-            <div className="rounded-3xl border border-white/35 bg-white/[0.03] px-5 py-5">
-              <p className="text-3xl font-bold">Verifica tu correo</p>
-              <p className="mt-2 text-sm text-white/75">Activa tu cuenta para operar con tranquilidad.</p>
+
+            <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
+              <p className="text-lg font-bold sm:text-xl">Verifica correo</p>
+              <p className="mt-1 text-xs text-white/75 sm:text-sm">
+                Activa tu cuenta fácilmente.
+              </p>
             </div>
           </div>
         </section>
 
-        <section className="flex items-center justify-center bg-white px-6 py-8 lg:px-10 lg:py-12">
-          <UnifiedAuthForm />
+        {/* Formulario */}
+        <section className="order-1 flex items-center justify-center bg-white px-4 py-5 sm:px-5 lg:order-2 lg:px-7 lg:py-7">
+          <div className="w-full max-w-[440px] sm:max-w-[480px] lg:max-w-[520px]">
+            <UnifiedAuthForm />
+          </div>
         </section>
       </div>
     </main>

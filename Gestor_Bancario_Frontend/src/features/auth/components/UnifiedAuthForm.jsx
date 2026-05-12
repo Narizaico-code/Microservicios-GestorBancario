@@ -176,22 +176,22 @@ export default function UnifiedAuthForm() {
   }
 
   const renderLoginMode = () => (
-    <form onSubmit={handleSubmitLogin} className="space-y-7">
+    <form onSubmit={handleSubmitLogin} className="space-y-6 sm:space-y-7">
       <div>
-        <h2 className="text-4xl font-black tracking-tight text-[#011743]">Inicia sesión</h2>
-        <p className="mt-3 text-xl text-[#011743]/75">Accede al sistema bancario</p>
+        <h2 className="text-2xl font-black tracking-tight text-[#011743] sm:text-3xl lg:text-4xl">Inicia sesión</h2>
+        <p className="mt-2 text-sm text-[#011743]/75 sm:mt-3 sm:text-base lg:text-xl">Accede al sistema bancario</p>
       </div>
 
-      <div className="rounded-[2rem] border border-[#011743]/8 bg-white px-8 py-7 shadow-[0_18px_40px_rgba(1,23,67,0.10)]">
+      <div className="rounded-[1.6rem] border border-[#011743]/8 bg-white px-5 py-6 shadow-[0_18px_40px_rgba(1,23,67,0.10)] sm:rounded-[2rem] sm:px-8 sm:py-7">
         <div className="flex justify-center">
           <img
             src={cerditoFondoBlanco}
             alt="Cerdito bancario"
-            className="h-32 w-auto object-contain"
+            className="h-20 w-auto object-contain sm:h-28 lg:h-32"
           />
         </div>
       
-        <div className="mt-8 space-y-5">
+        <div className="mt-6 space-y-4 sm:mt-8 sm:space-y-5">
           <label className="relative block">
             <span className="sr-only">Email</span>
             <svg className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#011743]" fill="currentColor" viewBox="0 0 20 20">
@@ -203,7 +203,7 @@ export default function UnifiedAuthForm() {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full rounded-2xl border border-[#011743]/30 bg-white py-4 pl-14 pr-4 text-lg text-[#011743] outline-none transition focus:border-[#011743] focus:ring-4 focus:ring-[#011743]/10"
+              className="w-full rounded-2xl border border-[#011743]/30 bg-white py-3 pl-12 pr-4 text-base text-[#011743] outline-none transition focus:border-[#011743] focus:ring-4 focus:ring-[#011743]/10 sm:py-4 sm:pl-14 sm:text-lg"
               placeholder="admin@gestor.local"
             />
           </label>
@@ -219,7 +219,7 @@ export default function UnifiedAuthForm() {
               value={form.password}
               onChange={handleChange}
               required
-              className="w-full rounded-2xl border border-[#011743]/30 bg-white py-4 pl-14 pr-12 text-lg text-[#011743] outline-none transition focus:border-[#011743] focus:ring-4 focus:ring-[#011743]/10"
+              className="w-full rounded-2xl border border-[#011743]/30 bg-white py-3 pl-12 pr-12 text-base text-[#011743] outline-none transition focus:border-[#011743] focus:ring-4 focus:ring-[#011743]/10 sm:py-4 sm:pl-14 sm:text-lg"
               placeholder="••••••••"
             />
             <button

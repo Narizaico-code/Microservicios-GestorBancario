@@ -1,9 +1,9 @@
 import { SignupRequest } from '../src/auth/signup-request.model.js';
-import { checkUserExists, createNewUser } from './user-db.js';
+import { checkUserExists } from './user-db.js';
 import { hashPassword } from '../utils/password-utils.js';
 import { generateEmailVerificationToken } from '../utils/auth-helpers.js';
-import { updateEmailVerificationToken } from './user-db.js';
 import { sendVerificationEmail } from './email-service.js';
+import { Op } from 'sequelize';
 
 export const createSignupRequest = async ({
   name,
@@ -76,29 +76,21 @@ export const approveSignupRequest = async (id, approverId) => {
     throw err;
   }
 
-  // Crear el usuario usando la contraseña ya hasheada
-  const user = await createNewUser({
-    name: request.Name,
-    email: request.Email,
-    phone: request.Phone,
-    profilePicture: request.ProfilePicture,
-    hashedPassword: request.PasswordHash,
-  });
-
-  // Generar token de verificación y asignarlo al usuario recién creado
+  // Generar token de verificación sobre la solicitud aprobada.
   const verificationToken = await generateEmailVerificationToken();
   const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
-  await updateEmailVerificationToken(user.Id, verificationToken, tokenExpiry);
 
   // Marcar la solicitud como aprobada
   request.Status = 'APPROVED';
   request.ApprovedBy = approverId || null;
   request.ApprovedAt = new Date();
+  request.VerificationToken = verificationToken;
+  request.VerificationTokenExpiry = tokenExpiry;
   await request.save();
 
   // Enviar email con el token de verificación
   try {
-    await sendVerificationEmail(user.Email, user.Name, verificationToken);
+    await sendVerificationEmail(request.Email, request.Name, verificationToken);
   } catch (err) {
     // No romper el flujo si el correo falla; el token sigue siendo válido
     console.error(
@@ -107,7 +99,31 @@ export const approveSignupRequest = async (id, approverId) => {
     );
   }
 
-  return { user, verificationToken };
+  return { request, verificationToken };
+};
+
+export const findApprovedSignupRequestByVerificationToken = async (token) => {
+  return SignupRequest.findOne({
+    where: {
+      Status: 'APPROVED',
+      VerificationToken: token,
+      VerificationTokenExpiry: {
+        [Op.gt]: new Date(),
+      },
+    },
+  });
+};
+
+export const consumeSignupRequestVerificationToken = async (requestId) => {
+  await SignupRequest.update(
+    {
+      VerificationToken: null,
+      VerificationTokenExpiry: null,
+    },
+    {
+      where: { Id: requestId },
+    }
+  );
 };
 
 export const rejectSignupRequest = async (id, approverId) => {

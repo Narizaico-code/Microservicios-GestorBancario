@@ -54,6 +54,16 @@ export const SignupRequest = sequelize.define(
       allowNull: true,
       field: 'approved_at',
     },
+    VerificationToken: {
+      type: DataTypes.STRING(256),
+      allowNull: true,
+      field: 'verification_token',
+    },
+    VerificationTokenExpiry: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'verification_token_expiry',
+    },
   },
   {
     tableName: 'signup_requests',

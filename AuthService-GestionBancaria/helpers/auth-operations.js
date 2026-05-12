@@ -12,6 +12,10 @@ import {
   findUserByPasswordResetToken,
 } from './user-db.js';
 import {
+  consumeSignupRequestVerificationToken,
+  findApprovedSignupRequestByVerificationToken,
+} from './signup-request-db.js';
+import {
   generateEmailVerificationToken,
   generatePasswordResetToken,
 } from '../utils/auth-helpers.js';
@@ -213,24 +217,44 @@ export const verifyEmailHelper = async (token) => {
       throw new Error('Token inválido para verificación de email');
     }
 
-    // Find user by verification token (like .NET does)
-    const user = await findUserByEmailVerificationToken(token);
-    if (!user) {
-      throw new Error('Usuario no encontrado o token inválido');
-    }
+    // 1) Flujo clásico: usuario ya existe y solo falta verificar email.
+    let user = await findUserByEmailVerificationToken(token);
 
-    // Verificar que el token no haya expirado (ya se verifica en jwt.verify, pero por seguridad)
-    const userEmail = user.UserEmail;
-    if (!userEmail) {
-      throw new Error('Registro de email no encontrado');
-    }
+    if (user) {
+      const userEmail = user.UserEmail;
+      if (!userEmail) {
+        throw new Error('Registro de email no encontrado');
+      }
 
-    if (userEmail.EmailVerified) {
-      throw new Error('El email ya ha sido verificado');
-    }
+      if (userEmail.EmailVerified) {
+        throw new Error('El email ya ha sido verificado');
+      }
 
-    // Marcar el email como verificado
-    await markEmailAsVerified(user.Id);
+      await markEmailAsVerified(user.Id);
+    } else {
+      // 2) Flujo por solicitud aprobada: crear cuenta al verificar el email.
+      const signupRequest =
+        await findApprovedSignupRequestByVerificationToken(token);
+
+      if (!signupRequest) {
+        throw new Error('Usuario no encontrado o token inválido');
+      }
+
+      if (await checkUserExists(signupRequest.Email)) {
+        throw new Error('Ya existe un usuario con este email');
+      }
+
+      user = await createNewUser({
+        name: signupRequest.Name,
+        email: signupRequest.Email,
+        phone: signupRequest.Phone,
+        profilePicture: signupRequest.ProfilePicture,
+        hashedPassword: signupRequest.PasswordHash,
+      });
+
+      await markEmailAsVerified(user.Id);
+      await consumeSignupRequestVerificationToken(signupRequest.Id);
+    }
 
     // Enviar email de bienvenida en background (aligned with .NET)
     Promise.resolve()

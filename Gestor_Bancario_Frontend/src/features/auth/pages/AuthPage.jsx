@@ -10,12 +10,13 @@ export default function AuthPage() {
   <section className="order-2 flex flex-col justify-between bg-[#011743] px-5 py-5 text-white sm:px-6 sm:py-6 lg:order-1 lg:px-7 lg:py-7">
           
           <div>
+
             <h1 className="mt-4 max-w-xl text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-              Tu portal bancario seguro.
+              Tu portal bancario, diseñado para ti.
             </h1>
 
-            <p className="mt-4 max-w-xl text-sm leading-6 text-white/85 sm:text-base sm:leading-7 lg:mt-5 lg:text-xl">
-              Inicia sesión, crea una cuenta, recupera tu contraseña o reenvía tu email de verificación en un único lugar.
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/85 sm:text-base sm:leading-7 lg:mt-5 lg:text-lg">
+              Accede a tus productos, realiza transacciones y gestiona tu dinero de forma fácil, rápida y segura.
             </p>
           </div>
 
@@ -24,7 +25,7 @@ export default function AuthPage() {
             <img
               src={cerditoFondoAzul}
               alt="Ilustración de ahorro bancario"
-              className="w-full max-w-[170px] object-contain sm:max-w-[210px] lg:max-w-[240px]"
+              className="w-full max-w-[170px] rounded-full bg-white/10 object-contain p-3 sm:max-w-[210px] lg:max-w-[240px]"
             />
           </div>
 
@@ -33,28 +34,28 @@ export default function AuthPage() {
             <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
               <p className="text-lg font-bold sm:text-xl">Acceso seguro</p>
               <p className="mt-1 text-xs text-white/75 sm:text-sm">
-                Ingresa a tu banca en línea.
+                Protegemos tu información y tus transacciones.
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
               <p className="text-lg font-bold sm:text-xl">Apertura de cuenta</p>
               <p className="mt-1 text-xs text-white/75 sm:text-sm">
-                Crea tu perfil rápidamente.
+                Crea tu cuenta en minutos desde cualquier lugar.
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
               <p className="text-lg font-bold sm:text-xl">Recupera acceso</p>
               <p className="mt-1 text-xs text-white/75 sm:text-sm">
-                Restablece tu contraseña.
+                ¿Olvidaste tu contraseña? Recupérala fácil.
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/20 bg-white/[0.04] px-4 py-4">
               <p className="text-lg font-bold sm:text-xl">Verifica correo</p>
               <p className="mt-1 text-xs text-white/75 sm:text-sm">
-                Activa tu cuenta fácilmente.
+                Activa tu cuenta y empieza a operar de inmediato.
               </p>
             </div>
           </div>

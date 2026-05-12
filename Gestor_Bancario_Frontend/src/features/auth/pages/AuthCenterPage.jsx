@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 
 const authRoutes = [
   { to: '/auth/login', label: 'Iniciar sesión' },
-  { to: '/auth/register', label: 'Registro' },
   { to: '/auth/signup-request', label: 'Solicitud de acceso' },
   { to: '/auth/forgot-password', label: 'Olvidé mi contraseña' },
   { to: '/auth/reset-password', label: 'Restablecer contraseña' },

@@ -82,7 +82,6 @@ export default function LoginForm() {
       <div className="flex flex-col gap-2 text-sm">
         <Link to="/auth/forgot-password" className="text-cyan-700 hover:underline">Olvidé mi contraseña</Link>
         <Link to="/auth/resend-verification" className="text-cyan-700 hover:underline">Reenviar verificación</Link>
-        <Link to="/auth/register" className="text-cyan-700 hover:underline">Registro</Link>
         <Link to="/auth/signup-request" className="text-cyan-700 hover:underline">Solicitud de acceso</Link>
       </div>
     </form>

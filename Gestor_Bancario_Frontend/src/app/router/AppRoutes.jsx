@@ -45,6 +45,8 @@ export default function AppRoutes() {
             </Route>
             <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
               <Route path="/client" element={<ClientPage />} />
+              <Route path="/client/help" element={<Help />} />
+              <Route path="/client/ayuda" element={<Help />} />
               <Route path="/client/perfil" element={<ClientProfilePage />} />
               <Route path="/client/favoritos" element={<ClientFavoritesPage />} />
             </Route>

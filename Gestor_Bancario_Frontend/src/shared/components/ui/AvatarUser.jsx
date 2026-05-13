@@ -4,7 +4,8 @@ import { useAuthStore } from "../../../features/auth/store/authStore";
 import defaultAvatarImg from "../../../assets/DefaultAvatarUser.png"
 
 export const AvatarUser = () => {
-    const { user, logout } = useAuthStore();
+    const { session, logout } = useAuthStore();
+    const user = session?.user;
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -28,13 +29,17 @@ export const AvatarUser = () => {
         navigate("/", { replace: true });
     };
 
+    
+
     const avatarSrc = user?.profilePicture && user.profilePicture.trim() !== "" ? user.profilePicture : defaultAvatarImg;
     const userName = user?.name || user?.username || "Usuario";
 
     return (
+        console.log(user),
         <div
-            className="relative"
-            ref={dropdownRef}>
+            className="relative z-[9999]"
+            ref={dropdownRef}
+        >
             <img
                 src={avatarSrc}
                 alt={userName}
@@ -47,15 +52,18 @@ export const AvatarUser = () => {
             />
 
             {open && (
-                <div className="absolute right-0 mt-3 w-56 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-slate-950/50 backdrop-blur-xl animate-fadeIn z-50">
+                <div className="absolute right-0 top-14 z-[9999] w-56 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-slate-950/50 backdrop-blur-xl animate-fadeIn">
                     <div className="border-b border-white/10 px-4 py-3">
                         <p className="font-semibold text-white">{userName}</p>
                         <p className="truncate text-sm text-slate-300">{user?.email}</p>
                     </div>
                     <ul className="p-2 text-sm font-medium text-white">
-                        
+
                         <li>
-                            <Link to="/dashboard/perfil" className="block w-full rounded-xl px-3 py-2 transition hover:bg-white/10">
+                            <Link
+                                to={user?.role === 'ADMIN_ROLE' ? '/dashboard/perfil' : '/client/perfil'}
+                                className="block w-full rounded-xl px-3 py-2 transition hover:bg-white/10"
+                            >
                                 Perfil
                             </Link>
                         </li>

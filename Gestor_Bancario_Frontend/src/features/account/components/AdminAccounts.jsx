@@ -23,7 +23,6 @@ const resolveUser = (user) => {
     emailVerified: user?.isEmailVerified ?? emailRecord.EmailVerified ?? false,
   }
 }
-
 export const AdminAccounts = () => {
   const { session } = useAuthStore()
   const [accounts, setAccounts] = useState([])
@@ -60,6 +59,8 @@ export const AdminAccounts = () => {
     }
   }, [])
 
+
+
   useEffect(() => {
     loadAccounts()
   }, [loadAccounts])
@@ -69,6 +70,8 @@ export const AdminAccounts = () => {
       setUsersError("No hay sesion activa para cargar usuarios")
       return
     }
+
+
 
     try {
       setUsersLoading(true)
@@ -202,6 +205,8 @@ export const AdminAccounts = () => {
         "Fecha de Creación",
         "Última Actualización",
       ])
+
+      
 
       detailHeaderRow.eachCell((cell) => {
         cell.font = { bold: true, color: { argb: "FFFFFFFF" } }

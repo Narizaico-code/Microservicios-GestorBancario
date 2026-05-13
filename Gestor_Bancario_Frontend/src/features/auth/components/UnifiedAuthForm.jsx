@@ -17,8 +17,8 @@ const MODE = {
   WAITING_VERIFICATION: 'waiting_verification',
 }
 
-export default function UnifiedAuthForm() {
-  const [mode, setMode] = useState(MODE.LOGIN)
+export default function UnifiedAuthForm({ onRegistered, initialMode = MODE.LOGIN, onlyRegister = false } = {}) {
+  const [mode, setMode] = useState(initialMode)
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -113,6 +113,13 @@ export default function UnifiedAuthForm() {
         profilePicture: null,
       }))
       setMode(MODE.WAITING_VERIFICATION)
+      if (typeof onRegistered === 'function') {
+        try {
+          onRegistered()
+        } catch (err) {
+          // noop
+        }
+      }
     } catch (err) {
       setError(getReadableError(err, 'No se pudo crear la cuenta'))
     } finally {
@@ -604,6 +611,10 @@ export default function UnifiedAuthForm() {
     </div>
   </div>
 )
+  if (onlyRegister) {
+    return <div className="mx-auto w-full max-w-[540px]">{renderRegisterMode()}</div>
+  }
+
   return (
     <div className="mx-auto w-full max-w-[540px]">
       {mode === MODE.LOGIN && renderLoginMode()}

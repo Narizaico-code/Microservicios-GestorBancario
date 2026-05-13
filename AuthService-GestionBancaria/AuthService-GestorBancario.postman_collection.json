@@ -306,7 +306,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "//Solo se puede cambiar role del usuario por medio de la autorización del token del admins\r\n\r\n{\r\n\r\n    \"roleName\" : \"ADMIN_ROLE\"\r\n}   ",
+					"raw": "//Solo se puede cambiar role del usuario por medio de la autorización del token del admins\r\n//Roles permitidos: ADMIN_ROLE, EMPLOYEE_ROLE, USER_ROLE\r\n\r\n{\r\n\r\n    \"roleName\" : \"EMPLOYEE_ROLE\"\r\n}   ",
 					"options": {
 						"raw": {
 							"language": "json"

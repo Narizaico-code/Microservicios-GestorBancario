@@ -13,7 +13,9 @@
     { "key": "cuentaOrigenId", "value": "" },
     { "key": "cuentaDestinoId", "value": "" },
     { "key": "transactionId", "value": "" },
-    { "key": "favoriteId", "value": "" }
+    { "key": "favoriteId", "value": "" },
+    { "key": "serviceId", "value": "" },
+    { "key": "promotionId", "value": "" }
   ],
   "item": [
     {
@@ -590,6 +592,206 @@
                   "host": ["localhost"],
                   "port": "3006",
                   "path": ["gestionBancaria", "api", "v1", "favorites", "{{favoriteId}}", "transfer"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Servicios y Productos",
+          "item": [
+            {
+              "name": "Crear Servicio o Producto (Admin)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Corte de cabello premium\",\n    \"description\": \"Servicio exclusivo para clientes\",\n    \"category\": \"Belleza\",\n    \"type\": \"SERVICE\",\n    \"price\": 150,\n    \"active\": true,\n    \"imageUrl\": \"https://example.com/servicio.jpg\",\n    \"terms\": \"Sujeto a disponibilidad\",\n    \"validFrom\": \"2026-05-01T00:00:00.000Z\",\n    \"validTo\": \"2026-12-31T23:59:59.000Z\",\n    \"discount\": {\n        \"type\": \"PERCENT\",\n        \"value\": 10,\n        \"startAt\": \"2026-05-01T00:00:00.000Z\",\n        \"endAt\": \"2026-05-31T23:59:59.000Z\",\n        \"minAmount\": 100,\n        \"maxUses\": 50,\n        \"terms\": \"Valido en sucursales participantes\"\n    }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "services"]
+                }
+              }
+            },
+            {
+              "name": "Listar Servicios/Productos",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{userToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services?type=SERVICE&active=true&category=Belleza&q=corte",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "services"],
+                  "query": [
+                    { "key": "type", "value": "SERVICE" },
+                    { "key": "active", "value": "true" },
+                    { "key": "category", "value": "Belleza" },
+                    { "key": "q", "value": "corte" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Obtener Servicio/Producto por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{userToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services/{{serviceId}}",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "services", "{{serviceId}}"]
+                }
+              }
+            },
+            {
+              "name": "Actualizar Servicio/Producto (Admin)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"price\": 175,\n    \"active\": true,\n    \"discount\": {\n        \"type\": \"AMOUNT\",\n        \"value\": 20\n    }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services/{{serviceId}}",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "services", "{{serviceId}}"]
+                }
+              }
+            },
+            {
+              "name": "Eliminar Servicio/Producto (Admin)",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services/{{serviceId}}",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "services", "{{serviceId}}"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Promociones",
+          "item": [
+            {
+              "name": "Crear Promocion Global (Admin)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Semana del cliente\",\n    \"description\": \"Beneficios exclusivos para clientes\",\n    \"terms\": \"Aplican restricciones\",\n    \"active\": true,\n    \"validFrom\": \"2026-06-01T00:00:00.000Z\",\n    \"validTo\": \"2026-06-30T23:59:59.000Z\",\n    \"imageUrl\": \"https://example.com/promo.jpg\",\n    \"conditions\": {\n        \"segment\": \"VIP\"\n    }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions"]
+                }
+              }
+            },
+            {
+              "name": "Listar Promociones",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{userToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions?active=true&q=cliente",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions"],
+                  "query": [
+                    { "key": "active", "value": "true" },
+                    { "key": "q", "value": "cliente" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Obtener Promocion por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{userToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}"]
+                }
+              }
+            },
+            {
+              "name": "Actualizar Promocion (Admin)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"active\": false,\n    \"terms\": \"Promocion finalizada\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}"]
+                }
+              }
+            },
+            {
+              "name": "Eliminar Promocion (Admin)",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}"]
                 }
               }
             }

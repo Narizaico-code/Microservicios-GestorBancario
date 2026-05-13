@@ -1,13 +1,13 @@
 import { Role } from '../src/auth/role.model.js';
 import { User, UserProfile, UserEmail } from '../src/users/user.model.js';
 import { UserRole } from '../src/auth/role.model.js';
-import { USER_ROLE, ADMIN_ROLE } from './role-constants.js';
+import { USER_ROLE, ADMIN_ROLE, EMPLOYEE_ROLE } from './role-constants.js';
 import { generateUserId } from './uuid-generator.js';
 import { hashPassword } from '../utils/password-utils.js';
 
 export const seedData = async () => {
   // Crear roles si no existen
-  const roles = [ADMIN_ROLE, USER_ROLE];
+  const roles = [ADMIN_ROLE, EMPLOYEE_ROLE, USER_ROLE];
   for (const name of roles) {
     await Role.findOrCreate({
       where: { Name: name },
@@ -53,6 +53,50 @@ export const seedData = async () => {
         Id: userRoleId,
         UserId: userId,
         RoleId: adminRole.Id,
+      });
+    }
+  }
+
+  const employeeEmail = 'employee@gestor.local';
+  const existingEmployee = await User.findOne({
+    where: { Email: employeeEmail },
+  });
+  if (!existingEmployee) {
+    const employeeRole = await Role.findOne({ where: { Name: EMPLOYEE_ROLE } });
+    if (employeeRole) {
+      const userId = generateUserId();
+      const profileId = generateUserId();
+      const emailId = generateUserId();
+      const userRoleId = generateUserId();
+      const password = await hashPassword('EMPLOYEE');
+
+      await User.create({
+        Id: userId,
+        Name: 'Employee',
+        Email: employeeEmail,
+        Password: password,
+        IsActive: true,
+      });
+
+      await UserProfile.create({
+        Id: profileId,
+        UserId: userId,
+        Imagen: '',
+        Phone: '30000000',
+      });
+
+      await UserEmail.create({
+        Id: emailId,
+        UserId: userId,
+        EmailVerified: true,
+        EmailVerificationToken: null,
+        EmailVerificationTokenExpiry: null,
+      });
+
+      await UserRole.create({
+        Id: userRoleId,
+        UserId: userId,
+        RoleId: employeeRole.Id,
       });
     }
   }

@@ -257,7 +257,11 @@ const swaggerDefinition = {
                             schema: {
                                 type: "object",
                                 properties: {
-                                    roleName: { type: "string", example: "ADMIN_ROLE" }
+                                    roleName: {
+                                        type: "string",
+                                        enum: ["ADMIN_ROLE", "EMPLOYEE_ROLE", "USER_ROLE"],
+                                        example: "EMPLOYEE_ROLE"
+                                    }
                                 }
                             }
                         }

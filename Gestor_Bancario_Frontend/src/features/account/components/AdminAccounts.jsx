@@ -1,11 +1,31 @@
-import { useEffect, useMemo, useState } from "react"
-import { Search, Filter, Download, AlertCircle, Eye, ToggleRight, ToggleLeft } from "lucide-react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { Search, Filter, Download, AlertCircle, Eye, ToggleRight, ToggleLeft, PlusCircle } from "lucide-react"
 import { getAllAccountsAdmin, updateAccountStatus } from "../../../shared/api/account"
+import { getAllUsersWithAuthService } from "../../../shared/api/auth"
 import { Spinner } from "../../../shared/components/layout/Spinner.jsx"
 import { AccountModal } from "./AccountModal.jsx"
 import ExcelJS from "exceljs"
+import { AdminCreateAccountModal } from "./AdminCreateAccountModal.jsx"
+import { useAuthStore } from "../../auth/store/authStore.js"
+
+const resolveUser = (user) => {
+  const profile = user?.UserProfile || {}
+  const emailRecord = user?.UserEmail || {}
+  const roleRecord = user?.UserRoles?.[0]?.Role || {}
+
+  return {
+    id: user?.id || user?.Id || "",
+    name: user?.name || user?.Name || "Sin nombre",
+    email: user?.email || user?.Email || "sin-email",
+    phone: user?.phone || profile.phone || profile.Phone || "",
+    role: user?.role || roleRecord.Name || "USER_ROLE",
+    isActive: user?.isActive ?? user?.IsActive ?? false,
+    emailVerified: user?.isEmailVerified ?? emailRecord.EmailVerified ?? false,
+  }
+}
 
 export const AdminAccounts = () => {
+  const { session } = useAuthStore()
   const [accounts, setAccounts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -13,6 +33,10 @@ export const AdminAccounts = () => {
   const [actionId, setActionId] = useState("")
   const [selectedAccount, setSelectedAccount] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [users, setUsers] = useState([])
+  const [usersLoading, setUsersLoading] = useState(false)
+  const [usersError, setUsersError] = useState("")
 
   // Filters
   const [search, setSearch] = useState("")
@@ -22,22 +46,42 @@ export const AdminAccounts = () => {
   const [sortBy, setSortBy] = useState("newest")
 
   // Load accounts
-  useEffect(() => {
-    const loadAccounts = async () => {
-      try {
-        setLoading(true)
-        setError(null)
+  const loadAccounts = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
 
-        const response = await getAllAccountsAdmin(1, 100, 'all')
-        setAccounts(Array.isArray(response?.data?.data) ? response.data.data : [])
-      } catch (err) {
-        setError(err.message || "Error al cargar las cuentas")
-      } finally {
-        setLoading(false)
-      }
+      const response = await getAllAccountsAdmin(1, 100, "all")
+      setAccounts(Array.isArray(response?.data?.data) ? response.data.data : [])
+    } catch (err) {
+      setError(err.message || "Error al cargar las cuentas")
+    } finally {
+      setLoading(false)
     }
-    loadAccounts()
   }, [])
+
+  useEffect(() => {
+    loadAccounts()
+  }, [loadAccounts])
+
+  const loadUsers = useCallback(async () => {
+    if (!session?.token) {
+      setUsersError("No hay sesion activa para cargar usuarios")
+      return
+    }
+
+    try {
+      setUsersLoading(true)
+      setUsersError("")
+      const response = await getAllUsersWithAuthService(session.token)
+      const rawUsers = Array.isArray(response?.users) ? response.users : []
+      setUsers(rawUsers.map(resolveUser).filter((user) => user.id))
+    } catch (err) {
+      setUsersError(err.message || "No fue posible cargar los usuarios")
+    } finally {
+      setUsersLoading(false)
+    }
+  }, [session?.token])
 
   // Filter and sort
   const filteredAccounts = useMemo(() => {
@@ -90,6 +134,17 @@ export const AdminAccounts = () => {
   const handleViewDetails = (account) => {
     setSelectedAccount(account)
     setIsModalOpen(true)
+  }
+
+  const handleOpenCreate = () => {
+    setIsCreateOpen(true)
+    if (!users.length && !usersLoading) {
+      loadUsers()
+    }
+  }
+
+  const handleCloseCreate = () => {
+    setIsCreateOpen(false)
   }
 
   const handleToggleStatus = async (account) => {
@@ -233,6 +288,11 @@ export const AdminAccounts = () => {
     setSelectedAccount(null)
   }
 
+  const handleCreateSuccess = () => {
+    setIsCreateOpen(false)
+    loadAccounts()
+  }
+
   // Stats
   const totalAccounts = accounts.length
   const activeAccounts = accounts.filter(a => a.estado).length
@@ -288,13 +348,22 @@ export const AdminAccounts = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-slate-900">Gestión de Cuentas</h1>
-        <button
-          onClick={handleDownloadReport}
-          className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 transition"
-        >
-          <Download size={20} />
-          Descargar Reporte
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleOpenCreate}
+            className="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-800 transition"
+          >
+            <PlusCircle size={20} />
+            Crear cuenta
+          </button>
+          <button
+            onClick={handleDownloadReport}
+            className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 transition"
+          >
+            <Download size={20} />
+            Descargar Reporte
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -515,6 +584,16 @@ export const AdminAccounts = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         account={selectedAccount}
+      />
+
+      <AdminCreateAccountModal
+        isOpen={isCreateOpen}
+        onClose={handleCloseCreate}
+        onCreated={handleCreateSuccess}
+        users={users}
+        usersLoading={usersLoading}
+        usersError={usersError}
+        onReloadUsers={loadUsers}
       />
     </div>
   )

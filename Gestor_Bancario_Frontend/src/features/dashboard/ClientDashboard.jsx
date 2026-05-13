@@ -1,24 +1,14 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
-  Home,
-  CreditCard,
-  ArrowRightLeft,
-  BarChart3,
-  CircleHelp,
   User,
   Wallet,
   Plus,
-  Headphones,
-  Heart
+  Headphones
 } from 'lucide-react'
 
-import { AvatarUser } from '../../shared/components/ui/AvatarUser'
-
-import { clearSession } from '../../shared/utils/session-storage.js'
 import { getRecentAccounts } from '../../shared/api/bank.js'
 
-export default function ClientDashboard({ session, onLogout }) {
+export default function ClientDashboard({ session }) {
   const [accountsLoading, setAccountsLoading] = useState(true)
   const [accountsError, setAccountsError] = useState('')
   const [accounts, setAccounts] = useState([])
@@ -55,71 +45,9 @@ export default function ClientDashboard({ session, onLogout }) {
     }
   }, [session.token])
 
-  const handleLogout = () => {
-    clearSession()
-    onLogout()
-  }
-
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.22),_transparent_35%),linear-gradient(180deg,_#020617_0%,_#030b1c_100%)] text-white px-5 py-5">
-      <div className="max-w-7xl mx-auto">
-
-        {/* NAVBAR */}
-      <header className="relative z-50 rounded-[2rem] border border-white/10 bg-[#081028]/90 backdrop-blur-xl px-8 py-5 flex items-center justify-between shadow-2xl">
-          <div className="flex items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-black tracking-wide">
-                KINAL BANC
-              </h1>
-            </div>
-          </div>
-
-          <nav className="hidden lg:flex items-center gap-3">
-            <Link
-              to="/client"
-              className="flex items-center gap-2 rounded-2xl bg-blue-500/20 border border-blue-400/20 px-5 py-3 text-blue-300 transition"
-            >
-              <Home size={20} />
-              Inicio
-            </Link>
-
-            <Link
-              to="/client/accounts"
-              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
-            >
-              <CreditCard size={20} />
-              Mis cuentas
-            </Link>
-
-            <Link
-              to="/client/transfers"
-              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
-            >
-              <ArrowRightLeft size={20} />
-              Transferencias
-            </Link>
-
-            <Link
-              to="/client/favoritos"
-              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
-            >
-              <Heart size={20} />
-              Favoritos
-            </Link>
-
-            <Link
-              to="/client/ayuda"
-              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
-            >
-              <CircleHelp size={20} />
-              Ayuda
-            </Link>
-          </nav>
-
-          <AvatarUser />
-        </header>
-
-        {/* TOP CARD */}
+    <>
+      {/* TOP CARD */}
          {/*<section className="mt-8 rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl">
          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
            <div className="flex items-center gap-5">
@@ -290,7 +218,6 @@ export default function ClientDashboard({ session, onLogout }) {
             Contactar soporte
           </button>
         </section>
-      </div>
-    </main>
+    </>
   )
 }

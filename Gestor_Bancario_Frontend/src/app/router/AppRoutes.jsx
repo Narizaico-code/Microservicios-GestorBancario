@@ -8,7 +8,8 @@ import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage.jsx'
 import UnauthorizedPage from '../../features/auth/pages/UnauthorizedPage.jsx'
 import ProtectedRoute from './ProtectedRoute.jsx'
 import RoleGuard from './RoleGuard.jsx'
-import { DashboardPage  } from '../../app/layouts/DashboardPages.jsx'
+import { DashboardPage } from '../../app/layouts/DashboardPages.jsx'
+import { ClientLayout } from '../../app/layouts/ClientPages.jsx'
 import ClientPage from '../../pages/ClientPage.jsx'
 import HomePage from '../../pages/HomePage.jsx'
 import { AdminAccounts } from '../../features/account/components/AdminAccounts.jsx'
@@ -46,11 +47,13 @@ export default function AppRoutes() {
               </Route>
             </Route>
             <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
-              <Route path="/client" element={<ClientPage />} />
-              <Route path="/client/help" element={<Help />} />
-              <Route path="/client/ayuda" element={<Help />} />
-              <Route path="/client/perfil" element={<ClientProfilePage />} />
-              <Route path="/client/favoritos" element={<ClientFavoritesPage />} />
+              <Route path="/client" element={<ClientLayout />}>
+                <Route index element={<ClientPage />} />
+                <Route path="help" element={<Help />} />
+                <Route path="ayuda" element={<Help />} />
+                <Route path="perfil" element={<ClientProfilePage />} />
+                <Route path="favoritos" element={<ClientFavoritesPage />} />
+              </Route>
             </Route>
             <Route path="/home" element={<DashboardRedirect />} />
           </Route>

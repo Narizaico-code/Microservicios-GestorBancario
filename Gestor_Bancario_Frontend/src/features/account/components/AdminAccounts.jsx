@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Search, Filter, Download, AlertCircle, Eye, ToggleRight, ToggleLeft, PlusCircle } from "lucide-react"
-import { getAllAccountsAdmin, updateAccountStatus } from "../../../shared/api/account"
+import {
+  getAllAccountsAdmin,
+  updateAccountStatus,
+  getAccountCreationRequests,
+  approveAccountCreationRequest,
+  denyAccountCreationRequest,
+} from "../../../shared/api/account"
 import { getAllUsersWithAuthService } from "../../../shared/api/auth"
 import { Spinner } from "../../../shared/components/layout/Spinner.jsx"
 import { AccountModal } from "./AccountModal.jsx"
@@ -36,6 +42,10 @@ export const AdminAccounts = () => {
   const [users, setUsers] = useState([])
   const [usersLoading, setUsersLoading] = useState(false)
   const [usersError, setUsersError] = useState("")
+  const [accountRequests, setAccountRequests] = useState([])
+  const [accountRequestsLoading, setAccountRequestsLoading] = useState(false)
+  const [accountRequestsError, setAccountRequestsError] = useState("")
+  const [requestActionId, setRequestActionId] = useState("")
 
   // Filters
   const [search, setSearch] = useState("")
@@ -64,6 +74,23 @@ export const AdminAccounts = () => {
   useEffect(() => {
     loadAccounts()
   }, [loadAccounts])
+
+  const loadAccountRequests = useCallback(async () => {
+    try {
+      setAccountRequestsLoading(true)
+      setAccountRequestsError("")
+      const response = await getAccountCreationRequests("PENDING")
+      setAccountRequests(Array.isArray(response?.data?.data) ? response.data.data : [])
+    } catch (err) {
+      setAccountRequestsError(err.message || "No fue posible cargar las solicitudes de cuenta")
+    } finally {
+      setAccountRequestsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadAccountRequests()
+  }, [loadAccountRequests])
 
   const loadUsers = useCallback(async () => {
     if (!session?.token) {
@@ -168,6 +195,26 @@ export const AdminAccounts = () => {
       setActionError(err.message || "No fue posible actualizar la cuenta")
     } finally {
       setActionId("")
+    }
+  }
+
+  const handleRequestAction = async (requestId, action) => {
+    try {
+      setRequestActionId(requestId)
+      setActionError("")
+
+      if (action === "approve") {
+        await approveAccountCreationRequest(requestId)
+        await loadAccounts()
+      } else {
+        await denyAccountCreationRequest(requestId)
+      }
+
+      setAccountRequests((current) => current.filter((item) => item._id !== requestId))
+    } catch (err) {
+      setActionError(err.message || "No fue posible procesar la solicitud")
+    } finally {
+      setRequestActionId("")
     }
   }
 
@@ -391,6 +438,72 @@ export const AdminAccounts = () => {
               ? (totalBalance / totalAccounts).toLocaleString("es-GT", { maximumFractionDigits: 2 })
               : "0"}
           </p>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">Solicitudes de creacion de cuenta</h2>
+            <p className="text-sm text-slate-500">Solicitudes enviadas por clientes pendientes de revision</p>
+          </div>
+          <button
+            type="button"
+            onClick={loadAccountRequests}
+            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+            disabled={accountRequestsLoading}
+          >
+            {accountRequestsLoading ? "Cargando..." : "Recargar"}
+          </button>
+        </div>
+
+        {accountRequestsError ? (
+          <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            {accountRequestsError}
+          </div>
+        ) : null}
+
+        {!accountRequestsLoading && !accountRequests.length ? (
+          <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+            No hay solicitudes pendientes.
+          </div>
+        ) : null}
+
+        <div className="mt-4 space-y-3">
+          {accountRequests.map((request) => (
+            <div key={request._id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">Usuario: {request.userId}</p>
+                  <p className="text-xs text-slate-600">
+                    Tipo: {getAccountTypeLabel(request.tipoCuenta)} | Moneda: {request.moneda}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Solicitada: {formatDate(request.createdAt)}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleRequestAction(request._id, "approve")}
+                    disabled={requestActionId === request._id}
+                    className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-70"
+                  >
+                    {requestActionId === request._id ? "Procesando..." : "Aprobar"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRequestAction(request._id, "deny")}
+                    disabled={requestActionId === request._id}
+                    className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-70"
+                  >
+                    {requestActionId === request._id ? "Procesando..." : "Denegar"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

@@ -17,11 +17,17 @@ import { AvatarUser } from '../../shared/components/ui/AvatarUser'
 
 import { clearSession } from '../../shared/utils/session-storage.js'
 import { getRecentAccounts } from '../../shared/api/bank.js'
+import { requestAccountCreation } from '../../shared/api/account.js'
 
 export default function ClientDashboard({ session, onLogout }) {
   const [accountsLoading, setAccountsLoading] = useState(true)
   const [accountsError, setAccountsError] = useState('')
   const [accounts, setAccounts] = useState([])
+  const [showCreateRequestModal, setShowCreateRequestModal] = useState(false)
+  const [requestForm, setRequestForm] = useState({ tipoCuenta: 'AHORRO', moneda: 'GTQ' })
+  const [requestLoading, setRequestLoading] = useState(false)
+  const [requestError, setRequestError] = useState('')
+  const [requestSuccess, setRequestSuccess] = useState('')
 
   useEffect(() => {
     let isMounted = true
@@ -58,6 +64,37 @@ export default function ClientDashboard({ session, onLogout }) {
   const handleLogout = () => {
     clearSession()
     onLogout()
+  }
+
+  const handleRequestFormChange = (event) => {
+    const { name, value } = event.target
+    setRequestForm((current) => ({
+      ...current,
+      [name]: value,
+    }))
+  }
+
+  const handleOpenRequestModal = () => {
+    setRequestError('')
+    setRequestSuccess('')
+    setShowCreateRequestModal(true)
+  }
+
+  const handleSubmitAccountRequest = async (event) => {
+    event.preventDefault()
+    setRequestLoading(true)
+    setRequestError('')
+    setRequestSuccess('')
+
+    try {
+      const response = await requestAccountCreation(requestForm)
+      setRequestSuccess(response?.message || 'Solicitud enviada al administrador')
+      setShowCreateRequestModal(false)
+    } catch (error) {
+      setRequestError(error.message || 'No fue posible enviar la solicitud')
+    } finally {
+      setRequestLoading(false)
+    }
   }
 
   return (
@@ -203,6 +240,18 @@ export default function ClientDashboard({ session, onLogout }) {
               </h3>
             </div>
 
+            {requestSuccess ? (
+              <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-700">
+                {requestSuccess}
+              </div>
+            ) : null}
+
+            {requestError ? (
+              <div className="mt-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-rose-700">
+                {requestError}
+              </div>
+            ) : null}
+
             {accountsError && (
               <div className="mt-6 rounded-2xl bg-rose-50 border border-rose-200 p-4 text-rose-600">
                 {accountsError}
@@ -230,7 +279,11 @@ export default function ClientDashboard({ session, onLogout }) {
                   las verás aquí.
                 </p>
 
-                <button className="mt-8 h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 transition text-white font-semibold flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleOpenRequestModal}
+                  className="mt-8 h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 transition text-white font-semibold flex items-center gap-3"
+                >
                   <Plus size={20} />
                   Abrir mi primera cuenta
                 </button>
@@ -267,6 +320,71 @@ export default function ClientDashboard({ session, onLogout }) {
             </div>
           </article>
         </section>
+
+        {showCreateRequestModal ? (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+            <div className="w-full max-w-md rounded-3xl bg-white p-6 text-slate-900 shadow-2xl">
+              <h3 className="text-2xl font-black">Solicitar creacion de cuenta</h3>
+              <p className="mt-2 text-sm text-slate-500">
+                Solo selecciona tipo y moneda. El administrador aprobara o denegara tu solicitud.
+              </p>
+
+              <form className="mt-6 space-y-4" onSubmit={handleSubmitAccountRequest}>
+                <label className="block text-sm font-semibold text-slate-700">
+                  Tipo de cuenta
+                  <select
+                    name="tipoCuenta"
+                    value={requestForm.tipoCuenta}
+                    onChange={handleRequestFormChange}
+                    className="mt-2 w-full rounded-xl border border-slate-200 px-3 py-2"
+                  >
+                    <option value="AHORRO">Ahorro</option>
+                    <option value="MONETARIA">Monetaria</option>
+                  </select>
+                </label>
+
+                <label className="block text-sm font-semibold text-slate-700">
+                  Moneda
+                  <select
+                    name="moneda"
+                    value={requestForm.moneda}
+                    onChange={handleRequestFormChange}
+                    className="mt-2 w-full rounded-xl border border-slate-200 px-3 py-2"
+                  >
+                    <option value="GTQ">GTQ</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="MXN">MXN</option>
+                    <option value="COP">COP</option>
+                    <option value="JPY">JPY</option>
+                  </select>
+                </label>
+
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+                  El monto inicial sera 0 y el estado se definira automaticamente al aprobar.
+                </div>
+
+                <div className="flex justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateRequestModal(false)}
+                    className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600"
+                    disabled={requestLoading}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={requestLoading}
+                    className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-70"
+                  >
+                    {requestLoading ? 'Enviando...' : 'Enviar solicitud'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        ) : null}
 
         {/* SUPPORT */}
         <section className="mt-8 rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5">

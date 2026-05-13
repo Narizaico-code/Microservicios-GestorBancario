@@ -31,6 +31,31 @@ export const createSignupRequest = async ({
 
   const passwordHash = await hashPassword(password);
 
+  // If there is an existing signup request for this email that was rejected,
+  // allow reusing it by updating its data and marking it as PENDING again.
+  const existingAny = await SignupRequest.findOne({ where: { Email: normalizedEmail } });
+  if (existingAny) {
+    if (existingAny.Status === 'REJECTED') {
+      existingAny.Name = name
+      existingAny.PasswordHash = passwordHash
+      existingAny.Phone = phone
+      existingAny.ProfilePicture = profilePicture || null
+      existingAny.Status = 'PENDING'
+      existingAny.ApprovedBy = null
+      existingAny.ApprovedAt = null
+      existingAny.VerificationToken = null
+      existingAny.VerificationTokenExpiry = null
+      await existingAny.save()
+      return existingAny
+    }
+    // If it's APPROVED or other state, creation will fail due to unique constraint
+    // but we intentionally fall through to throw a friendly error instead of
+    // hitting a DB unique constraint exception.
+    const err = new Error('Ya existe una solicitud para este email')
+    err.status = 409
+    throw err
+  }
+
   const request = await SignupRequest.create({
     Name: name,
     Email: normalizedEmail,

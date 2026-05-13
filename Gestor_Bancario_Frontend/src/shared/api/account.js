@@ -30,3 +30,28 @@ export const createAccountAdmin = async ({ userId, tipoCuenta, moneda, saldo, es
         body: payload,
     });
 };
+
+export const requestAccountCreation = async ({ tipoCuenta, moneda }) => {
+    return await requestFormData(`${API_CONFIG.bankBaseUrl}/account/request-create`, {
+        method: "POST",
+        body: {
+            tipoCuenta,
+            moneda,
+        },
+    });
+};
+
+export const getAccountCreationRequests = async (status = "PENDING") => {
+    const statusQuery = status ? `?status=${encodeURIComponent(status)}` : "";
+    return await axiosAccount.get(`/account/requests${statusQuery}`);
+};
+
+export const approveAccountCreationRequest = async (requestId) => {
+    return await axiosAccount.patch(`/account/requests/${requestId}/approve`);
+};
+
+export const denyAccountCreationRequest = async (requestId, comment = "") => {
+    return await axiosAccount.patch(`/account/requests/${requestId}/deny`, {
+        comment,
+    });
+};

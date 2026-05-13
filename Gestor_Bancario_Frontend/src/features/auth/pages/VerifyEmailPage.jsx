@@ -23,7 +23,10 @@ export default function VerifyEmailPage() {
 
     try {
       await verifyEmailLinkWithAuthService(token)
-      navigate('/auth/login', { replace: true })
+      setSuccess('Correo verificado correctamente. Redirigiendo al login...')
+      setTimeout(() => {
+        navigate('/auth', { replace: true })
+      }, 2000)
     } catch (requestError) {
       setError(requestError.message || 'No fue posible verificar el correo')
     } finally {

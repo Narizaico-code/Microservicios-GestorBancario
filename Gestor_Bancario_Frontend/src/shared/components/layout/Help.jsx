@@ -10,7 +10,7 @@ import {
 
 export const Help = () => {
     return (
-        <div className="mx-auto max-w-5xl space-y-8">
+        <div className="mx-auto max-w-5xl space-y-8 p-8">
             {/* Header */}
             <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
                 <div className="flex items-center gap-3">

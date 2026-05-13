@@ -1,49 +1,53 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import DashboardHeader from './DashboardHeader.jsx'
+import {
+  Home,
+  CreditCard,
+  ArrowRightLeft,
+  BarChart3,
+  CircleHelp,
+  User,
+  Wallet,
+  Plus,
+  Headphones,
+  Heart
+} from 'lucide-react'
+
+import { AvatarUser } from '../../shared/components/ui/AvatarUser'
+
 import { clearSession } from '../../shared/utils/session-storage.js'
-import { getBankHealth, getRecentAccounts } from '../../shared/api/bank.js'
+import { getRecentAccounts } from '../../shared/api/bank.js'
 
 export default function ClientDashboard({ session, onLogout }) {
-  const [healthLoading, setHealthLoading] = useState(true)
   const [accountsLoading, setAccountsLoading] = useState(true)
-  const [healthError, setHealthError] = useState('')
   const [accountsError, setAccountsError] = useState('')
-  const [health, setHealth] = useState(null)
   const [accounts, setAccounts] = useState([])
 
   useEffect(() => {
     let isMounted = true
 
-    const loadHealth = async () => {
-      try {
-        const healthResponse = await getBankHealth()
-
-        if (!isMounted) return
-        setHealth(healthResponse)
-      } catch (requestError) {
-        if (!isMounted) return
-        setHealthError(requestError.message || 'No fue posible consultar la salud del backend')
-      } finally {
-        if (isMounted) setHealthLoading(false)
-      }
-    }
-
     const loadAccounts = async () => {
       try {
-        const accountsResponse = await getRecentAccounts(session.token)
+        const response = await getRecentAccounts(session.token)
 
         if (!isMounted) return
-        setAccounts(Array.isArray(accountsResponse?.data) ? accountsResponse.data : [])
-      } catch (requestError) {
+
+        setAccounts(
+          Array.isArray(response?.data)
+            ? response.data
+            : []
+        )
+      } catch (error) {
         if (!isMounted) return
-        setAccountsError(requestError.message || 'No fue posible cargar las cuentas')
+
+        setAccountsError(
+          error.message || 'No fue posible cargar las cuentas'
+        )
       } finally {
         if (isMounted) setAccountsLoading(false)
       }
     }
 
-    loadHealth()
     loadAccounts()
 
     return () => {
@@ -57,86 +61,234 @@ export default function ClientDashboard({ session, onLogout }) {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_38%),linear-gradient(180deg,_#020617_0%,_#111827_100%)] text-slate-100">
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-8 px-4 py-8 lg:px-8">
-        <DashboardHeader
-          title="Panel del cliente"
-          subtitle="Vista personal con tus datos y cuentas"
-          userRole={session.user?.role || 'USER_ROLE'}
-          onLogout={handleLogout}
-        />
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.22),_transparent_35%),linear-gradient(180deg,_#020617_0%,_#030b1c_100%)] text-white px-5 py-5">
+      <div className="max-w-7xl mx-auto">
 
-        <div className="flex flex-wrap justify-end gap-3">
-          <Link
-            to="/client/perfil"
-            className="rounded-full border border-cyan-200/40 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
-          >
-            Ver mi perfil
-          </Link>
-          <Link
-            to="/client/favoritos"
-            className="rounded-full border border-cyan-200/40 bg-white/10 px-5 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
-          >
-            Ver favoritos
-          </Link>
-        </div>
+        {/* NAVBAR */}
+      <header className="relative z-50 rounded-[2rem] border border-white/10 bg-[#081028]/90 backdrop-blur-xl px-8 py-5 flex items-center justify-between shadow-2xl">
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-black tracking-wide">
+                KINAL BANC
+              </h1>
+            </div>
+          </div>
 
-        <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <article className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-950/20 backdrop-blur-xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Bienvenido</p>
-            <h2 className="mt-4 text-4xl font-bold tracking-tight text-white">
-              Gestiona tus cuentas y finanzas de forma simple.
-            </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
-              Aquí puedes revisar los movimientos de tus cuentas, verificar tu saldo y
-              acceder a tus configuraciones principales.
-            </p>
+          <nav className="hidden lg:flex items-center gap-3">
+            <Link
+              to="/client"
+              className="flex items-center gap-2 rounded-2xl bg-blue-500/20 border border-blue-400/20 px-5 py-3 text-blue-300 transition"
+            >
+              <Home size={20} />
+              Inicio
+            </Link>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-slate-400">Usuario</p>
-                <p className="mt-2 text-lg font-semibold text-white">{session.user?.name || 'Cliente'}</p>
+            <Link
+              to="/client/accounts"
+              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
+            >
+              <CreditCard size={20} />
+              Mis cuentas
+            </Link>
+
+            <Link
+              to="/client/transfers"
+              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
+            >
+              <ArrowRightLeft size={20} />
+              Transferencias
+            </Link>
+
+            <Link
+              to="/client/favoritos"
+              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
+            >
+              <Heart size={20} />
+              Favoritos
+            </Link>
+
+            <Link
+              to="/client/ayuda"
+              className="flex items-center gap-2 rounded-2xl px-5 py-3 hover:bg-white/5 transition"
+            >
+              <CircleHelp size={20} />
+              Ayuda
+            </Link>
+          </nav>
+
+          <AvatarUser />
+        </header>
+
+        {/* TOP CARD */}
+         {/*<section className="mt-8 rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl">
+         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+           <div className="flex items-center gap-5">
+              
+
+              <div>
+                <h2 className="text-5xl font-black">
+                  ¡Hola, {session.user?.name || 'Cliente'}!
+                </h2>
+
+                <p className="mt-2 text-slate-300 text-lg">
+                  Bienvenido a tu panel personal
+                </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-slate-400">Cuentas activas</p>
-                <p className="mt-2 text-lg font-semibold text-white">{accounts.length}</p>
+            </div>
+          </div>
+        </section>*/ }
+
+        {/* MAIN GRID */}
+        <section className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8 mt-8">
+
+          {/* HERO */}
+          <article className="relative overflow-hidden rounded-[2rem] border border-blue-500/10 bg-[#09152f] p-10 shadow-2xl">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/20 blur-3xl" />
+
+            <div className="relative z-10">
+              <p className="uppercase tracking-[0.3em] text-cyan-300 font-semibold text-sm">
+                !Bienvenido {session.user?.name || 'Cliente'}!
+              </p>
+
+              <h2 className="mt-5 text-6xl font-black leading-tight max-w-3xl">
+                Gestiona tus cuentas y finanzas de forma
+                <span className="text-cyan-400">
+                  {' '}simple y segura.
+                </span>
+              </h2>
+
+              <p className="mt-6 text-slate-300 text-lg leading-8 max-w-2xl">
+                Aquí puedes revisar los movimientos de tus cuentas,
+                verificar tu saldo y acceder a tus configuraciones
+                principales de manera rápida.
+              </p> 
+
+              <div className="grid sm:grid-cols-2 gap-5 mt-10">
+                <div className="rounded-[1.7rem] bg-white/5 border border-white/10 backdrop-blur-xl p-6">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-500/15 flex items-center justify-center">
+                    <User className="text-blue-300" />
+                  </div>
+
+                  <p className="mt-5 text-slate-400">
+                    Usuario
+                  </p>
+
+                  <h3 className="mt-1 text-3xl font-black">
+                    {session.user?.name || 'Cliente'}
+                  </h3>
+                </div>
+
+                <div className="rounded-[1.7rem] bg-white/5 border border-white/10 backdrop-blur-xl p-6">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/15 flex items-center justify-center">
+                    <Wallet className="text-emerald-300" />
+                  </div>
+
+                  <p className="mt-5 text-slate-400">
+                    Cuentas activas
+                  </p>
+
+                  <h3 className="mt-1 text-3xl font-black">
+                    {accounts.length}
+                  </h3>
+                </div>
               </div>
             </div>
           </article>
 
-          <article className="rounded-[2rem] border border-white/10 bg-white/95 p-6 text-slate-900 shadow-2xl shadow-slate-950/30 backdrop-blur-xl">
-            <h3 className="text-2xl font-bold text-slate-950">Mis cuentas recientes</h3>
+          {/* ACCOUNTS */}
+          <article className="rounded-[2rem] bg-white p-10 text-slate-900 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h3 className="text-4xl font-black">
+                Mis cuentas recientes
+              </h3>
+            </div>
 
-            <div className="mt-6 space-y-3">
-              {accountsError ? (
-                <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                  {accountsError}
+            {accountsError && (
+              <div className="mt-6 rounded-2xl bg-rose-50 border border-rose-200 p-4 text-rose-600">
+                {accountsError}
+              </div>
+            )}
+
+            {accountsLoading && (
+              <p className="mt-8 text-slate-500">
+                Cargando cuentas...
+              </p>
+            )}
+
+            {!accountsLoading && accounts.length === 0 && (
+              <div className="flex flex-col items-center justify-center text-center py-20">
+                <div className="w-40 h-40 rounded-full bg-blue-50 flex items-center justify-center text-7xl">
+                  👛
                 </div>
-              ) : null}
-              {accountsLoading ? (
-                <p className="text-sm text-slate-500">Cargando cuentas...</p>
-              ) : null}
+
+                <h4 className="mt-8 text-4xl font-black">
+                  Aún no tienes cuentas
+                </h4>
+
+                <p className="mt-4 text-slate-500 max-w-md text-lg">
+                  Cuando tengas cuentas registradas,
+                  las verás aquí.
+                </p>
+
+                <button className="mt-8 h-14 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 transition text-white font-semibold flex items-center gap-3">
+                  <Plus size={20} />
+                  Abrir mi primera cuenta
+                </button>
+              </div>
+            )}
+
+            <div className="space-y-5 mt-8">
               {accounts.slice(0, 5).map((account) => (
-                <div key={account._id || account.id || account.numeroCuenta} className="rounded-2xl bg-slate-50 px-4 py-3 border border-slate-100 flex items-center justify-between">
+                <div
+                  key={account._id || account.id}
+                  className="rounded-[1.7rem] border border-slate-200 p-6 flex items-center justify-between hover:shadow-lg transition"
+                >
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">Cuenta {account.tipoCuenta ? account.tipoCuenta.toLowerCase() : ''}</p>
-                    <p className="text-xs text-slate-500 font-mono mt-0.5">{account.numeroCuenta || 'Sin numero'}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-slate-900">
-                      {account.moneda || 'GTQ'} {account.saldo}
+                    <p className="text-slate-500">
+                      Cuenta {account.tipoCuenta}
                     </p>
-                    <p className="text-xs text-emerald-600 font-medium">Activa</p>
+
+                    <h4 className="mt-2 text-xl font-bold font-mono">
+                      {account.numeroCuenta}
+                    </h4>
+                  </div>
+
+                  <div className="text-right">
+                    <h4 className="text-2xl font-black">
+                      {account.moneda || 'GTQ'} {account.saldo}
+                    </h4>
+
+                    <p className="text-emerald-500 font-semibold mt-1">
+                      Activa
+                    </p>
                   </div>
                 </div>
               ))}
-              {!accountsLoading && accounts.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500 text-center">
-                  Aún no tienes cuentas registradas o activas.
-                </div>
-              ) : null}
             </div>
           </article>
+        </section>
+
+        {/* SUPPORT */}
+        <section className="mt-8 rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+              <Headphones className="text-emerald-400" />
+            </div>
+
+            <div>
+              <h3 className="text-3xl font-black">
+                ¿Necesitas ayuda?
+              </h3>
+
+              <p className="mt-2 text-slate-400 text-lg">
+                Nuestro equipo está disponible para ayudarte.
+              </p>
+            </div>
+          </div>
+
+          <button className="h-14 px-8 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 hover:bg-emerald-500/20 transition text-emerald-400 font-semibold">
+            Contactar soporte
+          </button>
         </section>
       </div>
     </main>

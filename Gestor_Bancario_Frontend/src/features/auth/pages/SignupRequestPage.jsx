@@ -1,11 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { submitSignupRequestWithAuthService } from '../../../shared/api/auth.js'
 
 const initialForm = { name: '', email: '', password: '', phone: '', profilePicture: null }
 
 export default function SignupRequestPage() {
+  const navigate = useNavigate()
   const [form, setForm] = useState(initialForm)
   const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
 
   const handleChange = (event) => {
     const { name, value, files, type } = event.target
@@ -14,9 +18,26 @@ export default function SignupRequestPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const result = await submitSignupRequestWithAuthService(form)
-    setMessage(result.message || 'Solicitud enviada')
+    setError('')
+    try {
+      const result = await submitSignupRequestWithAuthService(form)
+      setMessage(result.message || 'Cuenta solicitada correctamente, esperando APROBACION de Administrador')
+      setSuccess(true)
+    } catch (requestError) {
+      setError(requestError.message || 'No se pudo enviar la solicitud')
+      setMessage('')
+    }
   }
+
+  useEffect(() => {
+    if (!success) return
+
+    const timer = setTimeout(() => {
+      navigate('/auth', { replace: true })
+    }, 2500)
+
+    return () => clearTimeout(timer)
+  }, [success, navigate])
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
@@ -31,6 +52,7 @@ export default function SignupRequestPage() {
           <input name="profilePicture" type="file" accept="image/*" onChange={handleChange} className="w-full rounded-2xl border px-4 py-3 text-slate-300" />
         </div>
         {message ? <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</div> : null}
+        {error ? <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div> : null}
         <button className="mt-6 w-full rounded-2xl bg-white px-4 py-3 text-slate-950">Enviar solicitud</button>
       </form>
     </main>

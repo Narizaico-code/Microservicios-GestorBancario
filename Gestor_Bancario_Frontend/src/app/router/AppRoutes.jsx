@@ -10,6 +10,7 @@ import ProtectedRoute from './ProtectedRoute.jsx'
 import RoleGuard from './RoleGuard.jsx'
 import { DashboardPage  } from '../../app/layouts/DashboardPages.jsx'
 import ClientPage from '../../pages/ClientPage.jsx'
+import HomePage from '../../pages/HomePage.jsx'
 import { AdminAccounts } from '../../features/account/components/AdminAccounts.jsx'
 import { Help } from '../../shared/components/layout/Help.jsx'
 import ProfilePage from '../../features/profile/pages/ProfilePage.jsx'
@@ -25,7 +26,8 @@ function DashboardRedirect() {
 export default function AppRoutes() {
   return (
     <Routes>
-        <Route path="/auth" element={<AuthPage />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/auth" element={<AuthPage />} />
       <Route path="/auth/register" element={<Navigate to="/auth/signup-request" replace />} />
         <Route path="/auth/signup-request" element={<SignupRequestPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
@@ -45,13 +47,15 @@ export default function AppRoutes() {
             </Route>
             <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
               <Route path="/client" element={<ClientPage />} />
+              <Route path="/client/help" element={<Help />} />
+              <Route path="/client/ayuda" element={<Help />} />
               <Route path="/client/perfil" element={<ClientProfilePage />} />
               <Route path="/client/favoritos" element={<ClientFavoritesPage />} />
             </Route>
             <Route path="/home" element={<DashboardRedirect />} />
           </Route>
 
-        <Route path="*" element={<Navigate to="/auth" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
   )
 }

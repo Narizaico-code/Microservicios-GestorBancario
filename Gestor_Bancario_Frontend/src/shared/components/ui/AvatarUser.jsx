@@ -4,17 +4,14 @@ import { useAuthStore } from "../../../features/auth/store/authStore";
 import defaultAvatarImg from "../../../assets/DefaultAvatarUser.png"
 
 export const AvatarUser = () => {
-    const { user, logout } = useAuthStore();
+    const { session, logout } = useAuthStore();
+    const user = session?.user;
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
 
     const navigate = useNavigate();
 
-    const toogleMenu = () => setOpen((prev) => !prev);
-
-    useEffect(() => {
-    console.log("USER:", user);
-}, [user]);
+    const toogleMenu = () => setOpen((prev) => !prev)
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -32,15 +29,21 @@ export const AvatarUser = () => {
         navigate("/", { replace: true });
     };
 
+    
+
     const avatarSrc = user?.profilePicture && user.profilePicture.trim() !== "" ? user.profilePicture : defaultAvatarImg;
+    const userName = user?.name || user?.username || "Usuario";
 
     return (
+        console.log(user),
         <div
-            className="relative"
-            ref={dropdownRef}>
-            <img src={avatarSrc}
-                alt={user?.username}
-                className="w-13 h-13 rounded-full object-cover border cursor-pointer"
+            className="relative z-[9999]"
+            ref={dropdownRef}
+        >
+            <img
+                src={avatarSrc}
+                alt={userName}
+                className="h-12 w-12 cursor-pointer rounded-full object-cover ring-2 ring-white/25 transition-opacity hover:opacity-80"
                 onClick={toogleMenu}
                 onError={(e) => {
                     e.target.onerror = null;
@@ -49,15 +52,18 @@ export const AvatarUser = () => {
             />
 
             {open && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg animate-fadeIn z-50">
-                    <div className="px-4 py-3 border-b">
-                        <p className="font-semibold text-gray-800"> {user?.username} </p>
-                        <p className="text-sm text-gray-500 truncate">{user?.email}</p>
+                <div className="absolute right-0 top-14 z-[9999] w-56 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/95 shadow-2xl shadow-slate-950/50 backdrop-blur-xl animate-fadeIn">
+                    <div className="border-b border-white/10 px-4 py-3">
+                        <p className="font-semibold text-white">{userName}</p>
+                        <p className="truncate text-sm text-slate-300">{user?.email}</p>
                     </div>
-                    <ul className="p-2 text-sm text-gray-700 font-medium">
-                        
+                    <ul className="p-2 text-sm font-medium text-white">
+
                         <li>
-                            <Link to="/dashboard/perfil" className="block w-full p-2 rounded-md hover:bg-gray-100">
+                            <Link
+                                to={user?.role === 'ADMIN_ROLE' ? '/dashboard/perfil' : '/client/perfil'}
+                                className="block w-full rounded-xl px-3 py-2 transition hover:bg-white/10"
+                            >
                                 Perfil
                             </Link>
                         </li>
@@ -65,7 +71,7 @@ export const AvatarUser = () => {
                         <li>
                             <button
                                 onClick={handleLogout}
-                                className="block w-full text-left p-2 rounded-md hover:bg-red-100 text-red-600"
+                                className="block w-full rounded-xl px-3 py-2 text-left text-rose-300 transition hover:bg-rose-500/10 hover:text-rose-200"
                             >
                                 Cerrar sesión
                             </button>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { forgotPasswordWithAuthService } from '../../../shared/api/auth.js'
 
-export default function ForgotPasswordForm() {
+export const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 

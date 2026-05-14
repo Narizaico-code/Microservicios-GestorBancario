@@ -3,7 +3,7 @@ import { submitSignupRequestWithAuthService } from '../../../shared/api/auth.js'
 
 const initialForm = { name: '', email: '', password: '', phone: '', profilePicture: null }
 
-export default function SignupRequestPage() {
+export const SignupRequestPage = () => {
   const [form, setForm] = useState(initialForm)
   const [message, setMessage] = useState('')
 

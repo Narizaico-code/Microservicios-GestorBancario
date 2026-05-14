@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getAccounts } from "../../../shared/api/account";
+import { getMyAccounts } from "../../../shared/api/account";
 
 export const useAccountStore = create((set) => ({
     accounts: [],
@@ -9,7 +9,7 @@ export const useAccountStore = create((set) => ({
     getAccounts: async () => {
         try {
             set({ loading: true, error: null });
-            const response = await getAccounts();
+            const response = await getMyAccounts();
 
             set({ accounts: response.data?.data || [], loading: false });
         } catch (error) {

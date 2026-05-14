@@ -5,7 +5,7 @@ import AuthShell from '../../app/layouts/AuthShell.jsx'
 const fieldClassName =
   'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none ring-0 transition focus:border-cyan-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(6,182,212,0.12)]'
 
-export default function AuthActionPage({
+export const AuthActionPage = ({
   eyebrow,
   title,
   subtitle,
@@ -17,7 +17,7 @@ export default function AuthActionPage({
   onSubmit,
   links = [],
   note,
-}) {
+}) => {
   const [form, setForm] = useState(initialValues)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')

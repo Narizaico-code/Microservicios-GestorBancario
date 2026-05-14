@@ -1,6 +1,6 @@
 const SESSION_KEY = 'gestor-bancario-session'
 
-export function loadSession() {
+export const loadSession = () => {
   if (typeof window === 'undefined') {
     return null
   }
@@ -18,10 +18,10 @@ export function loadSession() {
   }
 }
 
-export function saveSession(session) {
+export const saveSession = (session) => {
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(session))
 }
 
-export function clearSession() {
+export const clearSession = () => {
   window.localStorage.removeItem(SESSION_KEY)
 }

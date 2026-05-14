@@ -4,6 +4,10 @@ export const getAccounts = async () => {
     return await axiosAccount.get("/account/get");
 };
 
+export const getMyAccounts = async (page = 1, limit = 10) => {
+    return await axiosAccount.get(`/account/get?misCuentas=true&page=${page}&limit=${limit}`);
+};
+
 export const getAllAccountsAdmin = async (page = 1, limit = 100, estado = 'all') => {
     const estadoQuery = estado ? `&estado=${encodeURIComponent(estado)}` : '';
     return await axiosAccount.get(`/account/get?page=${page}&limit=${limit}${estadoQuery}`);

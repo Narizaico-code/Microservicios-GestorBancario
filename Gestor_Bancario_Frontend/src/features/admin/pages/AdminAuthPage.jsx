@@ -11,7 +11,7 @@ import {
   Users,
 } from 'lucide-react'
 import { useAuthStore } from '../../auth/store/authStore.js'
-import UnifiedAuthForm from '../../auth/components/UnifiedAuthForm.jsx'
+import { UnifiedAuthForm } from '../../auth/components/UnifiedAuthForm.jsx'
 import {
   approveSignupRequestWithAuthService,
   rejectSignupRequestWithAuthService,
@@ -55,7 +55,7 @@ const resolveUser = (user) => {
   }
 }
 
-export default function AdminAuthPage() {
+export const AdminAuthPage = () => {
   const { session } = useAuthStore()
   const [registerForm, setRegisterForm] = useState(initialRegisterForm)
   const [registerLoading, setRegisterLoading] = useState(false)

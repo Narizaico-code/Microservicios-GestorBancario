@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { resendVerificationWithAuthService } from '../../../shared/api/auth.js'
 
-export default function ResendVerificationForm() {
+export const ResendVerificationForm = () => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 

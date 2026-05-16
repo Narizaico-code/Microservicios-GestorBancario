@@ -54,12 +54,12 @@ const FEATURE_ICON = {
 }
 
 const FEATURES = [
-  { iconKey: 'bank',   title: 'Cuentas digitales',      desc: 'Abre y gestiona múltiples cuentas en segundos desde cualquier dispositivo.' },
-  { iconKey: 'bolt',   title: 'Transferencias rápidas',  desc: 'Envía dinero al instante con total seguridad y sin comisiones ocultas.' },
-  { iconKey: 'lock',   title: 'Seguridad avanzada',      desc: 'Encriptación de nivel bancario y autenticación en dos pasos.' },
-  { iconKey: 'chart',  title: 'Control total',           desc: 'Visualiza tus movimientos y saldos en tiempo real.' },
-  { iconKey: 'globe',  title: 'Multi-divisa',            desc: 'Opera en Quetzales y Dólares desde una sola plataforma.' },
-  { iconKey: 'device', title: 'Siempre disponible',      desc: 'Accede desde cualquier lugar, en cualquier momento.' },
+  { iconKey: 'bank', title: 'Cuentas digitales', desc: 'Abre y gestiona múltiples cuentas en segundos desde cualquier dispositivo.' },
+  { iconKey: 'bolt', title: 'Transferencias rápidas', desc: 'Envía dinero al instante con total seguridad y sin comisiones ocultas.' },
+  { iconKey: 'lock', title: 'Seguridad avanzada', desc: 'Encriptación de nivel bancario y autenticación en dos pasos.' },
+  { iconKey: 'chart', title: 'Control total', desc: 'Visualiza tus movimientos y saldos en tiempo real.' },
+  { iconKey: 'globe', title: 'Multi-divisa', desc: 'Opera en Quetzales y Dólares desde una sola plataforma.' },
+  { iconKey: 'device', title: 'Siempre disponible', desc: 'Accede desde cualquier lugar, en cualquier momento.' },
 ]
 
 const SERVICES = [
@@ -124,7 +124,7 @@ export default function HomePage() {
               className="rounded-xl border border-white/15 px-4 py-2 text-sm font-bold text-white/80 transition hover:border-white/40 hover:text-white">
               Iniciar sesión
             </Link>
-            <Link to="/auth/signup-request"
+            <Link to="/auth" state={{ mode: 'register' }}
               className="rounded-xl bg-white px-4 py-2 text-sm font-bold text-black transition hover:opacity-90">
               Crear cuenta
             </Link>
@@ -149,7 +149,10 @@ export default function HomePage() {
 
             <h1 className="text-5xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl lg:text-[64px]">
               Tu dinero,{' '}
-              <span className="text-white/35">bajo control</span>{' '}
+              <span
+                className="text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.35) 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text' }}
+              >bajo control</span>{' '}
               total.
             </h1>
 
@@ -273,6 +276,25 @@ export default function HomePage() {
       </section>
 
 
+      {/* ── MARQUEE TICKER ── */}
+      <div className="relative overflow-hidden border-y border-white/7 bg-[#0d0d0d] py-3">
+        {/* Fade edges */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-[#0d0d0d] to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-[#0d0d0d] to-transparent" />
+
+        <div className="flex">
+          {/* Track 1 */}
+          <div className="animate-marquee flex shrink-0 items-center gap-0">
+            {['Banca digital', 'Transferencias', 'Seguridad', 'Cuentas de ahorro', 'Multi-divisa', 'Pago rápido', 'Soporte 24/7', 'Inversión', 'Encriptación SSL', 'Banca digital', 'Transferencias', 'Seguridad', 'Cuentas de ahorro', 'Multi-divisa', 'Pago rápido', 'Soporte 24/7', 'Inversión', 'Encriptación SSL'].map((item, i) => (
+              <span key={i} className="flex items-center gap-5 px-5">
+                <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/30 whitespace-nowrap">{item}</span>
+                <span className="h-1 w-1 rounded-full bg-white/15 shrink-0" />
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ── FEATURES ── */}
       <section className="border-t border-white/7 px-5 py-20">
         <div className="mx-auto max-w-7xl">
@@ -324,7 +346,7 @@ export default function HomePage() {
                 <div className="p-6">
                   <h3 className="mb-2 text-lg font-bold text-white">{title}</h3>
                   <p className="text-sm leading-6 text-white/45">{desc}</p>
-                  <Link to="/auth/signup-request"
+                  <Link to="/auth" state={{ mode: 'register' }}
                     className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-bold text-white/60 transition hover:text-white">
                     Solicitar cuenta
                     <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -349,7 +371,7 @@ export default function HomePage() {
               Únete a miles de clientes que ya gestionan su dinero de forma más inteligente y segura.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link to="/auth/signup-request"
+              <Link to="/auth" state={{ mode: 'register' }}
                 className="inline-flex h-12 items-center gap-2 rounded-xl bg-white px-8 text-base font-bold text-black transition hover:opacity-90">
                 Crear cuenta gratis
               </Link>
@@ -451,7 +473,7 @@ export default function HomePage() {
                 <p className="text-sm font-black tracking-widest text-white">KINAL BANC</p>
               </div>
             </div>
-            <p className="text-sm text-white/30">2026 © Todos los derechos reservados · Corporación Bi.</p>
+            <p className="text-sm text-white/30">2026 © Todos los derechos reservados · Kinal Banc.</p>
             <div className="flex gap-2">
               {['FB', 'IG', 'YT'].map((s) => (
                 <a key={s} href="#"

@@ -63,6 +63,7 @@ const Badge = ({ icon, label, className = '' }) => (
 export const AuthPage = () => {
   const { state } = useLocation()
   const infoMessage = state?.infoMessage
+  const initialMode  = state?.mode ?? 'login'
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
@@ -251,7 +252,7 @@ export const AuthPage = () => {
                 <span className="font-medium">{infoMessage}</span>
               </div>
             )}
-            <UnifiedAuthForm />
+            <UnifiedAuthForm initialMode={initialMode} />
           </div>
         </section>
 

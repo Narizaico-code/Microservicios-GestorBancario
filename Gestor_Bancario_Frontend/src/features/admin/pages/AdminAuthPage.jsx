@@ -11,8 +11,10 @@ import {
   Users,
 } from 'lucide-react'
 import { useAuthStore } from '../../auth/store/authStore.js'
+import { UnifiedAuthForm } from '../../auth/components/UnifiedAuthForm.jsx'
 import {
   approveSignupRequestWithAuthService,
+  rejectSignupRequestWithAuthService,
   getAllUsersWithAuthService,
   getProfileByIdWithAuthService,
   getSignupRequestsWithAuthService,
@@ -53,7 +55,7 @@ const resolveUser = (user) => {
   }
 }
 
-export default function AdminAuthPage() {
+export const AdminAuthPage = () => {
   const { session } = useAuthStore()
   const [registerForm, setRegisterForm] = useState(initialRegisterForm)
   const [registerLoading, setRegisterLoading] = useState(false)
@@ -75,6 +77,8 @@ export default function AdminAuthPage() {
   const [requestsError, setRequestsError] = useState('')
   const [requestsActionError, setRequestsActionError] = useState('')
   const [requestsActionId, setRequestsActionId] = useState('')
+
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -200,6 +204,8 @@ export default function AdminAuthPage() {
       setRequestsActionError('')
       if (action === 'approve') {
         await approveSignupRequestWithAuthService(session?.token, requestId)
+      } else if (action === 'reject') {
+        await rejectSignupRequestWithAuthService(session?.token, requestId)
       }
 
       setRequests((current) => current.filter((item) => item.Id !== requestId))
@@ -207,6 +213,32 @@ export default function AdminAuthPage() {
       setRequestsActionError(error.message || 'No fue posible procesar la solicitud')
     } finally {
       setRequestsActionId('')
+    }
+  }
+
+  const refreshUsers = async () => {
+    try {
+      setUsersLoading(true)
+      setUsersError('')
+      const response = await getAllUsersWithAuthService(session?.token)
+      setUsers(Array.isArray(response?.users) ? response.users : [])
+    } catch (error) {
+      setUsersError(error.message || 'No fue posible cargar los usuarios')
+    } finally {
+      setUsersLoading(false)
+    }
+  }
+
+  const refreshRequests = async () => {
+    try {
+      setRequestsLoading(true)
+      setRequestsError('')
+      const response = await getSignupRequestsWithAuthService(session?.token)
+      setRequests(Array.isArray(response?.data) ? response.data : [])
+    } catch (error) {
+      setRequestsError(error.message || 'No fue posible cargar las solicitudes')
+    } finally {
+      setRequestsLoading(false)
     }
   }
 
@@ -236,67 +268,17 @@ export default function AdminAuthPage() {
             <UserPlus className="h-5 w-5 text-emerald-600" />
             <h2 className="text-lg font-semibold">Registrar usuario</h2>
           </div>
-          <p className="mt-2 text-sm text-slate-500">
-            Registro de usuarios desde el panel administrativo.
-          </p>
+          <p className="mt-2 text-sm text-slate-500">Registro de usuarios desde el panel administrativo.</p>
 
-          <form className="mt-6 space-y-4" onSubmit={handleRegisterSubmit}>
-            <input
-              name="name"
-              placeholder="Nombre"
-              value={registerForm.name}
-              onChange={handleRegisterChange}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder-slate-400"
-            />
-            <input
-              name="email"
-              type="email"
-              placeholder="Correo"
-              value={registerForm.email}
-              onChange={handleRegisterChange}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder-slate-400"
-            />
-            <input
-              name="password"
-              type="password"
-              placeholder="Contrasena"
-              value={registerForm.password}
-              onChange={handleRegisterChange}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder-slate-400"
-            />
-            <input
-              name="phone"
-              placeholder="Telefono"
-              value={registerForm.phone}
-              onChange={handleRegisterChange}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder-slate-400"
-            />
-            <input
-              name="profilePicture"
-              type="file"
-              accept="image/*"
-              onChange={handleRegisterChange}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700"
-            />
-
-            {registerMessage ? (
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                {registerMessage}
-              </div>
-            ) : null}
-            {registerError ? (
-              <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                {registerError}
-              </div>
-            ) : null}
-
+          <div className="mt-6">
             <button
-              disabled={registerLoading}
-              className="w-full rounded-2xl bg-slate-950 px-4 py-3 text-white"
+              type="button"
+              onClick={() => setShowCreateModal(true)}
+              className="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-3 text-white"
             >
-              {registerLoading ? 'Procesando...' : 'Registrar'}
+              <UserPlus className="h-4 w-4" /> Crear usuario
             </button>
-          </form>
+          </div>
         </article>
 
         <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -496,6 +478,15 @@ export default function AdminAuthPage() {
                     >
                       {requestsActionId === request.Id ? 'Procesando...' : 'Aprobar'}
                     </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRequestAction(request.Id, 'reject')}
+                      disabled={requestsActionId === request.Id}
+                      className="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-70"
+                    >
+                      {requestsActionId === request.Id ? 'Procesando...' : 'Rechazar'}
+                    </button>
                   </div>
                 ) : null}
               </div>
@@ -509,6 +500,32 @@ export default function AdminAuthPage() {
           </div>
         ) : null}
       </section>
+      {showCreateModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowCreateModal(false)}
+          />
+          <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg">
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(false)}
+              className="absolute right-4 top-4 rounded-full bg-slate-100 px-3 py-1 text-sm"
+            >
+              Cerrar
+            </button>
+            <UnifiedAuthForm
+              initialMode={"register"}
+              onlyRegister={true}
+              onRegistered={() => {
+                setShowCreateModal(false)
+                refreshUsers()
+                refreshRequests()
+              }}
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

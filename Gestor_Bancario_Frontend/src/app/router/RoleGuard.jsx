@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthStore } from '../../features/auth/store/authStore.js'
 
-export default function RoleGuard({ allowedRoles = [] }) {
+export const RoleGuard = ({ allowedRoles = [] }) => {
   const { session } = useAuthStore()
 
   if (!session?.token) {

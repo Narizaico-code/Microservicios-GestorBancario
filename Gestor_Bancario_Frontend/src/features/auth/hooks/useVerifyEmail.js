@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { verifyEmailLinkWithAuthService, verifyEmailWithAuthService } from '../../../shared/api/auth.js'
 
-export function useVerifyEmail() {
+export const useVerifyEmail = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')

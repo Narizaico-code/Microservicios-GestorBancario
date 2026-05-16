@@ -8,7 +8,7 @@ const initialForm = {
   tipo: 'AHORRO',
 }
 
-export default function FavoritesPage() {
+export const FavoritesPage = () => {
   const [favorites, setFavorites] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -205,9 +205,9 @@ export default function FavoritesPage() {
 
           {!loading && !error ? (
             <div className="mt-4 space-y-4">
-              {filteredFavorites.map((item) => (
+              {filteredFavorites.map((item, index) => (
                 <div
-                  key={item._id}
+                  key={item._id || index}
                   className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
                 >
                   <div className="flex items-center justify-between">

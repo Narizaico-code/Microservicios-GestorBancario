@@ -1,138 +1,106 @@
-import {
-    HelpCircle,
-    BookOpen,
-    ShieldCheck,
-    AlertTriangle,
-    Phone,
-    Mail,
-    Info,
-} from "lucide-react";
+import { HelpCircle, BookOpen, ShieldCheck, AlertTriangle, Phone, Mail, Info } from 'lucide-react'
 
-export const Help = () => {
-    return (
-        <div className="mx-auto max-w-5xl space-y-8 p-8">
-            {/* Header */}
-            <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
-                <div className="flex items-center gap-3">
-                    <HelpCircle className="h-6 w-6 text-blue-300" />
-                    <h1 className="text-2xl font-bold">Centro de ayuda</h1>
-                </div>
+export const Help = () => (
+  <div className="flex flex-col gap-4 pb-8 text-white">
 
-                <p className="mt-3 text-sm text-slate-300">
-                    Información y soporte para el uso del sistema de gestión bancaria.
-                </p>
-            </div>
+    {/* HEADER */}
+    <div className="flex items-center gap-3 rounded-[16px] border border-white/[0.07] bg-[#111111] px-6 py-5">
+      <div className="w-9 h-9 rounded-[10px] bg-white flex items-center justify-center shrink-0">
+        <HelpCircle size={18} className="text-black" />
+      </div>
+      <div>
+        <h1 className="text-[22px] font-black text-white leading-none mb-1">Centro de ayuda</h1>
+        <p className="text-[13px] text-white/40">Información y soporte para el uso del sistema de gestión bancaria.</p>
+      </div>
+    </div>
 
-            {/* Grid */}
-            <div className="grid gap-6 md:grid-cols-2">
-                {/* Qué puedes hacer */}
-                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-                    <div className="mb-4 flex items-center gap-2 text-slate-900">
-                        <BookOpen className="h-5 w-5 text-blue-600" />
-                        <h2 className="text-lg font-semibold">Funciones disponibles</h2>
-                    </div>
+    {/* GRID 2 cols */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                    <ul className="space-y-3 text-sm text-slate-600">
-                        <li className="flex gap-2">
-                            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
-                            Consultar todas tus cuentas bancarias en tiempo real
-                        </li>
-                        <li className="flex gap-2">
-                            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
-                            Visualizar saldo disponible y tipo de cuenta
-                        </li>
-                        <li className="flex gap-2">
-                            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
-                            Revisar estado de cada cuenta (activa/inactiva)
-                        </li>
-                        <li className="flex gap-2">
-                            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
-                            Acceder a detalles completos de cada producto financiero
-                        </li>
-                    </ul>
-                </div>
-
-                {/* Seguridad */}
-                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-                    <div className="mb-4 flex items-center gap-2 text-slate-900">
-                        <ShieldCheck className="h-5 w-5 text-emerald-600" />
-                        <h2 className="text-lg font-semibold">Seguridad</h2>
-                    </div>
-
-                    <p className="text-sm text-slate-600">
-                        Tu información está protegida mediante autenticación y
-                        cifrado. Nunca compartas tus credenciales.
-                    </p>
-
-                    <div className="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-700">
-                        ✔ Sesiones seguras <br />
-                        ✔ Acceso controlado por token <br />
-                        ✔ Protección de datos sensibles
-                    </div>
-                </div>
-
-                {/* Problemas comunes */}
-                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md md:col-span-2">
-                    <div className="mb-4 flex items-center gap-2 text-slate-900">
-                        <AlertTriangle className="h-5 w-5 text-amber-500" />
-                        <h2 className="text-lg font-semibold">Problemas comunes</h2>
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-3 text-sm">
-                        <div className="rounded-2xl bg-slate-50 p-4">
-                            <p className="font-semibold text-slate-800">
-                                No cargan cuentas
-                            </p>
-                            <p className="text-slate-600 mt-1">
-                                Revisa tu conexión o refresca la página.
-                            </p>
-                        </div>
-
-                        <div className="rounded-2xl bg-slate-50 p-4">
-                            <p className="font-semibold text-slate-800">
-                                Error de login
-                            </p>
-                            <p className="text-slate-600 mt-1">
-                                Vuelve a iniciar sesión o verifica tu token.
-                            </p>
-                        </div>
-
-                        <div className="rounded-2xl bg-slate-50 p-4">
-                            <p className="font-semibold text-slate-800">
-                                Datos incorrectos
-                            </p>
-                            <p className="text-slate-600 mt-1">
-                                Contacta al administrador del sistema.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Contacto */}
-                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md md:col-span-2">
-                    <div className="mb-4 flex items-center gap-2 text-slate-900">
-                        <Phone className="h-5 w-5 text-indigo-600" />
-                        <h2 className="text-lg font-semibold">Soporte</h2>
-                    </div>
-
-                    <div className="flex flex-col gap-3 text-sm text-slate-600 md:flex-row md:justify-between">
-                        <div className="flex items-center gap-2">
-                            <Mail className="h-4 w-4 text-slate-500" />
-                            soporte@gestorbancario.com
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <Phone className="h-4 w-4 text-slate-500" />
-                            +502 0000 0000
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <Info className="h-4 w-4 text-slate-500" />
-                            Horario: 8:00 AM - 6:00 PM
-                        </div>
-                    </div>
-                </div>
-            </div>
+      {/* Funciones */}
+      <div className="rounded-[16px] border border-white/[0.07] bg-[#111111] px-6 py-5 transition-colors hover:border-white/[0.14]">
+        <div className="flex items-center gap-2.5 mb-4">
+          <div className="w-9 h-9 rounded-[10px] bg-white/[0.06] flex items-center justify-center shrink-0">
+            <BookOpen size={16} className="text-white" />
+          </div>
+          <h2 className="text-[15px] font-bold text-white">Funciones disponibles</h2>
         </div>
-    );
-};
+        <ul className="flex flex-col gap-2.5 list-none p-0 m-0">
+          {[
+            'Consultar todas tus cuentas bancarias en tiempo real',
+            'Visualizar saldo disponible y tipo de cuenta',
+            'Revisar estado de cada cuenta (activa / inactiva)',
+            'Acceder a detalles completos de cada producto financiero',
+          ].map(item => (
+            <li key={item} className="flex items-start gap-2.5 text-[13px] text-white/40 leading-relaxed">
+              <span className="mt-[7px] w-[5px] h-[5px] rounded-full bg-white/40 shrink-0" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Seguridad */}
+      <div className="rounded-[16px] border border-white/[0.07] bg-[#111111] px-6 py-5 transition-colors hover:border-white/[0.14]">
+        <div className="flex items-center gap-2.5 mb-4">
+          <div className="w-9 h-9 rounded-[10px] bg-white/[0.06] flex items-center justify-center shrink-0">
+            <ShieldCheck size={16} className="text-white" />
+          </div>
+          <h2 className="text-[15px] font-bold text-white">Seguridad</h2>
+        </div>
+        <p className="text-[13px] text-white/40 leading-relaxed mb-4">
+          Tu información está protegida mediante autenticación y cifrado. Nunca compartas tus credenciales.
+        </p>
+        <div className="rounded-[10px] border border-emerald-400/15 bg-emerald-400/[0.06] px-4 py-3 text-[12px] text-emerald-400 leading-loose">
+          ✔ Sesiones seguras<br />
+          ✔ Acceso controlado por token<br />
+          ✔ Protección de datos sensibles
+        </div>
+      </div>
+    </div>
+
+    {/* Problemas comunes */}
+    <div className="rounded-[16px] border border-white/[0.07] bg-[#111111] px-6 py-5 transition-colors hover:border-white/[0.14]">
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-9 h-9 rounded-[10px] bg-white/[0.06] flex items-center justify-center shrink-0">
+          <AlertTriangle size={16} className="text-white" />
+        </div>
+        <h2 className="text-[15px] font-bold text-white">Problemas comunes</h2>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {[
+          { title: 'No cargan cuentas',  desc: 'Revisa tu conexión o refresca la página.' },
+          { title: 'Error de login',     desc: 'Vuelve a iniciar sesión o verifica tu token.' },
+          { title: 'Datos incorrectos',  desc: 'Contacta al administrador del sistema.' },
+        ].map(({ title, desc }) => (
+          <div key={title} className="rounded-[12px] border border-white/[0.06] bg-[#1a1a1a] px-4 py-3">
+            <p className="text-[13px] font-bold text-white mb-1.5">{title}</p>
+            <p className="text-[13px] text-white/40 leading-relaxed">{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Soporte */}
+    <div className="rounded-[16px] border border-white/[0.07] bg-[#111111] px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-wrap transition-colors hover:border-white/[0.14]">
+      <div className="flex items-center gap-2.5">
+        <div className="w-9 h-9 rounded-[10px] bg-white flex items-center justify-center shrink-0">
+          <Phone size={16} className="text-black" />
+        </div>
+        <h2 className="text-[15px] font-bold text-white">Soporte</h2>
+      </div>
+      <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+        {[
+          { Icon: Mail,  text: 'soporte@gestorbancario.com' },
+          { Icon: Phone, text: '+502 0000 0000' },
+          { Icon: Info,  text: 'Horario: 8:00 AM – 6:00 PM' },
+        ].map(({ Icon, text }) => (
+          <div key={text} className="flex items-center gap-2 text-[13px] text-white/40">
+            <Icon size={14} className="text-white/30 shrink-0" />
+            {text}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)

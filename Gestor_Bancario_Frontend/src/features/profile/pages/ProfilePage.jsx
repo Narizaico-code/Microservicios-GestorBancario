@@ -56,7 +56,7 @@ const getStatusBadge = (value, options) => {
   return match?.label || value || 'N/D'
 }
 
-export default function ProfilePage() {
+export const ProfilePage = () => {
   const { session, updateUser } = useAuthStore()
   const [profile, setProfile] = useState(null)
   const [profileLoading, setProfileLoading] = useState(true)
@@ -536,7 +536,7 @@ export default function ProfilePage() {
   )
 }
 
-function AdminUpdateRequests({ token }) {
+const AdminUpdateRequests = ({ token }) => {
   const [requests, setRequests] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -671,8 +671,8 @@ function AdminUpdateRequests({ token }) {
 
       {!loading && !error ? (
         <div className="mt-6 space-y-4">
-          {requests.map((request) => (
-            <div key={request.Id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          {requests.map((request, index) => (
+            <div key={request.Id || index} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold text-slate-900">Solicitud #{request.Id}</p>

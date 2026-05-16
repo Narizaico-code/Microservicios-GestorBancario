@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { resetPasswordWithAuthService } from '../../../shared/api/auth.js'
 import cerditoFondoBlanco from '../../../assets/CerditoFondoBlanco.png'
 
-export default function ResetPasswordPage() {
+export const ResetPasswordPage = () => {
   const [newPassword, setNewPassword] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')

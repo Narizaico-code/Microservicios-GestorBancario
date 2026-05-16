@@ -9,7 +9,7 @@ const authRoutes = [
   { to: '/auth/resend-verification', label: 'Reenviar verificación' },
 ]
 
-export default function AuthCenterPage() {
+export const AuthCenterPage = () => {
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_42%),linear-gradient(180deg,_#020617_0%,_#0f172a_100%)] text-slate-100">
       <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-8 px-4 py-8 lg:px-8">

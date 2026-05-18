@@ -4,7 +4,6 @@ import { User, Wallet, Headphones, ArrowRight, Plus } from 'lucide-react'
 import { getRecentAccounts } from '../../shared/api/bank.js'
 import { requestAccountCreation } from '../../shared/api/account.js'
 
-
 export const ClientDashboard = ({ session }) => {
   const [accountsLoading, setAccountsLoading] = useState(true)
   const [accountsError, setAccountsError] = useState('')

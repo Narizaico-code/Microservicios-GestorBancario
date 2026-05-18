@@ -8,7 +8,8 @@ export async function loginWithAuthService({ email, password }) {
 }
 
 export async function registerWithAuthService(formData) {
-  return requestFormData(`${API_CONFIG.authBaseUrl}/auth/register`, {
+  // Keep function name for compatibility, but route registration through signup requests.
+  return requestFormData(`${API_CONFIG.authBaseUrl}/auth/signup-request`, {
     method: 'POST',
     body: formData,
   })
@@ -18,6 +19,32 @@ export async function submitSignupRequestWithAuthService(formData) {
   return requestFormData(`${API_CONFIG.authBaseUrl}/auth/signup-request`, {
     method: 'POST',
     body: formData,
+  })
+}
+
+export async function getSignupRequestsWithAuthService(token) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/auth/signup-requests`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function approveSignupRequestWithAuthService(token, requestId) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/auth/signup-requests/${requestId}/approve`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function rejectSignupRequestWithAuthService(token, requestId) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/auth/signup-requests/${requestId}/reject`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
 }
 
@@ -68,5 +95,50 @@ export async function getProfileByIdWithAuthService(token, userId) {
       Authorization: `Bearer ${token}`,
     },
     body: { userId },
+  })
+}
+
+export async function updateProfileWithAuthService(token, formData) {
+  return requestFormData(`${API_CONFIG.authBaseUrl}/users/me`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+}
+
+export async function getUpdateRequestsWithAuthService(token, status) {
+  const statusQuery = status ? `?status=${encodeURIComponent(status)}` : ''
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/update-requests${statusQuery}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function approveUpdateRequestWithAuthService(token, requestId) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/update-requests/${requestId}/approve`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function rejectUpdateRequestWithAuthService(token, requestId) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/update-requests/${requestId}/reject`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export async function getAllUsersWithAuthService(token) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/users/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
 }

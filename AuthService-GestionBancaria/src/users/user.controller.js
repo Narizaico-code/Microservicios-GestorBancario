@@ -33,7 +33,7 @@ export const updateUserRole = [
     if (!ALLOWED_ROLES.includes(normalized)) {
       return res.status(400).json({
         success: false,
-        message: 'Role not allowed. Use ADMIN_ROLE or USER_ROLE',
+        message: 'Role not allowed. Use ADMIN_ROLE, EMPLOYEE_ROLE, or USER_ROLE',
       });
     }
 
@@ -75,7 +75,7 @@ export const getUsersByRole = [
     if (!ALLOWED_ROLES.includes(normalized)) {
       return res.status(400).json({
         success: false,
-        message: 'Role not allowed. Use ADMIN_ROLE or USER_ROLE',
+        message: 'Role not allowed. Use ADMIN_ROLE, EMPLOYEE_ROLE, or USER_ROLE',
       });
     }
 

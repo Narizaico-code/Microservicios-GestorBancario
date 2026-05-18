@@ -1,30 +1,22 @@
-import axios from 'axios'
+import axios from "axios";
+import { loadSession } from "../utils/session-storage.js";
 
 const stripTrailingSlash = (value = '') => value.replace(/\/+$/, '')
 
 const getAuthToken = () => {
-	const tokenKeys = ['token', 'authToken', 'accessToken', 'x-token']
-
-	for (const key of tokenKeys) {
-		const localToken = localStorage.getItem(key)
-		if (localToken) return localToken
-
-		const sessionToken = sessionStorage.getItem(key)
-		if (sessionToken) return sessionToken
-	}
-
-	return import.meta.env.VITE_AUTH_TOKEN || null
+  const session = loadSession()
+  return session?.token || null
 }
 
 export const API_CONFIG = {
   authBaseUrl: stripTrailingSlash(
-    import.meta.env.VITE_AUTH_API_URL || 'http://localhost:3006/api/v1'
+    import.meta.env.VITE_AUTH_API_URL || 'http://localhost:4000/api/v1'
   ),
   bankBaseUrl: stripTrailingSlash(
-    import.meta.env.VITE_BANK_API_URL || 'http://localhost:3005/gestionBancaria/api/v1'
+    import.meta.env.VITE_BANK_API_URL || 'http://localhost:3006/gestionBancaria/api/v1'
   ),
   bankHealthUrl: stripTrailingSlash(
-    import.meta.env.VITE_BANK_HEALTH_URL || 'http://localhost:3005/health'
+    import.meta.env.VITE_BANK_HEALTH_URL || 'http://localhost:3006/health'
   ),
 }
 

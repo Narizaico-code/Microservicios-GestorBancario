@@ -1,7 +1,7 @@
-import ClientDashboard from '../features/dashboard/ClientDashboard.jsx'
+import { ClientDashboard } from '../features/dashboard/ClientDashboard.jsx'
 import { useAuthStore } from '../features/auth/store/authStore.js'
 
-export default function ClientPage() {
-  const { session, logout } = useAuthStore()
-  return <ClientDashboard session={session} onLogout={logout} />
+export const ClientPage = () => {
+  const { session } = useAuthStore()
+  return <ClientDashboard session={session} />
 }

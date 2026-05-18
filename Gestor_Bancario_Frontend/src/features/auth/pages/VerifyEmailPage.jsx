@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { verifyEmailLinkWithAuthService } from '../../../shared/api/auth.js'
 
-export default function VerifyEmailPage() {
+export const VerifyEmailPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const tokenFromQuery = searchParams.get('token') || ''
@@ -23,7 +23,10 @@ export default function VerifyEmailPage() {
 
     try {
       await verifyEmailLinkWithAuthService(token)
-      navigate('/auth/login', { replace: true })
+      setSuccess('Correo verificado correctamente. Redirigiendo al login...')
+      setTimeout(() => {
+        navigate('/auth', { replace: true })
+      }, 2000)
     } catch (requestError) {
       setError(requestError.message || 'No fue posible verificar el correo')
     } finally {

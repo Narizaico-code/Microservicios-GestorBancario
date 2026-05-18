@@ -352,8 +352,8 @@ export const TransactionsPage = () => {
                 </tr>
               )}
 
-              {transactions.map((transaction) => (
-                <tr key={transaction.id || transaction._id || `${transaction.createdAt}-${transaction.cuentaDestino}`} className="border-t border-[#011743]/10">
+              {transactions.map((transaction, index) => (
+                <tr key={transaction.id || transaction._id || `${transaction.createdAt}-${transaction.cuentaDestino}` || index} className="border-t border-[#011743]/10">
                   <td className="px-4 py-3">{formatDate(transaction.createdAt)}</td>
                   <td className="px-4 py-3">
                     <span

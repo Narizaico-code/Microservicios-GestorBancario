@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { registerWithAuthService } from '../../../shared/api/auth.js'
+import { submitSignupRequestWithAuthService } from '../../../shared/api/auth.js'
 
 const initialForm = { name: '', email: '', password: '', phone: '', profilePicture: null }
 
-export default function RegisterForm() {
+export const RegisterForm = () => {
   const [form, setForm] = useState(initialForm)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -21,10 +21,10 @@ export default function RegisterForm() {
     setMessage('')
 
     try {
-      const result = await registerWithAuthService(form)
-      setMessage(result.message || 'Usuario registrado')
+      const result = await submitSignupRequestWithAuthService(form)
+      setMessage(result.message || 'Solicitud enviada. Espera aprobación del administrador y verifica tu correo.')
     } catch (requestError) {
-      setError(requestError.message || 'No se pudo registrar')
+      setError(requestError.message || 'No se pudo enviar la solicitud')
     } finally {
       setLoading(false)
     }
@@ -39,7 +39,7 @@ export default function RegisterForm() {
       <input name="profilePicture" type="file" accept="image/*" onChange={handleChange} className="w-full rounded-2xl border px-4 py-3" />
       {message ? <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</div> : null}
       {error ? <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div> : null}
-      <button disabled={loading} className="w-full rounded-2xl bg-slate-950 px-4 py-3 text-white">{loading ? 'Procesando...' : 'Registrar'}</button>
+      <button disabled={loading} className="w-full rounded-2xl bg-slate-950 px-4 py-3 text-white">{loading ? 'Procesando...' : 'Enviar solicitud'}</button>
     </form>
   )
 }

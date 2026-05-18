@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import DashboardHeader from './DashboardHeader.jsx'
+import { DashboardHeader } from './DashboardHeader.jsx'
 import { clearSession } from '../../shared/utils/session-storage.js'
 import { getAllAccounts, getBankHealth } from '../../shared/api/bank.js'
 
-export default function AdminDashboard({ session, onLogout }) {
+export const AdminDashboard = ({ session, onLogout }) => {
   const [healthLoading, setHealthLoading] = useState(true)
   const [accountsLoading, setAccountsLoading] = useState(true)
   const [healthError, setHealthError] = useState('')

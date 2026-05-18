@@ -12,6 +12,10 @@ import {
   findUserByPasswordResetToken,
 } from './user-db.js';
 import {
+  consumeSignupRequestVerificationToken,
+  findApprovedSignupRequestByVerificationToken,
+} from './signup-request-db.js';
+import {
   generateEmailVerificationToken,
   generatePasswordResetToken,
 } from '../utils/auth-helpers.js';
@@ -179,9 +183,8 @@ export const loginUserHelper = async (email, password) => {
     const role = user.UserRoles?.[0]?.Role?.Name || 'USER_ROLE';
     const token = await generateJWT(user.Id.toString(), { role });
 
-    // Calcular fecha de expiración basada en la configuración
-    const expiresInMs = getExpirationTime(process.env.JWT_EXPIRES_IN || '30m');
-    const expiresAt = new Date(Date.now() + expiresInMs);
+    // Como ya no hay expiración de 30 mins, simulamos una sesión infinita (100 años) para el frontend
+    const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000);
 
     // Build compact userDetails object
     const fullUser = buildUserResponse(user);
@@ -213,24 +216,44 @@ export const verifyEmailHelper = async (token) => {
       throw new Error('Token inválido para verificación de email');
     }
 
-    // Find user by verification token (like .NET does)
-    const user = await findUserByEmailVerificationToken(token);
-    if (!user) {
-      throw new Error('Usuario no encontrado o token inválido');
-    }
+    // 1) Flujo clásico: usuario ya existe y solo falta verificar email.
+    let user = await findUserByEmailVerificationToken(token);
 
-    // Verificar que el token no haya expirado (ya se verifica en jwt.verify, pero por seguridad)
-    const userEmail = user.UserEmail;
-    if (!userEmail) {
-      throw new Error('Registro de email no encontrado');
-    }
+    if (user) {
+      const userEmail = user.UserEmail;
+      if (!userEmail) {
+        throw new Error('Registro de email no encontrado');
+      }
 
-    if (userEmail.EmailVerified) {
-      throw new Error('El email ya ha sido verificado');
-    }
+      if (userEmail.EmailVerified) {
+        throw new Error('El email ya ha sido verificado');
+      }
 
-    // Marcar el email como verificado
-    await markEmailAsVerified(user.Id);
+      await markEmailAsVerified(user.Id);
+    } else {
+      // 2) Flujo por solicitud aprobada: crear cuenta al verificar el email.
+      const signupRequest =
+        await findApprovedSignupRequestByVerificationToken(token);
+
+      if (!signupRequest) {
+        throw new Error('Usuario no encontrado o token inválido');
+      }
+
+      if (await checkUserExists(signupRequest.Email)) {
+        throw new Error('Ya existe un usuario con este email');
+      }
+
+      user = await createNewUser({
+        name: signupRequest.Name,
+        email: signupRequest.Email,
+        phone: signupRequest.Phone,
+        profilePicture: signupRequest.ProfilePicture,
+        hashedPassword: signupRequest.PasswordHash,
+      });
+
+      await markEmailAsVerified(user.Id);
+      await consumeSignupRequestVerificationToken(signupRequest.Id);
+    }
 
     // Enviar email de bienvenida en background (aligned with .NET)
     Promise.resolve()
@@ -344,17 +367,22 @@ export const forgotPasswordHelper = async (email) => {
     // Actualizar token en la base de datos
     await updatePasswordResetToken(user.Id, resetToken, tokenExpiry);
 
-    // Enviar email de reset
+    // Enviar email de reset de forma síncrona para poder reportar fallo real
     const { sendPasswordResetEmail } = await import('./email-service.js');
-    // Enviar email en background; no bloquear la respuesta
-    Promise.resolve()
-      .then(() => sendPasswordResetEmail(user.Email, user.Name, resetToken))
-      .catch((emailError) => {
-        console.error(
-          `Failed to send password reset email to ${email}:`,
-          emailError
-        );
-      });
+    try {
+      await sendPasswordResetEmail(user.Email, user.Name, resetToken);
+    } catch (emailError) {
+      console.error(
+        `Failed to send password reset email to ${email}:`,
+        emailError
+      );
+      return {
+        success: false,
+        message:
+          'No se pudo enviar el correo de recuperación en este momento. Intenta nuevamente más tarde.',
+        data: { email, initiated: false },
+      };
+    }
 
     // EmailResponseDto equivalent structure
     return {
@@ -364,12 +392,12 @@ export const forgotPasswordHelper = async (email) => {
     };
   } catch (error) {
     console.error('Error en forgotPasswordHelper:', error);
-    // Por seguridad, no revelamos errores internos
-    // EmailResponseDto equivalent structure
+    // Por seguridad mantenemos mensaje genérico
     return {
-      success: true,
-      message: 'Si el email existe, se ha enviado un enlace de recuperación',
-      data: { email, initiated: true },
+      success: false,
+      message:
+        'No se pudo procesar la recuperación de contraseña en este momento. Intenta nuevamente más tarde.',
+      data: { email, initiated: false },
     };
   }
 };

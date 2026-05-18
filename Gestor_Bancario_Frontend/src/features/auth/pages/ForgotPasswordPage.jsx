@@ -1,6 +1,6 @@
-import ForgotPasswordForm from '../components/ForgotPasswordForm.jsx'
+import { ForgotPasswordForm } from '../components/ForgotPasswordForm.jsx'
 
-export default function ForgotPasswordPage() {
+export const ForgotPasswordPage = () => {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">

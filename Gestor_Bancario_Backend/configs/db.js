@@ -29,7 +29,12 @@ export const dbConnection = async () => {
         console.log('MongoDB | desconectado a mongoDB');
         });
 
-        await mongoose.connect(process.env.URI_MONGO, {
+        const mongoUri = process.env.URI_MONGO || 'mongodb://localhost:27017/gestorBancarioDb';
+        if (!process.env.URI_MONGO) {
+            console.warn('MongoDB | WARNING: process.env.URI_MONGO is not set, using fallback:', mongoUri);
+        }
+
+        await mongoose.connect(mongoUri, {
             serverSelectionTimeoutMS: 5000,
             maxPoolSize: 10
         });

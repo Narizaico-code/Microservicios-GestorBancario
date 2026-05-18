@@ -1,61 +1,73 @@
-import { Typography } from "@material-tailwind/react"
 import { Link, useLocation } from "react-router-dom"
+import { Moon, Package, Sun, Tag } from "lucide-react"
 import imgLogo from "../../../assets/IMGLogoSinLetra.png"
-
+import { AvatarUser } from "../ui/AvatarUser"
+import { useTheme } from "../../store/themeStore.js"
 
 export const Navbar = () => {
-    const location = useLocation();
-
+    const location = useLocation()
+    const { theme, toggleTheme } = useTheme()
 
     const items = [
-        { label: "Inicio", to: "/dashboard" },
-        { label: "Perfil", to: "/dashboard/perfil" },
-        { label: "Ayuda", to: "/dashboard/ayuda" }
+        { label: "Cuentas", to: "/dashboard/cuentas" },
+        { label: "Usuarios", to: "/dashboard/usuarios" },
+        { label: "Servicios", to: "/dashboard/servicios", icon: Package },
+        { label: "Promociones", to: "/dashboard/promociones", icon: Tag },
+        { label: "Ayuda", to: "/dashboard/ayuda" },
     ]
+
+    const navClass = theme === 'dark'
+        ? 'fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#0a0a0a] shadow-[0_10px_30px_rgba(0,0,0,0.4)] backdrop-blur-xl'
+        : 'fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[linear-gradient(90deg,_#02183f_0%,_#07306a_48%,_#0b4b8f_100%)] shadow-[0_10px_30px_rgba(2,24,63,0.32)] backdrop-blur-xl'
+
     return (
-        <nav className="bg-white shadow-md sticky top-0 z-10">
-            <div className="max-w-7xl mx-auto px-6 h-20 md:h-24 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <div className="h-12 w-12 md:h-16 md:w-16 rounded-full overflow-hidden flex-shrink-0">
+        <nav className={navClass}>
+            <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8 md:h-24">
+                <Link to="/dashboard" className="flex items-center gap-3 whitespace-nowrap">
+                    <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-white/10 ring-1 ring-white/15">
                         <img
                             src={imgLogo}
-                            alt="KINAL BANC Logo"
+                            alt="KINAL BANC"
                             className="h-full w-full object-cover"
                         />
-                    </div>
-                    <Typography variant="h5" className="font-bold text-main-blue text-lg md:text-2xl">
+                    </span>
+                    <span className="text-lg font-extrabold tracking-wide text-white sm:text-xl">
                         KINAL BANC
-                    </Typography>
+                    </span>
+                </Link>
+
+                <ul className="hidden flex-1 items-center justify-center gap-3 lg:flex">
+                    {items.map((item) => {
+                        const active = location.pathname.startsWith(item.to)
+
+                        return (
+                            <li key={item.to}>
+                                <Link
+                                    to={item.to}
+                                    className={`inline-flex items-center rounded-2xl px-5 py-3 text-sm font-semibold transition duration-200 ${active
+                                        ? 'bg-white/14 text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] ring-1 ring-white/15'
+                                        : 'text-white/80 hover:bg-white/10 hover:text-white'
+                                        }`}
+                                >
+                                    {item.icon ? <item.icon size={16} className="mr-2" /> : null}
+                                    {item.label}
+                                </Link>
+                            </li>
+                        )
+                    })}
+                </ul>
+
+                <div className="ml-auto flex items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={toggleTheme}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition hover:bg-white/20"
+                        aria-label="Cambiar tema"
+                    >
+                        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                    </button>
+                    <AvatarUser />
                 </div>
-        
-                <div>
-                    {/* secondary dark nav (like the attached image) */}
-                    <div >
-                        <div className="max-w-7xl mx-auto px-6">
-                            <ul className="flex items-center justify-end gap-8 h-12 md:h-14">
-                                {items.map((item) => {
-                                    const active = location.pathname.startsWith(item.to);
-                                    return (
-                                        <li key={item.to}>
-                                            <Link
-                                                to={item.to}
-                                                className={`block px-4 py-2 rounded-lg font-medium transition-colors sidebar-underline${active
-                                                        ? ' active text-main-blue'  
-                                                        : ' text-gray-700 hover:bg-[#0b3a63] hover:text-white'
-                                                    }`}
-                                            >
-                                                {item.label}
-                                            </Link>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-
-
             </div>
         </nav>
     )

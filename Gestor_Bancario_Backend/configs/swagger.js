@@ -25,6 +25,14 @@ const swaggerDefinition = {
         {
             name: "Favorites",
             description: "Cuentas favoritas de los usuarios"
+        },
+        {
+            name: "Services",
+            description: "Catalogo de productos y servicios exclusivos"
+        },
+        {
+            name: "Promotions",
+            description: "Promociones globales exclusivas"
         }
     ],
     paths: {
@@ -219,6 +227,176 @@ const swaggerDefinition = {
                     "200": { description: "Transferencia rápida preparada" }
                 }
             }
+        },
+        "/services": {
+            post: {
+                tags: ["Services"],
+                summary: "Crea un producto o servicio (Requiere Rol Admin)",
+                security: [{ bearerAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "multipart/form-data": {
+                            schema: {
+                                $ref: "#/components/schemas/ServiceCreateRequest"
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    "201": { description: "Servicio creado" },
+                    "400": { description: "Datos inválidos" },
+                    "403": { description: "No autorizado (Requiere Admin)" }
+                }
+            },
+            get: {
+                tags: ["Services"],
+                summary: "Lista productos y servicios",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "type", in: "query", schema: { type: "string", enum: ["PRODUCT", "SERVICE"] } },
+                    { name: "category", in: "query", schema: { type: "string" } },
+                    { name: "active", in: "query", schema: { type: "boolean" } },
+                    { name: "q", in: "query", schema: { type: "string" } }
+                ],
+                responses: {
+                    "200": { description: "Lista de servicios" }
+                }
+            }
+        },
+        "/services/{id}": {
+            get: {
+                tags: ["Services"],
+                summary: "Obtiene un servicio por ID",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "path", required: true, schema: { type: "string" } }
+                ],
+                responses: {
+                    "200": { description: "Servicio encontrado" },
+                    "404": { description: "No encontrado" }
+                }
+            },
+            put: {
+                tags: ["Services"],
+                summary: "Actualiza un producto o servicio (Requiere Rol Admin)",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "path", required: true, schema: { type: "string" } }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "multipart/form-data": {
+                            schema: {
+                                $ref: "#/components/schemas/ServiceUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    "200": { description: "Servicio actualizado" },
+                    "400": { description: "Datos inválidos" },
+                    "403": { description: "No autorizado (Requiere Admin)" }
+                }
+            },
+            delete: {
+                tags: ["Services"],
+                summary: "Elimina un producto o servicio (Requiere Rol Admin)",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "path", required: true, schema: { type: "string" } }
+                ],
+                responses: {
+                    "200": { description: "Servicio eliminado" },
+                    "403": { description: "No autorizado (Requiere Admin)" },
+                    "404": { description: "No encontrado" }
+                }
+            }
+        },
+        "/promotions": {
+            post: {
+                tags: ["Promotions"],
+                summary: "Crea una promocion global (Requiere Rol Admin)",
+                security: [{ bearerAuth: [] }],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "multipart/form-data": {
+                            schema: {
+                                $ref: "#/components/schemas/PromotionCreateRequest"
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    "201": { description: "Promocion creada" },
+                    "400": { description: "Datos inválidos" },
+                    "403": { description: "No autorizado (Requiere Admin)" }
+                }
+            },
+            get: {
+                tags: ["Promotions"],
+                summary: "Lista promociones",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "active", in: "query", schema: { type: "boolean" } },
+                    { name: "q", in: "query", schema: { type: "string" } }
+                ],
+                responses: {
+                    "200": { description: "Lista de promociones" }
+                }
+            }
+        },
+        "/promotions/{id}": {
+            get: {
+                tags: ["Promotions"],
+                summary: "Obtiene una promocion por ID",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "path", required: true, schema: { type: "string" } }
+                ],
+                responses: {
+                    "200": { description: "Promocion encontrada" },
+                    "404": { description: "No encontrada" }
+                }
+            },
+            put: {
+                tags: ["Promotions"],
+                summary: "Actualiza una promocion (Requiere Rol Admin)",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "path", required: true, schema: { type: "string" } }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "multipart/form-data": {
+                            schema: {
+                                $ref: "#/components/schemas/PromotionUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    "200": { description: "Promocion actualizada" },
+                    "400": { description: "Datos inválidos" },
+                    "403": { description: "No autorizado (Requiere Admin)" }
+                }
+            },
+            delete: {
+                tags: ["Promotions"],
+                summary: "Elimina una promocion (Requiere Rol Admin)",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "path", required: true, schema: { type: "string" } }
+                ],
+                responses: {
+                    "200": { description: "Promocion eliminada" },
+                    "403": { description: "No autorizado (Requiere Admin)" },
+                    "404": { description: "No encontrada" }
+                }
+            }
         }
     },
     components: {
@@ -340,6 +518,216 @@ const swaggerDefinition = {
                     descripcion: {
                         type: "string",
                         example: "Pago de cena"
+                    }
+                }
+            },
+            Discount: {
+                type: "object",
+                properties: {
+                    type: {
+                        type: "string",
+                        enum: ["PERCENT", "AMOUNT"],
+                        example: "PERCENT"
+                    },
+                    value: {
+                        type: "number",
+                        example: 10
+                    },
+                    startAt: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    endAt: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    minAmount: {
+                        type: "number",
+                        example: 100
+                    },
+                    maxUses: {
+                        type: "number",
+                        example: 50
+                    },
+                    terms: {
+                        type: "string",
+                        example: "Valido en sucursales participantes"
+                    }
+                }
+            },
+            ServiceCreateRequest: {
+                type: "object",
+                required: ["name", "description", "type", "price"],
+                properties: {
+                    name: {
+                        type: "string",
+                        example: "Corte de cabello premium"
+                    },
+                    description: {
+                        type: "string",
+                        example: "Servicio exclusivo para clientes"
+                    },
+                    category: {
+                        type: "string",
+                        example: "Belleza"
+                    },
+                    type: {
+                        type: "string",
+                        enum: ["PRODUCT", "SERVICE"],
+                        example: "SERVICE"
+                    },
+                    price: {
+                        type: "number",
+                        example: 150
+                    },
+                    active: {
+                        type: "boolean",
+                        example: true
+                    },
+                    image: {
+                        type: "string",
+                        format: "binary"
+                    },
+                    imageUrl: {
+                        type: "string",
+                        example: "https://example.com/servicio.jpg"
+                    },
+                    terms: {
+                        type: "string",
+                        example: "Sujeto a disponibilidad"
+                    },
+                    validFrom: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    validTo: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    discount: {
+                        $ref: "#/components/schemas/Discount"
+                    }
+                }
+            },
+            ServiceUpdateRequest: {
+                type: "object",
+                properties: {
+                    name: {
+                        type: "string"
+                    },
+                    description: {
+                        type: "string"
+                    },
+                    category: {
+                        type: "string"
+                    },
+                    type: {
+                        type: "string",
+                        enum: ["PRODUCT", "SERVICE"]
+                    },
+                    price: {
+                        type: "number"
+                    },
+                    active: {
+                        type: "boolean"
+                    },
+                    image: {
+                        type: "string",
+                        format: "binary"
+                    },
+                    imageUrl: {
+                        type: "string"
+                    },
+                    terms: {
+                        type: "string"
+                    },
+                    validFrom: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    validTo: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    discount: {
+                        $ref: "#/components/schemas/Discount"
+                    }
+                }
+            },
+            PromotionCreateRequest: {
+                type: "object",
+                required: ["name"],
+                properties: {
+                    name: {
+                        type: "string",
+                        example: "Semana del cliente"
+                    },
+                    description: {
+                        type: "string",
+                        example: "Beneficios exclusivos para clientes"
+                    },
+                    terms: {
+                        type: "string",
+                        example: "Aplican restricciones"
+                    },
+                    active: {
+                        type: "boolean",
+                        example: true
+                    },
+                    image: {
+                        type: "string",
+                        format: "binary"
+                    },
+                    validFrom: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    validTo: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    imageUrl: {
+                        type: "string",
+                        example: "https://example.com/promo.jpg"
+                    },
+                    conditions: {
+                        type: "object",
+                        example: { "segment": "VIP" }
+                    }
+                }
+            },
+            PromotionUpdateRequest: {
+                type: "object",
+                properties: {
+                    name: {
+                        type: "string"
+                    },
+                    description: {
+                        type: "string"
+                    },
+                    terms: {
+                        type: "string"
+                    },
+                    active: {
+                        type: "boolean"
+                    },
+                    image: {
+                        type: "string",
+                        format: "binary"
+                    },
+                    validFrom: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    validTo: {
+                        type: "string",
+                        format: "date-time"
+                    },
+                    imageUrl: {
+                        type: "string"
+                    },
+                    conditions: {
+                        type: "object"
                     }
                 }
             }

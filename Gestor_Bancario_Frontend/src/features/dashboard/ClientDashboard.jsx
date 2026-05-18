@@ -1,53 +1,36 @@
 import { useEffect, useState } from 'react'
-import DashboardHeader from './DashboardHeader.jsx'
-import { clearSession } from '../../shared/utils/session-storage.js'
-import { getBankHealth, getRecentAccounts } from '../../shared/api/bank.js'
+import { useNavigate } from 'react-router-dom'
+import { User, Wallet, Headphones, ArrowRight, Plus } from 'lucide-react'
+import { getRecentAccounts } from '../../shared/api/bank.js'
+import { requestAccountCreation } from '../../shared/api/account.js'
 
-export default function ClientDashboard({ session, onLogout }) {
-  const [healthLoading, setHealthLoading] = useState(true)
+export const ClientDashboard = ({ session }) => {
   const [accountsLoading, setAccountsLoading] = useState(true)
-  const [healthError, setHealthError] = useState('')
   const [accountsError, setAccountsError] = useState('')
-  const [health, setHealth] = useState(null)
   const [accounts, setAccounts] = useState([])
+  const [requestForm, setRequestForm] = useState({ tipoCuenta: 'AHORRO', moneda: 'GTQ' })
+  const [requestLoading, setRequestLoading] = useState(false)
+  const [requestError, setRequestError] = useState('')
+  const [requestSuccess, setRequestSuccess] = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     let isMounted = true
-
-    const loadHealth = async () => {
-      try {
-        const healthResponse = await getBankHealth()
-
-        if (!isMounted) return
-        setHealth(healthResponse)
-      } catch (requestError) {
-        if (!isMounted) return
-        setHealthError(requestError.message || 'No fue posible consultar la salud del backend')
-      } finally {
-        if (isMounted) setHealthLoading(false)
-      }
-    }
-
     const loadAccounts = async () => {
       try {
-        const accountsResponse = await getRecentAccounts(session.token)
-
+        const response = await getRecentAccounts(session.token)
         if (!isMounted) return
-        setAccounts(Array.isArray(accountsResponse?.data) ? accountsResponse.data : [])
-      } catch (requestError) {
+        setAccounts(Array.isArray(response?.data) ? response.data : [])
+      } catch (error) {
         if (!isMounted) return
-        setAccountsError(requestError.message || 'No fue posible cargar las cuentas')
+        setAccountsError(error.message || 'No fue posible cargar las cuentas')
       } finally {
         if (isMounted) setAccountsLoading(false)
       }
     }
-
-    loadHealth()
     loadAccounts()
-
-    return () => {
-      isMounted = false
-    }
+    return () => { isMounted = false }
   }, [session.token])
 
   const handleLogout = () => {
@@ -55,85 +38,141 @@ export default function ClientDashboard({ session, onLogout }) {
     onLogout()
   }
 
-  return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_38%),linear-gradient(180deg,_#020617_0%,_#111827_100%)] text-slate-100">
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-8 px-4 py-8 lg:px-8">
-        <DashboardHeader
-          title="Panel del cliente"
-          subtitle="Vista personal con tus datos y cuentas"
-          userRole={session.user?.role || 'USER_ROLE'}
-          onLogout={handleLogout}
-        />
+  const handleRequestFormChange = (event) => {
+    const { name, value } = event.target
+    setRequestForm((current) => ({ ...current, [name]: value }))
+  }
 
-        <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <article className="rounded-[2rem] border border-white/10 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-950/20 backdrop-blur-xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Bienvenido</p>
-            <h2 className="mt-4 text-4xl font-bold tracking-tight text-white">
-              Tu información bancaria, en una sola pantalla.
-            </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
-              Este panel muestra una vista simplificada para cliente, consumiendo el
-              AuthService y el backend bancario con el mismo JWT.
+  const handleSubmitAccountRequest = async (event) => {
+    event.preventDefault()
+    setRequestLoading(true)
+    setRequestError('')
+    setRequestSuccess('')
+    try {
+      const response = await requestAccountCreation(requestForm)
+      setRequestSuccess(response?.message || 'Solicitud enviada al administrador')
+      setShowModal(false)
+    } catch (error) {
+      setRequestError(error.message || 'No fue posible enviar la solicitud')
+    } finally {
+      setRequestLoading(false)
+    }
+  }
+
+  const handleOpenModal = () => {
+    setRequestError('')
+    setRequestSuccess('')
+    setRequestForm({ tipoCuenta: 'AHORRO', moneda: 'GTQ' })
+    setShowModal(true)
+  }
+
+  return (
+    <div className="text-white font-sans">
+
+      {/* ── MAIN GRID ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.85fr] gap-5 items-start">
+
+        {/* HERO */}
+        <div className="relative overflow-hidden rounded-[18px] border border-white/[0.07] bg-[#111111] p-7">
+          <div className="absolute top-0 right-0 w-60 h-60 bg-[radial-gradient(circle,rgba(255,255,255,0.04),transparent_70%)] pointer-events-none" />
+
+          <div className="relative z-10">
+            <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-white/50 mb-4">
+              ¡Bienvenido {session.user?.name?.toUpperCase() || 'CLIENTE'}!
             </p>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-slate-400">Usuario</p>
-                <p className="mt-2 text-lg font-semibold text-white">{session.user?.name || 'Cliente'}</p>
+            <h2 className="text-2xl sm:text-[32px] font-black leading-tight text-white mb-4 max-w-xs">
+              Gestiona tus cuentas y finanzas de forma{' '}
+              <span className="text-white/45">simple y segura.</span>
+            </h2>
+
+            <p className="text-[13px] text-white/40 leading-relaxed max-w-sm mb-7">
+              Aquí puedes revisar los movimientos de tus cuentas, verificar tu saldo y acceder a tus configuraciones principales de manera rápida.
+            </p>
+
+            {/* Stat cards */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* User */}
+              <div className="relative overflow-hidden rounded-[14px] border border-white/[0.06] bg-[#1a1a1a] p-5">
+                <div className="absolute right-[-14px] bottom-[-14px] opacity-[0.04] pointer-events-none">
+                  <User size={90} strokeWidth={1} />
+                </div>
+                <div className="w-[38px] h-[38px] rounded-[10px] bg-white flex items-center justify-center mb-5">
+                  <User size={18} className="text-black" />
+                </div>
+                <p className="text-[12px] text-white/40 mb-1">Usuario</p>
+                <h3 className="text-xl font-black text-white">{session.user?.name || 'Cliente'}</h3>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-slate-400">Rol</p>
-                <p className="mt-2 text-lg font-semibold text-white">{session.user?.role || 'USER_ROLE'}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-slate-400">Cuentas recientes</p>
-                <p className="mt-2 text-lg font-semibold text-white">{accounts.length}</p>
+
+              {/* Accounts */}
+              <div className="relative overflow-hidden rounded-[14px] border border-white/[0.06] bg-[#1a1a1a] p-5">
+                <div className="absolute right-[-14px] bottom-[-14px] opacity-[0.04] pointer-events-none">
+                  <Wallet size={90} strokeWidth={1} />
+                </div>
+                <div className="w-[38px] h-[38px] rounded-[10px] bg-white flex items-center justify-center mb-5">
+                  <Wallet size={18} className="text-black" />
+                </div>
+                <p className="text-[12px] text-white/40 mb-1">Cuentas activas</p>
+                <h3 className="text-xl font-black text-white">{accountsLoading ? '–' : accounts.length}</h3>
               </div>
             </div>
-          </article>
+          </div>
+        </div>
 
-          <article className="rounded-[2rem] border border-white/10 bg-white/95 p-6 text-slate-900 shadow-2xl shadow-slate-950/30 backdrop-blur-xl">
-            <h3 className="text-2xl font-bold text-slate-950">Mis cuentas</h3>
-            {healthLoading ? (
-              <p className="mt-4 text-sm text-slate-500">Consultando salud...</p>
-            ) : null}
-            {healthError ? (
-              <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                {healthError}
-              </div>
-            ) : null}
-            {health ? (
-              <div className="mt-4 rounded-2xl bg-cyan-50 px-4 py-3 text-sm text-cyan-900">
-                <p className="font-semibold">Health</p>
-                <p className="mt-1 break-all text-xs">{JSON.stringify(health)}</p>
-              </div>
-            ) : null}
+        {/* RECENT ACCOUNTS */}
+        <div className="rounded-[18px] border border-white/[0.07] bg-[#111111] p-6 h-full">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-[22px] font-black text-white">Mis cuentas recientes</h3>
 
-            <div className="mt-6 space-y-3">
-              {accountsError ? (
-                <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                  {accountsError}
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {accountsLoading && <p className="text-white/30 text-sm">Cargando cuentas…</p>}
+            {!accountsLoading && accounts.length === 0 && <p className="text-white/30 text-sm">No tienes cuentas aún.</p>}
+
+            {accounts.slice(0, 3).map((account, index) => (
+              <div
+                key={account._id || account.id || index}
+                className="relative overflow-hidden rounded-[14px] border border-white/[0.06] bg-[#1a1a1a] px-[18px] py-4 flex items-center justify-between cursor-pointer transition-colors hover:border-white/[0.14]"
+              >
+                <div className="absolute right-0 top-0 h-full w-[6px] bg-white rounded-r-[14px]" />
+                <div>
+                  <p className="text-[11px] text-white/45 font-medium mb-1.5">Cuenta {account.tipoCuenta}</p>
+                  <p className="text-[15px] font-bold text-white font-mono tracking-wider">{account.numeroCuenta}</p>
                 </div>
-              ) : null}
-              {accountsLoading ? (
-                <p className="text-sm text-slate-500">Cargando cuentas...</p>
-              ) : null}
-              {accounts.slice(0, 5).map((account, index) => (
-                <div key={account._id || account.id || index} className="rounded-2xl bg-slate-50 px-4 py-3">
-                  <p className="text-sm font-medium text-slate-700">Cuenta #{index + 1}</p>
-                  <p className="text-xs text-slate-500">Usuario: {account.userId || 'N/D'}</p>
-                  <p className="text-xs text-slate-500">Estado: {String(account.estado)}</p>
+                <div className="text-right pr-[18px]">
+                  <p className="text-[20px] font-black text-white leading-none mb-1.5">
+                    {account.moneda || 'GTQ'} {Number(account.saldo).toLocaleString()}
+                  </p>
+                  <p className="text-[12px] text-emerald-400 font-semibold">Activa</p>
                 </div>
-              ))}
-              {!accountsLoading && accounts.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
-                  No tienes cuentas visibles todavía.
-                </div>
-              ) : null}
-            </div>
-          </article>
-        </section>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </main>
+
+      {/* SUPPORT BANNER */}
+      <div className="mt-5 rounded-[18px] border border-white/[0.07] bg-[#111111] px-8 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-4">
+          <div className="w-[46px] h-[46px] rounded-[12px] bg-white flex items-center justify-center shrink-0">
+            <Headphones size={22} className="text-black" />
+          </div>
+          <div>
+            <h3 className="text-[18px] font-black text-white mb-1">¿Necesitas ayuda?</h3>
+            <p className="text-[13px] text-white/40">Estamos aquí para ayudarte con cualquier consulta o problema.</p>
+          </div>
+        </div>
+        <button
+          onClick={() => navigate('/client/ayuda')}
+          className="self-start sm:self-auto h-[44px] px-7 rounded-[12px] border border-white/20 text-white text-[14px] font-bold flex items-center gap-2 hover:bg-white hover:text-black transition-colors whitespace-nowrap"
+        >
+          Ir a ayuda <ArrowRight size={14} />
+        </button>
+      </div>
+
+
+    </div>
   )
 }
+

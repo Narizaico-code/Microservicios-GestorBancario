@@ -3,7 +3,7 @@ import { clearSession, loadSession, saveSession } from '../../../shared/utils/se
 
 const AuthContext = createContext(null)
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(() => loadSession())
 
   const value = useMemo(
@@ -13,6 +13,22 @@ export function AuthProvider({ children }) {
       login(nextSession) {
         saveSession(nextSession)
         setSession(nextSession)
+      },
+      updateUser(userPatch) {
+        setSession((current) => {
+          if (!current) {
+            return current
+          }
+          const nextSession = {
+            ...current,
+            user: {
+              ...current.user,
+              ...userPatch,
+            },
+          }
+          saveSession(nextSession)
+          return nextSession
+        })
       },
       logout() {
         clearSession()
@@ -25,7 +41,7 @@ export function AuthProvider({ children }) {
   return createElement(AuthContext.Provider, { value }, children)
 }
 
-export function useAuthStore() {
+export const useAuthStore = () => {
   const context = useContext(AuthContext)
 
   if (!context) {

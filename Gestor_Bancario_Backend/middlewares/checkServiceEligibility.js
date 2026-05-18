@@ -69,7 +69,7 @@ export const checkServiceEligibility = async (req, res, next) => {
     if (service.requiresVerifiedEmail) {
       try {
         const response = await fetch(`${AUTH_SERVICE_URL}/auth/profile/by-id`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },

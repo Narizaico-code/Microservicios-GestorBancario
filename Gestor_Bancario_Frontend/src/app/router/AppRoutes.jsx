@@ -19,6 +19,10 @@ import { ProfilePage } from '../../features/profile/pages/ProfilePage.jsx'
 import { ClientProfilePage } from '../../features/profile/pages/ClientProfilePage.jsx'
 import { AdminAuthPage } from '../../features/admin/pages/AdminAuthPage.jsx'
 import { ClientFavoritesPage } from '../../features/favorites/pages/ClientFavoritesPage.jsx'
+import { AdminServicesPage } from '../../features/services/pages/AdminServicesPage.jsx'
+import { AdminPromotionsPage } from '../../features/promotions/pages/AdminPromotionsPage.jsx'
+import { ClientServicesPage } from '../../features/services/pages/ClientServicesPage.jsx'
+import { ClientPromotionsPage } from '../../features/promotions/pages/ClientPromotionsPage.jsx'
 
 const DashboardRedirect = () => {
   const { session } = useAuthStore()
@@ -43,6 +47,8 @@ export const AppRoutes = () => {
                 <Route index element={<Navigate to="cuentas" replace />} />
                 <Route path="cuentas" element={<AdminAccounts />} />
                 <Route path="usuarios" element={<AdminAuthPage />} />
+                <Route path="servicios" element={<AdminServicesPage />} />
+                <Route path="promociones" element={<AdminPromotionsPage />} />
                 <Route path="perfil" element={<ProfilePage />} />
                 <Route path="ayuda" element={<Help />} />
               </Route>
@@ -51,6 +57,8 @@ export const AppRoutes = () => {
               <Route path="/client" element={<ClientLayout />}>
                 <Route index element={<ClientPage />} />
                 <Route path="accounts" element={<MyAccounts />} />
+                <Route path="servicios" element={<ClientServicesPage />} />
+                <Route path="promociones" element={<ClientPromotionsPage />} />
                 <Route path="help" element={<Help />} />
                 <Route path="ayuda" element={<Help />} />
                 <Route path="perfil" element={<ClientProfilePage />} />

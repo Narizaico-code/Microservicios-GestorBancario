@@ -321,3 +321,80 @@ Arrays centralizados de campos permitidos para las whitelists de update.
 | `AUTH_SERVICE_URL` | `http://localhost:4000/api/v1` | URL del AuthService para verificaciones de elegibilidad |
 | `JWT_SECRET` | — | Clave compartida entre ambos backends |
 | `PORT` | `3006` | Puerto del Gestor Bancario |
+
+---
+
+## Implementación del Frontend (React)
+
+Se implementó la interfaz de usuario completa para los módulos de Servicios y Promociones en el proyecto `Gestor_Bancario_Frontend`, siguiendo las convenciones y utilizando el stack tecnológico existente (React, Vite, Tailwind CSS, Zustand).
+
+### Sistema Global de Temas (Claro/Oscuro)
+
+Se añadió un sistema de temas dual (claro/oscuro) con las siguientes características:
+- **Persistencia**: La preferencia de tema se guarda en `localStorage`.
+- **Contexto Global**: Se creó un `ThemeProvider` y un hook `useTheme` en `src/shared/store/themeStore.js` para gestionar el estado del tema.
+- **Control**: Se agregó un interruptor en los `Navbar` de Admin y Cliente para cambiar de tema.
+- **Estilos**: Se utiliza un atributo `data-theme` en la etiqueta `<html>` para aplicar variables CSS condicionales definidas en `src/style/index.css`.
+
+### Estructura de Archivos Creada
+
+```
+src/
+├── features/
+│   ├── services/
+│   │   ├── components/
+│   │   │   ├── ServiceCard.jsx
+│   │   │   ├── ServiceList.jsx
+│   │   │   ├── ServiceDetailModal.jsx
+│   │   │   ├── ServiceFormModal.jsx
+│   │   │   └── ServiceFilters.jsx
+│   │   ├── hooks/
+│   │   │   ├── useServiceForm.js  # Lógica del formulario extraída
+│   │   │   └── useServices.js     # Lógica de fetch y estado
+│   │   └── pages/
+│   │       ├── ClientServicesPage.jsx
+│   │       └── AdminServicesPage.jsx
+│   └── promotions/
+│       ├── components/
+│       │   ├── PromotionCard.jsx
+│       │   ├── PromotionList.jsx
+│       │   ├── PromotionDetailModal.jsx
+│       │   ├── PromotionFormModal.jsx
+│       │   ├── PromotionToggleModal.jsx
+│       │   ├── PromotionStatsModal.jsx
+│       │   └── PromotionFilters.jsx
+│       ├── hooks/
+│       │   ├── usePromotionForm.js # Lógica del formulario extraída
+│       │   └── usePromotions.js    # Lógica de fetch y estado
+│       └── pages/
+│           ├── ClientPromotionsPage.jsx
+│           └── AdminPromotionsPage.jsx
+└── shared/
+    ├── api/
+    │   ├── services.js    # API para /services
+    │   └── promotions.js  # API para /promotions
+    └── components/
+        └── ui/
+            └── Modal.jsx      # Componente de modal reutilizable
+```
+
+### Capa de API
+
+Se crearon dos nuevos módulos en `src/shared/api/`:
+- **`services.js`**: Contiene funciones para `getServices`, `getServiceById`, `createService`, `updateService` y `deleteService`. Las operaciones de creación y actualización utilizan el helper `requestFormData`.
+- **`promotions.js`**: Contiene funciones para `getPromotions`, `getPromotionById`, `createPromotion`, `updatePromotion`, `deletePromotion`, `togglePromotion` y `getPromotionStats`.
+
+### Hooks y Lógica de Formularios
+
+- **Hooks de Datos**: Se crearon `useServices.js` y `usePromotions.js` para encapsular la lógica de fetching de datos, manejo de estado de carga, filtros y paginación.
+- **Hooks de Formularios**: La lógica compleja de los modales de creación/edición fue extraída a `useServiceForm.js` y `usePromotionForm.js`. Estos hooks gestionan el estado del formulario, las validaciones del lado del cliente y la construcción del objeto `FormData`, incluyendo la serialización de `tags`, `discount`, `conditions`, etc., a strings JSON.
+
+### Componentes y Páginas
+
+- Se crearon todas las **páginas** de Admin y Cliente para listar y gestionar servicios y promociones.
+- Se implementaron **componentes de UI** como `ServiceCard`, `PromotionCard`, filtros, listas y todos los modales especificados (detalle, formulario, toggle de estado, estadísticas).
+- Se creó un componente **`Modal.jsx` reutilizable** y tematizable.
+
+### Rutas y Navegación
+
+- Se actualizaron `AppRoutes.jsx`, `Navbar.jsx` (admin) y `ClientNavbar.jsx` (cliente) para incluir las nuevas rutas (`/servicios`, `/promociones`) y sus respectivos enlaces de navegación, utilizando los íconos de `lucide-react`.

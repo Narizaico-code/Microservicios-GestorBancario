@@ -156,7 +156,7 @@ async function checkSegmentEligibility(segment, userId, res) {
         // Verificar si el usuario fue creado hace menos de 30 días
         try {
           const response = await fetch(`${AUTH_SERVICE_URL}/auth/profile/by-id`, {
-            method: 'GET',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId }),
           });

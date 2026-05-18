@@ -1,0 +1,66 @@
+[
+  {
+    "userId": "user_premium_1",
+    "numeroCuenta": "1000000001",
+    "tipoCuenta": "AHORRO",
+    "saldo": 5000.50,
+    "moneda": "GTQ",
+    "estado": true
+  },
+  {
+    "userId": "user_premium_1",
+    "numeroCuenta": "1000000002",
+    "tipoCuenta": "MONETARIA",
+    "saldo": 1500.00,
+    "moneda": "GTQ",
+    "estado": true
+  },
+  {
+    "userId": "user_vip_2",
+    "numeroCuenta": "1000000003",
+    "tipoCuenta": "MONETARIA",
+    "saldo": 15000.00,
+    "moneda": "GTQ",
+    "estado": true
+  },
+  {
+    "userId": "user_inactive_3",
+    "numeroCuenta": "1000000004",
+    "tipoCuenta": "AHORRO",
+    "saldo": 0.00,
+    "moneda": "USD",
+    "estado": true
+  },
+  {
+    "userId": "user_new_4",
+    "numeroCuenta": "1000000005",
+    "tipoCuenta": "MONETARIA",
+    "saldo": 250.00,
+    "moneda": "GTQ",
+    "estado": true
+  },
+  {
+    "userId": "user_regular_5",
+    "numeroCuenta": "1000000006",
+    "tipoCuenta": "AHORRO",
+    "saldo": 1000.00,
+    "moneda": "EUR",
+    "estado": true
+  },
+  {
+    "userId": "user_regular_6",
+    "numeroCuenta": "1000000007",
+    "tipoCuenta": "MONETARIA",
+    "saldo": 5000.00,
+    "moneda": "MXN",
+    "estado": false
+  },
+  {
+    "userId": "user_regular_7",
+    "numeroCuenta": "1000000008",
+    "tipoCuenta": "AHORRO",
+    "saldo": 300.00,
+    "moneda": "GTQ",
+    "estado": true
+  }
+]

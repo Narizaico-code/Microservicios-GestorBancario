@@ -517,6 +517,7 @@ export const AdminAuthPage = () => {
             <UnifiedAuthForm
               initialMode={"register"}
               onlyRegister={true}
+              dynamic={true}
               onRegistered={() => {
                 setShowCreateModal(false)
                 refreshUsers()

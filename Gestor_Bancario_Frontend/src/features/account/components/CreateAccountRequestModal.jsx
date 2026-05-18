@@ -46,7 +46,7 @@ const CreateAccountRequestModal = ({
         <form onSubmit={onSubmit} className="px-6 py-5 flex flex-col gap-4">
 
           {/* Tipo de cuenta */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5" title="Selecciona la modalidad de la cuenta bancaria">
             <label className="text-[11px] font-bold tracking-[0.15em] uppercase text-white/40">
               Tipo de cuenta
             </label>
@@ -63,7 +63,7 @@ const CreateAccountRequestModal = ({
           </div>
 
           {/* Moneda */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5" title="Divisa base para las operaciones de esta cuenta">
             <label className="text-[11px] font-bold tracking-[0.15em] uppercase text-white/40">
               Moneda
             </label>

@@ -102,7 +102,7 @@ const typeRules = (isRequired = true) => {
   if (!isRequired) chain = chain.optional();
   return chain
     .isIn(['PRODUCT', 'SERVICE'])
-    .withMessage('El tipo debe ser PRODUCT o SERVICE');
+    .withMessage('El tipo de ítem debe ser un producto o un servicio válido');
 };
 
 const priceRules = (isRequired = true) => {
@@ -117,7 +117,7 @@ const commonOptionalRules = () => [
   body('currency')
     .optional()
     .isIn(['GTQ', 'USD', 'EUR', 'MXN'])
-    .withMessage('La moneda debe ser GTQ, USD, EUR o MXN'),
+    .withMessage('La moneda seleccionada no es válida'),
 
   body('category')
     .optional()
@@ -130,24 +130,24 @@ const commonOptionalRules = () => [
   body('status')
     .optional()
     .isIn(['DRAFT', 'ACTIVE', 'INACTIVE', 'ARCHIVED'])
-    .withMessage('El estado debe ser DRAFT, ACTIVE, INACTIVE o ARCHIVED'),
+    .withMessage('El estado seleccionado no es válido'),
 
   body('active')
     .optional()
     .isBoolean()
-    .withMessage('active debe ser true o false')
+    .withMessage('El estado activo debe ser verdadero o falso')
     .toBoolean(),
 
   body('validFrom')
     .optional()
     .isISO8601()
-    .withMessage('validFrom debe ser una fecha ISO8601 valida')
+    .withMessage('La fecha de inicio debe ser una fecha válida')
     .toDate(),
 
   body('validTo')
     .optional()
     .isISO8601()
-    .withMessage('validTo debe ser una fecha ISO8601 valida')
+    .withMessage('La fecha de finalización debe ser una fecha válida')
     .toDate(),
 
   body('validTo')
@@ -166,7 +166,7 @@ const commonOptionalRules = () => [
   body('imageUrl')
     .optional()
     .isURL({ require_protocol: true })
-    .withMessage('imageUrl debe ser una URL valida con protocolo')
+    .withMessage('La URL de la imagen debe ser válida y empezar con http:// o https://')
     .trim(),
 
   body('minBalance')
@@ -177,12 +177,12 @@ const commonOptionalRules = () => [
   body('maxUsesPerUser')
     .optional()
     .isInt({ gt: 0 })
-    .withMessage('maxUsesPerUser debe ser un entero mayor que 0'),
+    .withMessage('El límite de usos por usuario debe ser un número mayor a cero'),
 
   body('totalUsesLimit')
     .optional()
     .isInt({ gt: 0 })
-    .withMessage('totalUsesLimit debe ser un entero mayor que 0'),
+    .withMessage('El límite total de usos debe ser un número mayor a cero'),
 
   body('targetRoles')
     .optional()
@@ -192,7 +192,7 @@ const commonOptionalRules = () => [
   body('targetRoles.*')
     .optional()
     .isIn(['USER_ROLE', 'EMPLOYEE_ROLE', 'ADMIN_ROLE'])
-    .withMessage('Cada rol debe ser USER_ROLE, EMPLOYEE_ROLE o ADMIN_ROLE'),
+    .withMessage('El rol seleccionado no es válido'),
 
   body('tags')
     .optional()
@@ -216,7 +216,7 @@ const commonOptionalRules = () => [
   body('requiresVerifiedEmail')
     .optional()
     .isBoolean()
-    .withMessage('requiresVerifiedEmail debe ser true o false'),
+    .withMessage('El campo requiere correo verificado debe ser verdadero o falso'),
 ];
 
 const termsConditionalRules = () =>
@@ -250,7 +250,7 @@ const discountRules = () => [
     .notEmpty()
     .withMessage('discount.type es requerido')
     .isIn(['PERCENT', 'AMOUNT'])
-    .withMessage('discount.type debe ser PERCENT o AMOUNT'),
+    .withMessage('El tipo de descuento debe ser por porcentaje o monto fijo'),
 
   body('discount.value')
     .if(body('discount').exists({ values: 'falsy' }).not())
@@ -371,7 +371,7 @@ export const validateServiceQuery = [
   query('active')
     .optional()
     .isIn(['true', 'false'])
-    .withMessage('active debe ser true o false'),
+    .withMessage('El estado activo debe ser verdadero o falso'),
 
   query('q')
     .optional()

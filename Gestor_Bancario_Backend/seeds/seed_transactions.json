@@ -1,0 +1,74 @@
+[
+  {
+    "tipoTransaccion": "DEPOSITO",
+    "cuentaOrigen": null,
+    "cuentaDestino": "1000000001",
+    "monto": 500.00,
+    "moneda": "GTQ",
+    "descripcion": "Depósito en efectivo agencia zona 10.",
+    "estado": "COMPLETADA"
+  },
+  {
+    "tipoTransaccion": "TRANSFERENCIA",
+    "cuentaOrigen": "1000000003",
+    "cuentaDestino": "1000000005",
+    "monto": 2500.00,
+    "moneda": "GTQ",
+    "descripcion": "Pago de servicios profesionales (Supera límite Q2000 por trx).",
+    "estado": "COMPLETADA"
+  },
+  {
+    "tipoTransaccion": "TRANSFERENCIA",
+    "cuentaOrigen": "1000000003",
+    "cuentaDestino": "1000000008",
+    "monto": 8000.00,
+    "moneda": "GTQ",
+    "descripcion": "Transferencia de fondos grande (Acumula para límite Q10000 diario).",
+    "estado": "COMPLETADA"
+  },
+  {
+    "tipoTransaccion": "RETIRO",
+    "cuentaOrigen": "1000000002",
+    "cuentaDestino": null,
+    "monto": 200.00,
+    "moneda": "GTQ",
+    "descripcion": "Retiro en cajero automático zona 1.",
+    "estado": "COMPLETADA"
+  },
+  {
+    "tipoTransaccion": "DEPOSITO",
+    "cuentaOrigen": null,
+    "cuentaDestino": "1000000004",
+    "monto": 50.00,
+    "moneda": "USD",
+    "descripcion": "Remesa recibida del extranjero.",
+    "estado": "COMPLETADA"
+  },
+  {
+    "tipoTransaccion": "TRANSFERENCIA",
+    "cuentaOrigen": "1000000001",
+    "cuentaDestino": "1000000002",
+    "monto": 1000.00,
+    "moneda": "GTQ",
+    "descripcion": "Transferencia entre cuentas propias.",
+    "estado": "COMPLETADA"
+  },
+  {
+    "tipoTransaccion": "TRANSFERENCIA",
+    "cuentaOrigen": "1000000005",
+    "cuentaDestino": "1000000003",
+    "monto": 100.00,
+    "moneda": "GTQ",
+    "descripcion": "Devolución de préstamo.",
+    "estado": "CANCELADA"
+  },
+  {
+    "tipoTransaccion": "RETIRO",
+    "cuentaOrigen": "1000000006",
+    "cuentaDestino": null,
+    "monto": 50.00,
+    "moneda": "EUR",
+    "descripcion": "Compra en terminal de punto de venta internacional.",
+    "estado": "COMPLETADA"
+  }
+]

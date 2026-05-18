@@ -32,18 +32,18 @@ export const PromotionFormModal = ({ promotion, onClose, onSuccess }) => {
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Tipo</span>
+            <span className="text-[var(--theme-text-muted)]">Tipo de promoción</span>
             <select
               name="type"
               value={form.type}
               onChange={handleChange}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             >
-              <option value="GENERAL">GENERAL</option>
-              <option value="CASHBACK">CASHBACK</option>
-              <option value="RATE_REDUCTION">RATE_REDUCTION</option>
-              <option value="FEE_WAIVER">FEE_WAIVER</option>
-              <option value="BONUS_POINTS">BONUS_POINTS</option>
+              <option value="GENERAL">General</option>
+              <option value="CASHBACK">Devolución de efectivo</option>
+              <option value="RATE_REDUCTION">Reducción de tasa</option>
+              <option value="FEE_WAIVER">Exención de comisión</option>
+              <option value="BONUS_POINTS">Puntos de bonificación</option>
             </select>
           </label>
 
@@ -59,111 +59,127 @@ export const PromotionFormModal = ({ promotion, onClose, onSuccess }) => {
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Estado</span>
+            <span className="text-[var(--theme-text-muted)]">Estado actual</span>
             <select
               name="status"
               value={form.status}
               onChange={handleChange}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             >
-              <option value="DRAFT">DRAFT</option>
-              <option value="SCHEDULED">SCHEDULED</option>
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="PAUSED">PAUSED</option>
-              <option value="EXPIRED">EXPIRED</option>
-              <option value="CANCELLED">CANCELLED</option>
+              <option value="DRAFT">Borrador</option>
+              <option value="SCHEDULED">Programada</option>
+              <option value="ACTIVE">Activa</option>
+              <option value="PAUSED">Pausada</option>
+              <option value="EXPIRED">Expirada</option>
+              <option value="CANCELLED">Cancelada</option>
             </select>
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Segmento</span>
+            <span className="text-[var(--theme-text-muted)]">Segmento Objetivo</span>
             <select
               name="targetSegment"
               value={form.targetSegment}
               onChange={handleChange}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             >
-              {segmentOptions.map((segment) => (
-                <option key={segment} value={segment}>{segment}</option>
-              ))}
+              {segmentOptions.map((segment) => {
+                const labels = { ALL: 'Todos', VIP: 'VIP', NEW: 'Nuevos usuarios', INACTIVE: 'Inactivos', PREMIUM: 'Premium' };
+                return <option key={segment} value={segment}>{labels[segment] || segment}</option>;
+              })}
             </select>
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">
+              VIP: Saldo alto | NEW: &lt; 30 días | INACTIVE: Sin uso 60 días | PREMIUM: &gt; 1 cuenta
+            </small>
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Vigencia inicio</span>
+            <span className="text-[var(--theme-text-muted)]">Fecha de inicio</span>
             <input
               type="date"
               name="validFrom"
               value={form.validFrom}
               onChange={handleChange}
+              title="Fecha en que la promoción comenzará a estar activa"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Inicio del período activo.</small>
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Vigencia fin</span>
+            <span className="text-[var(--theme-text-muted)]">Fecha de finalización</span>
             <input
               type="date"
               name="validTo"
               value={form.validTo}
               onChange={handleChange}
+              title="Fecha en que la promoción terminará"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Fin del período activo.</small>
           </label>
 
           <div className="flex items-center gap-3 text-sm">
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2" title="Habilitar permite que la promoción se muestre si está activa">
               <input type="checkbox" name="active" checked={form.active} onChange={handleChange} />
               <span className="text-[var(--theme-text-muted)]">Activo</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2" title="Permite que esta promoción se combine con otras simultáneamente">
               <input type="checkbox" name="stackable" checked={form.stackable} onChange={handleChange} />
-              <span className="text-[var(--theme-text-muted)]">Stackable</span>
+              <span className="text-[var(--theme-text-muted)]">Acumulable (Stackable)</span>
             </label>
           </div>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Max usos global</span>
+            <span className="text-[var(--theme-text-muted)]">Límite global de usos</span>
             <input
               name="maxUsesGlobal"
               type="number"
               value={form.maxUsesGlobal}
               onChange={handleChange}
+              placeholder="Ej. 1000"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Total de veces que todos los usuarios pueden usarla combinados.</small>
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Max usos por usuario</span>
+            <span className="text-[var(--theme-text-muted)]">Límite de usos por usuario</span>
             <input
               name="maxUsesPerUser"
               type="number"
               value={form.maxUsesPerUser}
               onChange={handleChange}
+              placeholder="Ej. 1"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Veces que un mismo cliente puede beneficiarse.</small>
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Budget</span>
+            <span className="text-[var(--theme-text-muted)]">Presupuesto máximo asignado</span>
             <input
               name="budget"
               type="number"
               value={form.budget}
               onChange={handleChange}
+              placeholder="Ej. 50000"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Límite de gasto monetario de la promoción.</small>
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Priority</span>
+            <span className="text-[var(--theme-text-muted)]">Prioridad</span>
             <input
               name="priority"
               type="number"
               value={form.priority}
               onChange={handleChange}
+              placeholder="Ej. 10"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">A mayor número, mayor prioridad para aplicarse.</small>
           </label>
         </div>
 
@@ -217,24 +233,27 @@ export const PromotionFormModal = ({ promotion, onClose, onSuccess }) => {
           />
         </label>
 
-        <label className="grid gap-2 text-sm">
-          <span className="text-[var(--theme-text-muted)]">Condiciones (JSON)</span>
+        <label className="grid gap-2 text-sm" title="Estructura JSON con las condiciones específicas de la promoción">
+          <span className="text-[var(--theme-text-muted)]">Condiciones especiales (JSON)</span>
           <textarea
             name="conditions"
             rows="3"
             value={form.conditions}
             onChange={handleChange}
+            placeholder='Ej: {"minPurchase": 500}'
             className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
           />
+          <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Objeto JSON con condiciones adicionales.</small>
         </label>
 
-        <label className="grid gap-2 text-sm">
-          <span className="text-[var(--theme-text-muted)]">Nota interna</span>
+        <label className="grid gap-2 text-sm" title="Información exclusiva para el equipo administrativo">
+          <span className="text-[var(--theme-text-muted)]">Nota interna administrativa</span>
           <textarea
             name="internalNote"
             rows="2"
             value={form.internalNote}
             onChange={handleChange}
+            placeholder="Comentarios solo visibles para administradores..."
             className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
           />
         </label>

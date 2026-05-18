@@ -1,0 +1,50 @@
+[
+  {
+    "userId": "user_premium_1",
+    "cuenta": "2000000001",
+    "tipo": "TERCEROS",
+    "alias": "Pago Colegio"
+  },
+  {
+    "userId": "user_vip_2",
+    "cuenta": "2000000002",
+    "tipo": "PROPIA_OTROS_BANCOS",
+    "alias": "Ahorros Banrural"
+  },
+  {
+    "userId": "user_inactive_3",
+    "cuenta": "2000000003",
+    "tipo": "TERCEROS",
+    "alias": "Mamá"
+  },
+  {
+    "userId": "user_new_4",
+    "cuenta": "2000000004",
+    "tipo": "TERCEROS",
+    "alias": "Arrendador"
+  },
+  {
+    "userId": "user_regular_5",
+    "cuenta": "2000000005",
+    "tipo": "PROPIA_OTROS_BANCOS",
+    "alias": "Cuenta Nomina"
+  },
+  {
+    "userId": "user_regular_6",
+    "cuenta": "2000000006",
+    "tipo": "TERCEROS",
+    "alias": "Seguro Médico"
+  },
+  {
+    "userId": "user_regular_7",
+    "cuenta": "2000000007",
+    "tipo": "TERCEROS",
+    "alias": "Proveedor Internet"
+  },
+  {
+    "userId": "user_regular_8",
+    "cuenta": "2000000008",
+    "tipo": "TERCEROS",
+    "alias": "Gimnasio"
+  }
+]

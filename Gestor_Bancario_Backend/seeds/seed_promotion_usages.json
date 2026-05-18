@@ -1,0 +1,86 @@
+[
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b1",
+    "userId": "user_vip_2",
+    "accountNumber": "1000000003",
+    "usedAt": "2025-12-05T10:00:00.000Z",
+    "status": "APPLIED",
+    "benefitDetails": {
+      "cashbackAmount": 150.00,
+      "transactionId": "txn_8374928"
+    }
+  },
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b1",
+    "userId": "user_vip_2",
+    "accountNumber": "1000000003",
+    "usedAt": "2025-12-10T14:30:00.000Z",
+    "status": "REVERSED",
+    "benefitDetails": {
+      "cashbackAmount": 50.00,
+      "reason": "Compra cancelada por el comercio."
+    }
+  },
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b2",
+    "userId": "user_new_4",
+    "accountNumber": "1000000005",
+    "usedAt": "2026-05-02T09:15:00.000Z",
+    "status": "APPLIED",
+    "benefitDetails": {
+      "interestRate": 0.0,
+      "originalRate": 0.05
+    }
+  },
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b3",
+    "userId": "user_new_4",
+    "accountNumber": "1000000005",
+    "usedAt": "2024-01-15T11:45:00.000Z",
+    "status": "APPLIED",
+    "benefitDetails": {
+      "pointsEarned": 2000,
+      "multiplier": 2
+    }
+  },
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b4",
+    "userId": "user_inactive_3",
+    "accountNumber": "1000000004",
+    "usedAt": "2026-06-10T16:00:00.000Z",
+    "status": "APPLIED",
+    "benefitDetails": {
+      "feeWaived": 25.00
+    }
+  },
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b5",
+    "userId": "user_premium_1",
+    "accountNumber": "1000000001",
+    "usedAt": "2026-05-15T12:00:00.000Z",
+    "status": "APPLIED",
+    "benefitDetails": {
+      "cashbackAmount": 200.00
+    }
+  },
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b5",
+    "userId": "user_premium_1",
+    "accountNumber": "1000000002",
+    "usedAt": "2026-05-16T10:00:00.000Z",
+    "status": "REVERSED",
+    "benefitDetails": {
+      "reason": "Uso máximo por usuario alcanzado."
+    }
+  },
+  {
+    "promotionId": "60d5ecb54cb8a919c098d7b8",
+    "userId": "user_premium_1",
+    "accountNumber": "1000000001",
+    "usedAt": "2026-01-05T08:00:00.000Z",
+    "status": "APPLIED",
+    "benefitDetails": {
+      "bonusAmount": 500.00
+    }
+  }
+]

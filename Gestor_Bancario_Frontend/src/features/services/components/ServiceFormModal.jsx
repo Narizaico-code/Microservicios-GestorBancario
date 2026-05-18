@@ -55,15 +55,15 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Tipo</span>
+            <span className="text-[var(--theme-text-muted)]">Tipo de ítem</span>
             <select
               name="type"
               value={form.type}
               onChange={handleChange}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             >
-              <option value="SERVICE">SERVICE</option>
-              <option value="PRODUCT">PRODUCT</option>
+              <option value="SERVICE">Servicio</option>
+              <option value="PRODUCT">Producto</option>
             </select>
           </label>
 
@@ -107,16 +107,16 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Estado</span>
+            <span className="text-[var(--theme-text-muted)]">Estado actual</span>
             <select
               name="status"
               value={form.status}
               onChange={handleChange}
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             >
-              <option value="DRAFT">DRAFT</option>
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="INACTIVE">INACTIVE</option>
+              <option value="DRAFT">Borrador</option>
+              <option value="ACTIVE">Activo</option>
+              <option value="INACTIVE">Inactivo</option>
             </select>
           </label>
 
@@ -130,68 +130,74 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
               />
               <span className="text-[var(--theme-text-muted)]">Activo</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-2" title="Indica si el usuario debe tener su correo verificado para usar esto">
               <input
                 type="checkbox"
                 name="requiresVerifiedEmail"
                 checked={form.requiresVerifiedEmail}
                 onChange={handleChange}
               />
-              <span className="text-[var(--theme-text-muted)]">Email verificado</span>
+              <span className="text-[var(--theme-text-muted)]">Requiere Email Verificado</span>
             </label>
           </div>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Vigencia inicio</span>
+            <span className="text-[var(--theme-text-muted)]">Fecha de inicio</span>
             <input
               type="date"
               name="validFrom"
               value={form.validFrom}
               onChange={handleChange}
+              title="Fecha en que el servicio comenzará a estar activo"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Vigencia fin</span>
+            <span className="text-[var(--theme-text-muted)]">Fecha de finalización</span>
             <input
               type="date"
               name="validTo"
               value={form.validTo}
               onChange={handleChange}
+              title="Fecha en que el servicio dejará de estar activo"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Min balance</span>
+            <span className="text-[var(--theme-text-muted)]">Saldo mínimo requerido</span>
             <input
               name="minBalance"
               type="number"
               value={form.minBalance}
               onChange={handleChange}
+              title="Saldo mínimo requerido en la cuenta para poder adquirirlo"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
+            <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Saldo mínimo requerido para adquirir.</small>
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Max usos por usuario</span>
+            <span className="text-[var(--theme-text-muted)]">Límite de usos por usuario</span>
             <input
               name="maxUsesPerUser"
               type="number"
               value={form.maxUsesPerUser}
               onChange={handleChange}
+              title="Límite máximo de veces que un usuario puede adquirir esto"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
           </label>
 
           <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Total usos limite</span>
+            <span className="text-[var(--theme-text-muted)]">Límite total de usos global</span>
             <input
               name="totalUsesLimit"
               type="number"
               value={form.totalUsesLimit}
               onChange={handleChange}
+              title="Límite máximo global en todo el sistema"
               className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
           </label>
@@ -236,13 +242,14 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
           </label>
         </div>
 
-        <label className="grid gap-2 text-sm">
-          <span className="text-[var(--theme-text-muted)]">Nota interna</span>
+        <label className="grid gap-2 text-sm" title="Información exclusiva para el equipo administrativo">
+          <span className="text-[var(--theme-text-muted)]">Nota interna administrativa</span>
           <textarea
             name="internalNote"
             rows="2"
             value={form.internalNote}
             onChange={handleChange}
+            placeholder="Solo visible para administradores..."
             className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
           />
         </label>
@@ -262,15 +269,15 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
           {showDiscount ? (
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <label className="grid gap-2 text-sm">
-                <span className="text-[var(--theme-text-muted)]">Tipo</span>
+                <span className="text-[var(--theme-text-muted)]">Tipo de Descuento</span>
                 <select
                   name="type"
                   value={discount.type}
                   onChange={handleDiscountChange}
                   className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
                 >
-                  <option value="PERCENT">PERCENT</option>
-                  <option value="AMOUNT">AMOUNT</option>
+                  <option value="PERCENT">Porcentaje</option>
+                  <option value="AMOUNT">Monto Fijo</option>
                 </select>
               </label>
 

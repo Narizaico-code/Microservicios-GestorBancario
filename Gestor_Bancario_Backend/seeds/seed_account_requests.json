@@ -1,0 +1,74 @@
+[
+  {
+    "userId": "user_new_4",
+    "tipoCuenta": "AHORRO",
+    "moneda": "GTQ",
+    "status": "PENDING",
+    "reviewedBy": null,
+    "reviewedAt": null,
+    "reviewComment": null
+  },
+  {
+    "userId": "user_regular_5",
+    "tipoCuenta": "MONETARIA",
+    "moneda": "USD",
+    "status": "APPROVED",
+    "reviewedBy": "admin_1",
+    "reviewedAt": "2026-05-18T10:00:00.000Z",
+    "reviewComment": "Documentos validados correctamente."
+  },
+  {
+    "userId": "user_regular_6",
+    "tipoCuenta": "AHORRO",
+    "moneda": "EUR",
+    "status": "DENIED",
+    "reviewedBy": "admin_2",
+    "reviewedAt": "2026-05-17T15:30:00.000Z",
+    "reviewComment": "DPI no coincide con la foto enviada."
+  },
+  {
+    "userId": "user_vip_2",
+    "tipoCuenta": "AHORRO",
+    "moneda": "GTQ",
+    "status": "PENDING",
+    "reviewedBy": null,
+    "reviewedAt": null,
+    "reviewComment": null
+  },
+  {
+    "userId": "user_premium_1",
+    "tipoCuenta": "MONETARIA",
+    "moneda": "MXN",
+    "status": "APPROVED",
+    "reviewedBy": "admin_1",
+    "reviewedAt": "2026-05-16T09:15:00.000Z",
+    "reviewComment": "Cliente frecuente, aprobado automático."
+  },
+  {
+    "userId": "user_inactive_3",
+    "tipoCuenta": "AHORRO",
+    "moneda": "GTQ",
+    "status": "DENIED",
+    "reviewedBy": "admin_2",
+    "reviewedAt": "2026-05-15T11:45:00.000Z",
+    "reviewComment": "Falta comprobante de ingresos."
+  },
+  {
+    "userId": "user_regular_7",
+    "tipoCuenta": "MONETARIA",
+    "moneda": "COP",
+    "status": "PENDING",
+    "reviewedBy": null,
+    "reviewedAt": null,
+    "reviewComment": null
+  },
+  {
+    "userId": "user_regular_8",
+    "tipoCuenta": "AHORRO",
+    "moneda": "JPY",
+    "status": "APPROVED",
+    "reviewedBy": "admin_1",
+    "reviewedAt": "2026-05-14T08:00:00.000Z",
+    "reviewComment": "Cumple con todos los requisitos."
+  }
+]

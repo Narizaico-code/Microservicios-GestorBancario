@@ -98,19 +98,19 @@ export const validateCreatePromotion = [
   body('active')
     .optional()
     .isBoolean()
-    .withMessage('active debe ser true o false')
+    .withMessage('El estado activo debe ser verdadero o falso')
     .toBoolean(),
 
   body('validFrom')
     .optional()
     .isISO8601()
-    .withMessage('validFrom debe ser una fecha valida')
+    .withMessage('La fecha de inicio debe ser una fecha válida')
     .toDate(),
 
   body('validTo')
     .optional()
     .isISO8601()
-    .withMessage('validTo debe ser una fecha valida')
+    .withMessage('La fecha de finalización debe ser una fecha válida')
     .toDate(),
 
   body('validTo')
@@ -120,7 +120,7 @@ export const validateCreatePromotion = [
         const start = new Date(req.body.validFrom);
         const end = new Date(value);
         if (end <= start) {
-          throw new Error('validTo debe ser posterior a validFrom');
+          throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
         }
       }
       return true;
@@ -129,7 +129,7 @@ export const validateCreatePromotion = [
   body('imageUrl')
     .optional()
     .isURL({ require_protocol: true })
-    .withMessage('imageUrl debe ser una URL valida')
+    .withMessage('La URL de la imagen debe ser válida y empezar con http:// o https://')
     .trim(),
 
   body('conditions')
@@ -138,33 +138,33 @@ export const validateCreatePromotion = [
       if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
         return true;
       }
-      throw new Error('conditions debe ser un objeto');
+      throw new Error('Las condiciones deben tener un formato de datos estructurado (objeto JSON)');
     }),
 
   body('type')
     .optional()
     .isIn(['CASHBACK', 'RATE_REDUCTION', 'FEE_WAIVER', 'BONUS_POINTS', 'GENERAL'])
-    .withMessage('type debe ser CASHBACK, RATE_REDUCTION, FEE_WAIVER, BONUS_POINTS o GENERAL'),
+    .withMessage('El tipo de promoción no es válido. Seleccione una opción de la lista'),
 
   body('status')
     .optional()
     .isIn(['DRAFT', 'SCHEDULED', 'ACTIVE', 'PAUSED', 'EXPIRED', 'CANCELLED'])
-    .withMessage('status debe ser DRAFT, SCHEDULED, ACTIVE, PAUSED, EXPIRED o CANCELLED'),
+    .withMessage('El estado de la promoción no es válido. Seleccione una opción de la lista'),
 
   body('targetSegment')
     .optional()
     .isIn(['ALL', 'VIP', 'NEW', 'INACTIVE', 'PREMIUM'])
-    .withMessage('targetSegment debe ser ALL, VIP, NEW, INACTIVE o PREMIUM'),
+    .withMessage('El segmento objetivo no es válido. Seleccione una opción de la lista'),
 
   body('targetRoles')
     .optional()
     .isArray()
-    .withMessage('targetRoles debe ser un array'),
+    .withMessage('Los roles objetivo deben enviarse como una lista'),
 
   body('targetRoles.*')
     .optional()
     .isIn(['USER_ROLE', 'EMPLOYEE_ROLE'])
-    .withMessage('Cada rol debe ser USER_ROLE o EMPLOYEE_ROLE'),
+    .withMessage('El rol seleccionado no es válido'),
 
   body('maxUsesGlobal')
     .optional()
@@ -199,7 +199,7 @@ export const validateCreatePromotion = [
   body('applicableServices.*')
     .optional()
     .isMongoId()
-    .withMessage('Cada ID de servicio aplicable debe ser un MongoId valido'),
+    .withMessage('Uno o más identificadores de servicios aplicables no son válidos'),
 
   body('internalNote')
     .optional()
@@ -249,19 +249,19 @@ export const validateUpdatePromotion = [
   body('active')
     .optional()
     .isBoolean()
-    .withMessage('active debe ser true o false')
+    .withMessage('El estado activo debe ser verdadero o falso')
     .toBoolean(),
 
   body('validFrom')
     .optional()
     .isISO8601()
-    .withMessage('validFrom debe ser una fecha valida')
+    .withMessage('La fecha de inicio debe ser una fecha válida')
     .toDate(),
 
   body('validTo')
     .optional()
     .isISO8601()
-    .withMessage('validTo debe ser una fecha valida')
+    .withMessage('La fecha de finalización debe ser una fecha válida')
     .toDate(),
 
   body('validTo')
@@ -271,7 +271,7 @@ export const validateUpdatePromotion = [
         const start = new Date(req.body.validFrom);
         const end = new Date(value);
         if (end <= start) {
-          throw new Error('validTo debe ser posterior a validFrom');
+          throw new Error('La fecha de finalización debe ser posterior a la fecha de inicio');
         }
       }
       return true;
@@ -280,7 +280,7 @@ export const validateUpdatePromotion = [
   body('imageUrl')
     .optional()
     .isURL({ require_protocol: true })
-    .withMessage('imageUrl debe ser una URL valida')
+    .withMessage('La URL de la imagen debe ser válida y empezar con http:// o https://')
     .trim(),
 
   body('conditions')
@@ -289,33 +289,33 @@ export const validateUpdatePromotion = [
       if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
         return true;
       }
-      throw new Error('conditions debe ser un objeto');
+      throw new Error('Las condiciones deben tener un formato de datos estructurado (objeto JSON)');
     }),
 
   body('type')
     .optional()
     .isIn(['CASHBACK', 'RATE_REDUCTION', 'FEE_WAIVER', 'BONUS_POINTS', 'GENERAL'])
-    .withMessage('type debe ser CASHBACK, RATE_REDUCTION, FEE_WAIVER, BONUS_POINTS o GENERAL'),
+    .withMessage('El tipo de promoción no es válido. Seleccione una opción de la lista'),
 
   body('status')
     .optional()
     .isIn(['DRAFT', 'SCHEDULED', 'ACTIVE', 'PAUSED', 'EXPIRED', 'CANCELLED'])
-    .withMessage('status debe ser DRAFT, SCHEDULED, ACTIVE, PAUSED, EXPIRED o CANCELLED'),
+    .withMessage('El estado de la promoción no es válido. Seleccione una opción de la lista'),
 
   body('targetSegment')
     .optional()
     .isIn(['ALL', 'VIP', 'NEW', 'INACTIVE', 'PREMIUM'])
-    .withMessage('targetSegment debe ser ALL, VIP, NEW, INACTIVE o PREMIUM'),
+    .withMessage('El segmento objetivo no es válido. Seleccione una opción de la lista'),
 
   body('targetRoles')
     .optional()
     .isArray()
-    .withMessage('targetRoles debe ser un array'),
+    .withMessage('Los roles objetivo deben enviarse como una lista'),
 
   body('targetRoles.*')
     .optional()
     .isIn(['USER_ROLE', 'EMPLOYEE_ROLE'])
-    .withMessage('Cada rol debe ser USER_ROLE o EMPLOYEE_ROLE'),
+    .withMessage('El rol seleccionado no es válido'),
 
   body('maxUsesGlobal')
     .optional()
@@ -350,7 +350,7 @@ export const validateUpdatePromotion = [
   body('applicableServices.*')
     .optional()
     .isMongoId()
-    .withMessage('Cada ID de servicio aplicable debe ser un MongoId valido'),
+    .withMessage('Uno o más identificadores de servicios aplicables no son válidos'),
 
   body('internalNote')
     .optional()
@@ -385,17 +385,17 @@ export const validatePromotionQuery = [
   query('active')
     .optional()
     .isIn(['true', 'false'])
-    .withMessage('active debe ser true o false'),
+    .withMessage('El estado activo debe ser verdadero o falso'),
 
   query('status')
     .optional()
     .isIn(['DRAFT', 'SCHEDULED', 'ACTIVE', 'PAUSED', 'EXPIRED', 'CANCELLED'])
-    .withMessage('status debe ser DRAFT, SCHEDULED, ACTIVE, PAUSED, EXPIRED o CANCELLED'),
+    .withMessage('El estado de la promoción no es válido. Seleccione una opción de la lista'),
 
   query('type')
     .optional()
     .isIn(['CASHBACK', 'RATE_REDUCTION', 'FEE_WAIVER', 'BONUS_POINTS', 'GENERAL'])
-    .withMessage('type debe ser CASHBACK, RATE_REDUCTION, FEE_WAIVER, BONUS_POINTS o GENERAL'),
+    .withMessage('El tipo de promoción no es válido. Seleccione una opción de la lista'),
 
   query('targetSegment')
     .optional()

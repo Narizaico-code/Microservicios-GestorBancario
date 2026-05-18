@@ -168,21 +168,21 @@ export const AdminCreateAccountModal = ({
               ))}
             </select>
 
-            <div>
+            <div title="Identificador único del usuario dueño de la cuenta">
               <label className="text-xs font-semibold text-slate-600">User ID (manual)</label>
               <input
                 type="text"
                 name="userId"
                 value={form.userId}
                 onChange={handleChange}
-                placeholder="Ingresa el ID del usuario"
+                placeholder="Ej. user_123"
                 className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
               />
             </div>
           </section>
 
           <section className="grid gap-4 md:grid-cols-2">
-            <div>
+            <div title="Selecciona la modalidad de la cuenta bancaria">
               <label className="text-xs font-semibold text-slate-600">Tipo de cuenta</label>
               <select
                 name="tipoCuenta"
@@ -195,7 +195,7 @@ export const AdminCreateAccountModal = ({
               </select>
             </div>
 
-            <div>
+            <div title="Divisa base para las operaciones de esta cuenta">
               <label className="text-xs font-semibold text-slate-600">Moneda</label>
               <select
                 name="moneda"
@@ -212,7 +212,7 @@ export const AdminCreateAccountModal = ({
               </select>
             </div>
 
-            <div>
+            <div title="Monto de apertura disponible en la cuenta">
               <label className="text-xs font-semibold text-slate-600">Saldo inicial</label>
               <input
                 type="number"
@@ -221,7 +221,7 @@ export const AdminCreateAccountModal = ({
                 onChange={handleChange}
                 min="0"
                 step="0.01"
-                placeholder="0.00"
+                placeholder="Ej. 1500.00"
                 className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
               />
             </div>

@@ -11,26 +11,26 @@ export const validateTransaction = async (req, res, next) => {
         const normalizedType = String(tipoTransaccion).toUpperCase();
         const validTypes = ['DEPOSITO', 'TRANSFERENCIA', 'RETIRO'];
         if (!validTypes.includes(normalizedType)) {
-            return res.status(400).json({ success: false, message: 'tipoTransaccion inválido' });
+            return res.status(400).json({ success: false, message: 'El tipo de transacción seleccionado no es válido' });
         }
 
         if (monto <= 0) {
-            return res.status(400).json({ success: false, message: 'El monto debe ser mayor a 0' });
+            return res.status(400).json({ success: false, message: 'El monto de la transacción debe ser mayor a cero' });
         }
 
         const validCurrencies = ['GTQ', 'USD', 'EUR', 'MXN', 'COP', 'JPY'];
         if (!validCurrencies.includes(String(moneda).toUpperCase())) {
-            return res.status(400).json({ success: false, message: 'moneda inválida' });
+            return res.status(400).json({ success: false, message: 'La moneda seleccionada no es válida' });
         }
 
         if (normalizedType === 'TRANSFERENCIA') {
-            if (!cuentaOrigen) return res.status(400).json({ success: false, message: 'cuentaOrigen es obligatoria para transferencias' });
-            if (!cuentaDestino) return res.status(400).json({ success: false, message: 'cuentaDestino es obligatoria para transferencias' });
+            if (!cuentaOrigen) return res.status(400).json({ success: false, message: 'Debe especificar la cuenta de origen para realizar la transferencia' });
+            if (!cuentaDestino) return res.status(400).json({ success: false, message: 'Debe especificar la cuenta de destino para realizar la transferencia' });
 
             const origin = await Account.findOne({ numeroCuenta: cuentaOrigen });
             const destination = await Account.findOne({ numeroCuenta: cuentaDestino });
 
-            if (!origin || !destination) return res.status(404).json({ success: false, message: 'Cuenta origen o destino no encontrada por número de cuenta' });
+            if (!origin || !destination) return res.status(404).json({ success: false, message: 'La cuenta de origen o destino no existe' });
 
             // Validar que el usuario autenticado sea el dueño de la cuenta de origen
             if (String(origin.userId) !== String(req.userId)) {
@@ -43,18 +43,18 @@ export const validateTransaction = async (req, res, next) => {
                 return res.status(403).json({ success: false, message: 'Solo los administradores pueden realizar depósitos' });
             }
 
-            if (!cuentaDestino) return res.status(400).json({ success: false, message: 'cuentaDestino es obligatoria para depósitos' });
+            if (!cuentaDestino) return res.status(400).json({ success: false, message: 'Debe especificar la cuenta de destino para realizar el depósito' });
             
             const destination = await Account.findOne({ numeroCuenta: cuentaDestino });
             
-            if (!destination) return res.status(404).json({ success: false, message: 'Cuenta destinataria no encontrada por número de cuenta' });
+            if (!destination) return res.status(404).json({ success: false, message: 'La cuenta destinataria no existe' });
 
         } else if (normalizedType === 'RETIRO') {
-            if (!cuentaOrigen) return res.status(400).json({ success: false, message: 'cuentaOrigen es obligatoria para retiros' });
+            if (!cuentaOrigen) return res.status(400).json({ success: false, message: 'Debe especificar la cuenta de origen para realizar el retiro' });
 
             const origin = await Account.findOne({ numeroCuenta: cuentaOrigen });
 
-            if (!origin) return res.status(404).json({ success: false, message: 'Cuenta origen no encontrada por número de cuenta' });
+            if (!origin) return res.status(404).json({ success: false, message: 'La cuenta de origen no existe' });
 
             // Validar que el usuario autenticado sea el dueño de la cuenta de origen
             if (String(origin.userId) !== String(req.userId)) {

@@ -17,7 +17,94 @@ const MODE = {
   WAITING_VERIFICATION: 'waiting_verification',
 }
 
-export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRegister = false } = {}) => {
+/* -- Shared sub-components --------------------------------------------- */
+const Avatar = ({ dynamic }) => (
+  <div className="mb-5 flex justify-center">
+    <img
+      src={cerditoFondoBlanco}
+      alt="Kinal Banc"
+      className={`h-[70px] w-[70px] rounded-full border object-contain p-2 ${
+        dynamic ? 'border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)]' : 'border-white/8 bg-white/5'
+      }`}
+    />
+  </div>
+)
+
+const Heading = ({ title, sub, dynamic }) => (
+  <div className="mb-5 text-center">
+    <h2 className={`text-2xl font-black tracking-tight ${dynamic ? 'text-[color:var(--theme-text)]' : 'text-white'}`}>{title}</h2>
+    {sub && <p className={`mt-1 text-[13px] ${dynamic ? 'text-[color:var(--theme-text-muted)]' : 'text-white/40'}`}>{sub}</p>}
+  </div>
+)
+
+const ErrorBanner = ({ error }) => error ? (
+  <div className="mt-3 whitespace-pre-line rounded-xl border border-red-500/25 bg-red-500/8 px-4 py-3 text-[13px] text-red-300">
+    {error}
+  </div>
+) : null
+
+const SuccessBanner = ({ success }) => success ? (
+  <div className="mt-3 rounded-xl border border-emerald-500/25 bg-emerald-500/8 px-4 py-3 text-[13px] text-emerald-400">
+    {success}
+  </div>
+) : null
+
+const InputField = ({ label, name, type = 'text', value, onChange, placeholder, required, minLength, pattern, accept, dynamic }) => (
+  <label className="block">
+    <span className={`mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] ${dynamic ? 'text-[color:var(--theme-text-muted)]' : 'text-white/40'}`}>{label}</span>
+    <input
+      type={type}
+      name={name}
+      value={type !== 'file' ? value : undefined}
+      onChange={onChange}
+      required={required}
+      minLength={minLength}
+      pattern={pattern}
+      accept={accept}
+      placeholder={placeholder}
+      className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition focus:ring-0 ${
+        dynamic
+          ? 'border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] text-[color:var(--theme-text)] placeholder:text-[color:var(--theme-text-muted)] focus:border-[color:var(--theme-accent)]'
+          : 'border-white/10 bg-[#1a1a1a] text-white placeholder-white/25 focus:border-white/35'
+      }`}
+    />
+  </label>
+)
+
+const PrimaryButton = ({ children, onClick, disabled, type = 'submit', dynamic }) => (
+  <button
+    type={type}
+    onClick={onClick}
+    disabled={disabled}
+    className={`mt-4 w-full rounded-xl py-3 text-[15px] font-bold transition hover:opacity-90 disabled:opacity-50 ${
+      dynamic ? 'bg-[color:var(--theme-accent)] text-white' : 'bg-white text-black'
+    }`}
+  >
+    {children}
+  </button>
+)
+
+const LinkButton = ({ onClick, children, muted = false, dynamic }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`text-[13px] font-bold transition hover:opacity-80 ${
+      dynamic
+        ? muted ? 'text-[color:var(--theme-text-muted)]' : 'text-[color:var(--theme-accent)]'
+        : muted ? 'text-white/45' : 'text-white/65'
+    }`}
+  >
+    {children}
+  </button>
+)
+
+const Card = ({ children, dynamic }) => (
+  <div className={`rounded-[18px] border ${dynamic ? 'border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] text-[color:var(--theme-text)] shadow-sm' : 'border-white/8 bg-[#111111] text-white'} px-6 py-6`}>
+    {children}
+  </div>
+)
+
+export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRegister = false, dynamic = false } = {}) => {
   const [mode, setMode] = useState(initialMode)
   const [form, setForm] = useState({ email: '', password: '', name: '', phone: '', profilePicture: null })
   const [loading, setLoading] = useState(false)
@@ -102,81 +189,6 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
     finally { setLoading(false) }
   }
 
-  /* ── Shared sub-components ───────────────────────────────────────────── */
-  const Avatar = () => (
-    <div className="mb-5 flex justify-center">
-      <img
-        src={cerditoFondoBlanco}
-        alt="Kinal Banc"
-        className="h-[70px] w-[70px] rounded-full border border-white/8 bg-white/5 object-contain p-2"
-      />
-    </div>
-  )
-
-  const Heading = ({ title, sub }) => (
-    <div className="mb-5 text-center">
-      <h2 className="text-2xl font-black tracking-tight text-white">{title}</h2>
-      {sub && <p className="mt-1 text-[13px] text-white/40">{sub}</p>}
-    </div>
-  )
-
-  const ErrorBanner = () => error ? (
-    <div className="mt-3 whitespace-pre-line rounded-xl border border-red-500/25 bg-red-500/8 px-4 py-3 text-[13px] text-red-300">
-      {error}
-    </div>
-  ) : null
-
-  const SuccessBanner = () => success ? (
-    <div className="mt-3 rounded-xl border border-emerald-500/25 bg-emerald-500/8 px-4 py-3 text-[13px] text-emerald-400">
-      {success}
-    </div>
-  ) : null
-
-  const InputField = ({ label, name, type = 'text', value, placeholder, required, minLength, pattern, accept }) => (
-    <label className="block">
-      <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">{label}</span>
-      <input
-        type={type}
-        name={name}
-        value={type !== 'file' ? value : undefined}
-        onChange={handleChange}
-        required={required}
-        minLength={minLength}
-        pattern={pattern}
-        accept={accept}
-        placeholder={placeholder}
-        className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35 focus:ring-0"
-      />
-    </label>
-  )
-
-  const PrimaryButton = ({ children, onClick, disabled, type = 'submit' }) => (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className="mt-4 w-full rounded-xl bg-white py-3 text-[15px] font-bold text-black transition hover:opacity-90 disabled:opacity-50"
-    >
-      {children}
-    </button>
-  )
-
-  const LinkButton = ({ onClick, children, muted = false }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`text-[13px] font-bold transition hover:opacity-80 ${muted ? 'text-white/45' : 'text-white/65'}`}
-    >
-      {children}
-    </button>
-  )
-
-  const Card = ({ children }) => (
-    <div className="rounded-[18px] border border-white/8 bg-[#111111] px-6 py-6">
-      {children}
-    </div>
-  )
-
   /* ── Render: LOGIN ───────────────────────────────────────────────────── */
   const renderLoginMode = () => (
     <form onSubmit={handleSubmitLogin} className="flex flex-col gap-4">
@@ -238,8 +250,8 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
           </div>
         </div>
 
-        <ErrorBanner />
-        <SuccessBanner />
+        <ErrorBanner error={error} />
+        <SuccessBanner success={success} />
         <PrimaryButton disabled={loading}>{loading ? 'Ingresando...' : 'Ingresar'}</PrimaryButton>
       </Card>
 
@@ -261,28 +273,28 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
   /* ── Render: REGISTER ────────────────────────────────────────────────── */
   const renderRegisterMode = () => (
     <form onSubmit={handleSubmitRegister} className="flex flex-col gap-4">
-      <Avatar />
-      <Heading title="Crear cuenta" sub="Únete a nuestro sistema bancario" />
+      <Avatar dynamic={dynamic} />
+      <Heading title="Crear cuenta" sub="Únete a nuestro sistema bancario" dynamic={dynamic} />
 
-      <Card>
+      <Card dynamic={dynamic}>
         <div className="flex flex-col gap-4">
-          <InputField label="Nombre" name="name" value={form.name} required placeholder="Tu nombre completo" />
-          <InputField label="Correo electrónico" name="email" type="email" value={form.email} required placeholder="tu@email.com" />
-          <InputField label="Teléfono" name="phone" type="tel" value={form.phone} required pattern="\d{8}" placeholder="12345678" />
-          <InputField label="Contraseña" name="password" type="password" value={form.password} required minLength="8" placeholder="Mínimo 8 caracteres" />
-          <InputField label="Foto de perfil (opcional)" name="profilePicture" type="file" accept="image/*" />
+          <InputField label="Nombre" name="name" value={form.name} onChange={handleChange} required placeholder="Tu nombre completo" dynamic={dynamic} />
+          <InputField label="Correo electrónico" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="tu@email.com" dynamic={dynamic} />
+          <InputField label="Teléfono" name="phone" type="tel" value={form.phone} onChange={handleChange} required pattern="\d{8}" placeholder="12345678" dynamic={dynamic} />
+          <InputField label="Contraseña" name="password" type="password" value={form.password} onChange={handleChange} required minLength="8" placeholder="Mínimo 8 caracteres" dynamic={dynamic} />
+          <InputField label="Foto de perfil (opcional)" name="profilePicture" type="file" accept="image/*" onChange={handleChange} dynamic={dynamic} />
         </div>
-        <ErrorBanner />
-        <SuccessBanner />
-        <PrimaryButton disabled={loading}>{loading ? 'Creando cuenta...' : 'Crear cuenta'}</PrimaryButton>
+        <ErrorBanner error={error} />
+        <SuccessBanner success={success} />
+        <PrimaryButton disabled={loading} dynamic={dynamic}>{loading ? 'Creando cuenta...' : 'Crear cuenta'}</PrimaryButton>
       </Card>
 
-      <div className="flex items-center justify-center gap-4 text-[13px] text-white/35">
-        <LinkButton muted onClick={() => { setForm((c) => ({ ...c, email: c.email || registeredEmail })); setModeWithReset(MODE.RESEND_VERIFICATION) }}>
+      <div className="flex items-center justify-center gap-4 text-[13px]">
+        <LinkButton muted onClick={() => { setForm((c) => ({ ...c, email: c.email || registeredEmail })); setModeWithReset(MODE.RESEND_VERIFICATION) }} dynamic={dynamic}>
           ¿No te llegó el correo?
         </LinkButton>
-        <span className="text-white/15">|</span>
-        <LinkButton onClick={() => setModeWithReset(MODE.LOGIN)}>Iniciar sesión</LinkButton>
+        <span className={dynamic ? 'text-[color:var(--theme-text-muted)]' : 'text-white/15'}>|</span>
+        <LinkButton onClick={() => setModeWithReset(MODE.LOGIN)} dynamic={dynamic}>Iniciar sesión</LinkButton>
       </div>
     </form>
   )
@@ -298,8 +310,8 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
           Ingresa tu email y te enviaremos un enlace para recuperar tu contraseña.
         </div>
         <InputField label="Correo electrónico" name="email" type="email" value={form.email} required placeholder="tu@email.com" />
-        <ErrorBanner />
-        <SuccessBanner />
+        <ErrorBanner error={error} />
+        <SuccessBanner success={success} />
         <PrimaryButton disabled={loading}>{loading ? 'Enviando...' : 'Enviar enlace'}</PrimaryButton>
       </Card>
 
@@ -320,8 +332,8 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
           Si no recibiste el email de verificación, ingresa tu email y te lo reenviamos.
         </div>
         <InputField label="Correo electrónico" name="email" type="email" value={form.email} required placeholder="tu@email.com" />
-        <ErrorBanner />
-        <SuccessBanner />
+        <ErrorBanner error={error} />
+        <SuccessBanner success={success} />
         <PrimaryButton disabled={loading}>{loading ? 'Enviando...' : 'Reenviar verificación'}</PrimaryButton>
       </Card>
 
@@ -379,3 +391,4 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
     </div>
   )
 }
+

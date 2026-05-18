@@ -212,11 +212,11 @@ export const TransactionsPage = () => {
           )}
 
           <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
-            <label className="space-y-2">
+            <label className="space-y-2" title="Número de cuenta donde se realizará el depósito">
               <span className="text-sm font-semibold">Cuenta destino</span>
               <input
                 type="text"
-                placeholder="Ej. 001-874563-2"
+                placeholder="Ej. 1000000001"
                 name="cuentaDestino"
                 value={formValues.cuentaDestino}
                 onChange={handleChange}
@@ -230,12 +230,12 @@ export const TransactionsPage = () => {
               </datalist>
             </label>
 
-            <label className="space-y-2">
-              <span className="text-sm font-semibold">Monto (GTQ)</span>
+            <label className="space-y-2" title="Cantidad de dinero a transferir o depositar">
+              <span className="text-sm font-semibold">Monto</span>
               <input
                 type="number"
                 min="0"
-                placeholder="Q 0.00"
+                placeholder="Ej. 100.00"
                 name="monto"
                 value={formValues.monto}
                 onChange={handleChange}
@@ -243,7 +243,24 @@ export const TransactionsPage = () => {
               />
             </label>
 
-            <label className="space-y-2">
+            <label className="space-y-2" title="Divisa de la transacción">
+              <span className="text-sm font-semibold">Moneda</span>
+              <select
+                name="moneda"
+                value={formValues.moneda}
+                onChange={handleChange}
+                className="h-12 w-full rounded-xl border border-[#011743]/15 bg-[#F3F2F2] px-4 text-sm outline-none placeholder:text-[#011743]/35 focus:border-[#011743]"
+              >
+                <option value="GTQ">GTQ</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="MXN">MXN</option>
+                <option value="COP">COP</option>
+                <option value="JPY">JPY</option>
+              </select>
+            </label>
+
+            <label className="space-y-2" title="El tipo de transacción que se realizará">
               <span className="text-sm font-semibold">Tipo de transaccion</span>
               <div className="flex h-12 items-center justify-between rounded-xl border border-[#F8D80D]/90 bg-[#F8D80D]/20 px-4 text-sm font-semibold">
                 <span>Deposito</span>

@@ -23,6 +23,7 @@ import { AdminServicesPage } from '../../features/services/pages/AdminServicesPa
 import { AdminPromotionsPage } from '../../features/promotions/pages/AdminPromotionsPage.jsx'
 import { ClientServicesPage } from '../../features/services/pages/ClientServicesPage.jsx'
 import { ClientPromotionsPage } from '../../features/promotions/pages/ClientPromotionsPage.jsx'
+import { TransactionsPage } from '../../features/transactions/pages/TransactionsPage.jsx'
 
 const DashboardRedirect = () => {
   const { session } = useAuthStore()
@@ -49,6 +50,7 @@ export const AppRoutes = () => {
             <Route path="usuarios" element={<AdminAuthPage />} />
             <Route path="servicios" element={<AdminServicesPage />} />
             <Route path="promociones" element={<AdminPromotionsPage />} />
+            <Route path="transacciones" element={<TransactionsPage />} />
             <Route path="perfil" element={<ProfilePage />} />
             <Route path="ayuda" element={<Help />} />
           </Route>

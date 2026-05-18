@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { Search, Filter, Download, AlertCircle, Eye, ToggleRight, ToggleLeft, PlusCircle } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Search, Filter, Download, AlertCircle, Eye, ToggleRight, ToggleLeft, PlusCircle, Package, Tag } from "lucide-react"
 import {
   getAllAccountsAdmin,
   updateAccountStatus,
@@ -396,11 +397,30 @@ export const AdminAccounts = () => {
   }
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="space-y-6 w-full text-[color:var(--theme-text)]">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900">Gestión de Cuentas</h1>
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Gestión de Cuentas</h1>
+          <p className="mt-2 text-sm text-[color:var(--theme-text-muted)]">
+            Administra el estado, saldo y solicitudes de cuentas.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            to="/dashboard/promociones"
+            className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-3 py-2 text-sm font-semibold text-[color:var(--theme-text)] transition hover:bg-[color:var(--theme-surface-alt)]"
+          >
+            <Tag size={16} />
+            Promociones
+          </Link>
+          <Link
+            to="/dashboard/servicios"
+            className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-3 py-2 text-sm font-semibold text-[color:var(--theme-text)] transition hover:bg-[color:var(--theme-surface-alt)]"
+          >
+            <Package size={16} />
+            Servicios
+          </Link>
           <button
             onClick={handleOpenCreate}
             className="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-800 transition"
@@ -420,20 +440,20 @@ export const AdminAccounts = () => {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-semibold text-slate-600 uppercase">Total de Cuentas</p>
-          <p className="mt-2 text-4xl font-bold text-slate-900">{totalAccounts}</p>
-          <p className="mt-1 text-xs text-slate-500">{activeAccounts} activas</p>
+        <div className="rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
+          <p className="text-sm font-semibold text-[color:var(--theme-text-muted)] uppercase">Total de Cuentas</p>
+          <p className="mt-2 text-4xl font-bold">{totalAccounts}</p>
+          <p className="mt-1 text-xs text-[color:var(--theme-text-muted)]">{activeAccounts} activas</p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-semibold text-slate-600 uppercase">Saldo Total (GTQ)</p>
-          <p className="mt-2 text-4xl font-bold text-slate-900">
+        <div className="rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
+          <p className="text-sm font-semibold text-[color:var(--theme-text-muted)] uppercase">Saldo Total (GTQ)</p>
+          <p className="mt-2 text-4xl font-bold">
             {totalBalance.toLocaleString("es-GT", { maximumFractionDigits: 2 })}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm font-semibold text-slate-600 uppercase">Promedio por Cuenta</p>
-          <p className="mt-2 text-4xl font-bold text-slate-900">
+        <div className="rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
+          <p className="text-sm font-semibold text-[color:var(--theme-text-muted)] uppercase">Promedio por Cuenta</p>
+          <p className="mt-2 text-4xl font-bold">
             {totalAccounts > 0
               ? (totalBalance / totalAccounts).toLocaleString("es-GT", { maximumFractionDigits: 2 })
               : "0"}
@@ -441,16 +461,16 @@ export const AdminAccounts = () => {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">Solicitudes de creacion de cuenta</h2>
-            <p className="text-sm text-slate-500">Solicitudes enviadas por clientes pendientes de revision</p>
+            <h2 className="text-xl font-bold">Solicitudes de creacion de cuenta</h2>
+            <p className="text-sm text-[color:var(--theme-text-muted)]">Solicitudes enviadas por clientes pendientes de revision</p>
           </div>
           <button
             type="button"
             onClick={loadAccountRequests}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+            className="rounded-lg border border-[color:var(--theme-border)] px-3 py-2 text-sm font-semibold text-[color:var(--theme-text-muted)] hover:bg-[color:var(--theme-surface-alt)]"
             disabled={accountRequestsLoading}
           >
             {accountRequestsLoading ? "Cargando..." : "Recargar"}
@@ -464,21 +484,21 @@ export const AdminAccounts = () => {
         ) : null}
 
         {!accountRequestsLoading && !accountRequests.length ? (
-          <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+          <div className="mt-4 rounded-xl border border-dashed border-[color:var(--theme-border)] px-4 py-6 text-sm text-[color:var(--theme-text-muted)]">
             No hay solicitudes pendientes.
           </div>
         ) : null}
 
         <div className="mt-4 space-y-3">
           {accountRequests.map((request) => (
-            <div key={request._id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <div key={request._id} className="rounded-xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] p-4">
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">Usuario: {request.userId}</p>
-                  <p className="text-xs text-slate-600">
+                  <p className="text-sm font-semibold">Usuario: {request.userId}</p>
+                  <p className="text-xs text-[color:var(--theme-text-muted)]">
                     Tipo: {getAccountTypeLabel(request.tipoCuenta)} | Moneda: {request.moneda}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[color:var(--theme-text-muted)]">
                     Solicitada: {formatDate(request.createdAt)}
                   </p>
                 </div>
@@ -508,26 +528,26 @@ export const AdminAccounts = () => {
       </div>
 
       {/* Filters Section */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
-          <Filter size={20} className="text-slate-600" />
-          <h2 className="text-lg font-semibold text-slate-900">Filtros y Búsqueda</h2>
+          <Filter size={20} className="text-[color:var(--theme-text-muted)]" />
+          <h2 className="text-lg font-semibold">Filtros y Búsqueda</h2>
         </div>
 
         <div className="space-y-4">
           {/* Search */}
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-[color:var(--theme-text-muted)] mb-2">
               Buscar por número de cuenta o usuario
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
+              <Search className="absolute left-3 top-3 h-5 w-5 text-[color:var(--theme-text-muted)]" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Ej: 1234567890 o usuario@email.com"
-                className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-4 text-slate-900 placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                className="w-full rounded-lg border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] py-2 pl-10 pr-4 text-[color:var(--theme-text)] placeholder:text-[color:var(--theme-text-muted)] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               />
             </div>
           </div>
@@ -536,11 +556,11 @@ export const AdminAccounts = () => {
           <div className="grid gap-4 md:grid-cols-4">
             {/* Status */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Estado</label>
+              <label className="block text-sm font-semibold text-[color:var(--theme-text-muted)] mb-2">Estado</label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                className="w-full rounded-lg border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-3 py-2 text-[color:var(--theme-text)] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               >
                 <option value="ALL">Todos</option>
                 <option value="ACTIVE">Activas</option>
@@ -550,11 +570,11 @@ export const AdminAccounts = () => {
 
             {/* Type */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Tipo</label>
+              <label className="block text-sm font-semibold text-[color:var(--theme-text-muted)] mb-2">Tipo</label>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                className="w-full rounded-lg border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-3 py-2 text-[color:var(--theme-text)] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               >
                 <option value="ALL">Todos</option>
                 <option value="AHORRO">Ahorro</option>
@@ -564,11 +584,11 @@ export const AdminAccounts = () => {
 
             {/* Currency */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Moneda</label>
+              <label className="block text-sm font-semibold text-[color:var(--theme-text-muted)] mb-2">Moneda</label>
               <select
                 value={currencyFilter}
                 onChange={(e) => setCurrencyFilter(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                className="w-full rounded-lg border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-3 py-2 text-[color:var(--theme-text)] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               >
                 <option value="ALL">Todas</option>
                 <option value="GTQ">GTQ</option>
@@ -580,11 +600,11 @@ export const AdminAccounts = () => {
 
             {/* Sort */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Ordenar</label>
+              <label className="block text-sm font-semibold text-[color:var(--theme-text-muted)] mb-2">Ordenar</label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                className="w-full rounded-lg border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-3 py-2 text-[color:var(--theme-text)] focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
               >
                 <option value="newest">Más recientes</option>
                 <option value="oldest">Más antiguos</option>
@@ -611,66 +631,66 @@ export const AdminAccounts = () => {
       ) : null}
 
       {/* Table */}
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] shadow-sm overflow-hidden">
         {filteredAccounts.length === 0 ? (
           <div className="p-8 text-center">
-            <AlertCircle className="mx-auto h-12 w-12 text-slate-400 mb-3" />
-            <p className="text-slate-600">No se encontraron cuentas con los filtros aplicados</p>
+            <AlertCircle className="mx-auto h-12 w-12 text-[color:var(--theme-text-muted)] mb-3" />
+            <p className="text-[color:var(--theme-text-muted)]">No se encontraron cuentas con los filtros aplicados</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-slate-200 bg-slate-50">
+              <thead className="border-b border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[color:var(--theme-text-muted)] uppercase">
                     # Cuenta
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[color:var(--theme-text-muted)] uppercase">
                     Usuario
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[color:var(--theme-text-muted)] uppercase">
                     Tipo
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[color:var(--theme-text-muted)] uppercase">
                     Saldo
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[color:var(--theme-text-muted)] uppercase">
                     Estado
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[color:var(--theme-text-muted)] uppercase">
                     Creada
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[color:var(--theme-text-muted)] uppercase">
                     Acciones
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-[color:var(--theme-border)]">
                 {filteredAccounts.map((account, index) => (
-                  <tr key={account._id || account.numeroCuenta || index} className="hover:bg-slate-50 transition">
-                    <td className="px-6 py-4 text-sm font-mono font-semibold text-slate-900">
+                  <tr key={account._id || account.numeroCuenta || index} className="hover:bg-[color:var(--theme-surface-alt)] transition">
+                    <td className="px-6 py-4 text-sm font-mono font-semibold">
                       {account.numeroCuenta}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-700">
+                    <td className="px-6 py-4 text-sm text-[color:var(--theme-text-muted)]">
                       {account.userId}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-700">
+                    <td className="px-6 py-4 text-sm text-[color:var(--theme-text-muted)]">
                       {getAccountTypeLabel(account.tipoCuenta)}
                     </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-slate-900">
+                    <td className="px-6 py-4 text-sm font-semibold">
                       {formatCurrency(account.saldo, account.moneda)}
                     </td>
                     <td className="px-6 py-4 text-sm">
                       {getStatusBadge(account.estado)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
+                    <td className="px-6 py-4 text-sm text-[color:var(--theme-text-muted)]">
                       {formatDate(account.createdAt)}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleViewDetails(account)}
-                          className="inline-flex items-center justify-center p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition"
+                          className="inline-flex items-center justify-center p-2 text-emerald-600 hover:bg-emerald-500/10 rounded-lg transition"
                           title="Ver detalles"
                         >
                           <Eye size={18} />
@@ -680,8 +700,8 @@ export const AdminAccounts = () => {
                           disabled={actionId === account.numeroCuenta}
                           className={`inline-flex items-center justify-center p-2 rounded-lg transition ${
                             account.estado
-                              ? "text-orange-600 hover:bg-orange-50"
-                              : "text-emerald-600 hover:bg-emerald-50"
+                              ? "text-orange-600 hover:bg-orange-500/10"
+                              : "text-emerald-600 hover:bg-emerald-500/10"
                           }`}
                           title={account.estado ? "Desactivar" : "Activar"}
                         >

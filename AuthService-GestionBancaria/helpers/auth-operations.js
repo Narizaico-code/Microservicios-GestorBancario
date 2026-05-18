@@ -183,9 +183,8 @@ export const loginUserHelper = async (email, password) => {
     const role = user.UserRoles?.[0]?.Role?.Name || 'USER_ROLE';
     const token = await generateJWT(user.Id.toString(), { role });
 
-    // Calcular fecha de expiración basada en la configuración
-    const expiresInMs = getExpirationTime(process.env.JWT_EXPIRES_IN || '30m');
-    const expiresAt = new Date(Date.now() + expiresInMs);
+    // Como ya no hay expiración de 30 mins, simulamos una sesión infinita (100 años) para el frontend
+    const expiresAt = new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000);
 
     // Build compact userDetails object
     const fullUser = buildUserResponse(user);

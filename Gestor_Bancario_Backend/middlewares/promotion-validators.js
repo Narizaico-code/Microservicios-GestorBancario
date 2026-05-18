@@ -6,21 +6,37 @@ import { allowedPromotionFields } from './allowed-fields.js';
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    const payload = errors.array().map((error) => ({
+      field: error.path,
+      message: error.msg,
+      value: error.value,
+    }));
+
+    console.warn('Validation error', {
+      method: req.method,
+      path: req.originalUrl,
+      errors: payload.map(({ field, message }) => ({ field, message })),
+    });
+
     return res.status(400).json({
       success: false,
       message: 'Errores de validacion',
-      errors: errors.array().map((error) => ({
-        field: error.path,
-        message: error.msg,
-        value: error.value,
-      })),
+      errors: payload,
     });
   }
 
   return next();
 };
 
-const respondValidationError = (res, errors) => {
+const respondValidationError = (req, res, errors) => {
+  console.warn('Validation error', {
+    method: req.method,
+    path: req.originalUrl,
+    errors: Array.isArray(errors)
+      ? errors.map((message) => ({ message }))
+      : [{ message: String(errors) }],
+  });
+
   return res.status(400).json({
     success: false,
     message: 'Errores de validacion',
@@ -44,7 +60,7 @@ const ensureAllowedFields = (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    return respondValidationError(res, errors);
+    return respondValidationError(req, res, errors);
   }
 
   return next();

@@ -204,7 +204,32 @@ export const useServiceForm = ({ service, onSuccess, onClose }) => {
       toast.success(isEdit ? 'Servicio actualizado' : 'Servicio creado')
       onClose?.()
     } catch (error) {
-      const message = error?.payload?.message || error?.message || 'No fue posible guardar el servicio'
+      const validationMessage = (() => {
+        const errors = error?.payload?.errors
+        if (!Array.isArray(errors) || errors.length === 0) return null
+
+        const messages = errors
+          .map((item) => {
+            if (!item) return null
+            if (typeof item === 'string') return item
+
+            const field = item.field || item.param || item.path
+            const msg = item.message || item.msg
+
+            if (field && msg) return `${field}: ${msg}`
+            return msg || field || null
+          })
+          .filter(Boolean)
+
+        return messages.length ? messages.join(' | ') : null
+      })()
+
+      const message =
+        validationMessage ||
+        error?.payload?.message ||
+        error?.message ||
+        'No fue posible guardar el servicio'
+
       toast.error(message)
     } finally {
       setLoading(false)

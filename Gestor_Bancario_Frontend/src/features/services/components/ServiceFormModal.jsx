@@ -78,6 +78,19 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
             />
           </label>
 
+          {form.type === 'SERVICE' ? (
+            <label className="grid gap-2 text-sm md:col-span-2">
+              <span className="text-[var(--theme-text-muted)]">Terminos</span>
+              <textarea
+                name="terms"
+                rows="3"
+                value={form.terms}
+                onChange={handleChange}
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
+              />
+            </label>
+          ) : null}
+
           <label className="grid gap-2 text-sm">
             <span className="text-[var(--theme-text-muted)]">Moneda</span>
             <select
@@ -222,17 +235,6 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
             />
           </label>
         </div>
-
-        <label className="grid gap-2 text-sm">
-          <span className="text-[var(--theme-text-muted)]">Terminos</span>
-          <textarea
-            name="terms"
-            rows="3"
-            value={form.terms}
-            onChange={handleChange}
-            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-          />
-        </label>
 
         <label className="grid gap-2 text-sm">
           <span className="text-[var(--theme-text-muted)]">Nota interna</span>

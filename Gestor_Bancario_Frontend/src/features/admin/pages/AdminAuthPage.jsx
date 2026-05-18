@@ -251,24 +251,24 @@ export const AdminAuthPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
-      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-lg">
+    <div className="mx-auto max-w-6xl space-y-6 text-[color:var(--theme-text)]">
+      <div className="rounded-3xl border border-[color:var(--theme-border)] bg-[linear-gradient(135deg,var(--theme-surface)_0%,var(--theme-surface-alt)_100%)] p-8 shadow-[var(--theme-shadow)]">
         <div className="flex items-center gap-3">
-          <ShieldCheck className="h-7 w-7 text-cyan-200" />
+          <ShieldCheck className="h-7 w-7 text-[color:var(--theme-accent)]" />
           <h1 className="text-2xl font-bold">Auth administrativo</h1>
         </div>
-        <p className="mt-3 text-sm text-slate-300">
+        <p className="mt-3 text-sm text-[color:var(--theme-text-muted)]">
           Registro controlado, consulta de perfiles y aprobaciones de cambios.
         </p>
       </div>
 
       <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-2 text-slate-900">
+        <article className="rounded-3xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
+          <div className="flex items-center gap-2 text-[color:var(--theme-text)]">
             <UserPlus className="h-5 w-5 text-emerald-600" />
             <h2 className="text-lg font-semibold">Registrar usuario</h2>
           </div>
-          <p className="mt-2 text-sm text-slate-500">Registro de usuarios desde el panel administrativo.</p>
+          <p className="mt-2 text-sm text-[color:var(--theme-text-muted)]">Registro de usuarios desde el panel administrativo.</p>
 
           <div className="mt-6">
             <button
@@ -281,12 +281,12 @@ export const AdminAuthPage = () => {
           </div>
         </article>
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-2 text-slate-900">
+        <article className="rounded-3xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
+          <div className="flex items-center gap-2 text-[color:var(--theme-text)]">
             <Eye className="h-5 w-5 text-blue-600" />
             <h2 className="text-lg font-semibold">Ver perfil por ID</h2>
           </div>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-[color:var(--theme-text-muted)]">
             Consulta el perfil completo usando el endpoint /profile/by-id.
           </p>
 
@@ -295,7 +295,7 @@ export const AdminAuthPage = () => {
               value={profileId}
               onChange={(event) => setProfileId(event.target.value)}
               placeholder="ID de usuario"
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder-slate-400"
+              className="w-full rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] px-4 py-3 text-[color:var(--theme-text)] placeholder:text-[color:var(--theme-text-muted)]"
             />
 
             {profileError ? (
@@ -307,15 +307,15 @@ export const AdminAuthPage = () => {
             <button
               type="submit"
               disabled={profileLoading}
-              className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-white"
+              className="w-full rounded-2xl bg-[color:var(--theme-accent)] px-4 py-3 text-white"
             >
               {profileLoading ? 'Buscando...' : 'Buscar perfil'}
             </button>
           </form>
 
           {profileResult ? (
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-              <div className="flex items-center gap-2 text-slate-900">
+            <div className="mt-6 rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] p-4 text-sm text-[color:var(--theme-text-muted)]">
+              <div className="flex items-center gap-2 text-[color:var(--theme-text)]">
                 <Mail className="h-4 w-4" />
                 <span>{profileResult.email}</span>
               </div>
@@ -329,28 +329,28 @@ export const AdminAuthPage = () => {
         </article>
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-3xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-slate-900">
+          <div className="flex items-center gap-2 text-[color:var(--theme-text)]">
             <Users className="h-5 w-5 text-indigo-600" />
             <div>
               <h2 className="text-lg font-semibold">Listado de usuarios</h2>
-              <p className="text-sm text-slate-500">Usuarios registrados en el AuthService</p>
+              <p className="text-sm text-[color:var(--theme-text-muted)]">Usuarios registrados en el AuthService</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2">
-            <Filter className="h-4 w-4 text-slate-500" />
+          <div className="flex items-center gap-2 rounded-xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] px-3 py-2">
+            <Filter className="h-4 w-4 text-[color:var(--theme-text-muted)]" />
             <input
               value={userSearch}
               onChange={(event) => setUserSearch(event.target.value)}
               placeholder="Buscar"
-              className="text-sm text-slate-900 placeholder-slate-400 outline-none"
+              className="text-sm text-[color:var(--theme-text)] placeholder:text-[color:var(--theme-text-muted)] outline-none bg-transparent"
             />
           </div>
         </div>
 
         {usersLoading ? (
-          <p className="mt-4 text-sm text-slate-500">Cargando usuarios...</p>
+          <p className="mt-4 text-sm text-[color:var(--theme-text-muted)]">Cargando usuarios...</p>
         ) : null}
         {usersError ? (
           <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
@@ -361,7 +361,7 @@ export const AdminAuthPage = () => {
         {!usersLoading && !usersError ? (
           <div className="mt-4 overflow-x-auto">
             <table className="w-full">
-              <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold text-slate-600">
+              <thead className="border-b border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] text-left text-xs font-semibold text-[color:var(--theme-text-muted)]">
                 <tr>
                   <th className="px-4 py-3">ID</th>
                   <th className="px-4 py-3">Nombre</th>
@@ -372,22 +372,22 @@ export const AdminAuthPage = () => {
                   <th className="px-4 py-3">Registro</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 text-sm">
+              <tbody className="divide-y divide-[color:var(--theme-border)] text-sm">
                 {filteredUsers.map((user) => {
                   const resolved = resolveUser(user)
                   return (
-                    <tr key={resolved.id} className="hover:bg-slate-50">
-                      <td className="px-4 py-3 font-mono text-xs text-slate-700">{resolved.id}</td>
-                      <td className="px-4 py-3 text-slate-800">{resolved.name}</td>
-                      <td className="px-4 py-3 text-slate-700">{resolved.email}</td>
-                      <td className="px-4 py-3 text-slate-700">{resolved.role}</td>
-                      <td className="px-4 py-3 text-slate-700">
+                    <tr key={resolved.id} className="hover:bg-[color:var(--theme-surface-alt)]">
+                      <td className="px-4 py-3 font-mono text-xs text-[color:var(--theme-text-muted)]">{resolved.id}</td>
+                      <td className="px-4 py-3">{resolved.name}</td>
+                      <td className="px-4 py-3 text-[color:var(--theme-text-muted)]">{resolved.email}</td>
+                      <td className="px-4 py-3 text-[color:var(--theme-text-muted)]">{resolved.role}</td>
+                      <td className="px-4 py-3 text-[color:var(--theme-text-muted)]">
                         {resolved.isActive ? 'Activo' : 'Inactivo'}
                       </td>
-                      <td className="px-4 py-3 text-slate-700">
+                      <td className="px-4 py-3 text-[color:var(--theme-text-muted)]">
                         {resolved.emailVerified ? 'Si' : 'No'}
                       </td>
-                      <td className="px-4 py-3 text-slate-600">
+                      <td className="px-4 py-3 text-[color:var(--theme-text-muted)]">
                         {formatDate(resolved.createdAt)}
                       </td>
                     </tr>
@@ -397,7 +397,7 @@ export const AdminAuthPage = () => {
             </table>
 
             {!filteredUsers.length ? (
-              <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+              <div className="rounded-2xl border border-dashed border-[color:var(--theme-border)] px-4 py-6 text-sm text-[color:var(--theme-text-muted)]">
                 No hay usuarios para mostrar.
               </div>
             ) : null}
@@ -405,18 +405,18 @@ export const AdminAuthPage = () => {
         ) : null}
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-3xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-slate-900">
+          <div className="flex items-center gap-2 text-[color:var(--theme-text)]">
             <ClipboardCheck className="h-5 w-5 text-emerald-600" />
             <div>
               <h2 className="text-lg font-semibold">Solicitudes de acceso</h2>
-              <p className="text-sm text-slate-500">Solicitudes pendientes para aprobar o rechazar</p>
+              <p className="text-sm text-[color:var(--theme-text-muted)]">Solicitudes pendientes para aprobar o rechazar</p>
             </div>
           </div>
         </div>
 
-        {requestsLoading ? <p className="mt-4 text-sm text-slate-500">Cargando solicitudes...</p> : null}
+        {requestsLoading ? <p className="mt-4 text-sm text-[color:var(--theme-text-muted)]">Cargando solicitudes...</p> : null}
         {requestsError ? (
           <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {requestsError}
@@ -431,11 +431,11 @@ export const AdminAuthPage = () => {
         {!requestsLoading && !requestsError ? (
           <div className="mt-6 space-y-4">
             {requests.map((request) => (
-              <div key={request.Id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div key={request.Id} className="rounded-2xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">Solicitud #{request.Id}</p>
-                    <p className="text-xs text-slate-500">Correo: {request.Email}</p>
+                    <p className="text-sm font-semibold">Solicitud #{request.Id}</p>
+                    <p className="text-xs text-[color:var(--theme-text-muted)]">Correo: {request.Email}</p>
                   </div>
                   <span
                     className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${
@@ -449,21 +449,21 @@ export const AdminAuthPage = () => {
                   </span>
                 </div>
 
-                <div className="mt-3 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
+                <div className="mt-3 grid gap-3 text-sm text-[color:var(--theme-text-muted)] sm:grid-cols-2">
                   <div>
-                    <p className="font-semibold text-slate-700">Solicitante</p>
+                    <p className="font-semibold text-[color:var(--theme-text)]">Solicitante</p>
                     <p>{request.Name}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-700">Campos enviados</p>
+                    <p className="font-semibold text-[color:var(--theme-text)]">Campos enviados</p>
                     <p>{getRequestedFields(request).join(', ')}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-700">Fecha de solicitud</p>
+                    <p className="font-semibold text-[color:var(--theme-text)]">Fecha de solicitud</p>
                     <p>{formatDate(request.created_at || request.createdAt)}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-700">Estado</p>
+                    <p className="font-semibold text-[color:var(--theme-text)]">Estado</p>
                     <p>{request.Status || 'PENDING'}</p>
                   </div>
                 </div>
@@ -493,7 +493,7 @@ export const AdminAuthPage = () => {
             ))}
 
             {!requests.length ? (
-              <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+              <div className="rounded-2xl border border-dashed border-[color:var(--theme-border)] px-4 py-6 text-sm text-[color:var(--theme-text-muted)]">
                 No hay solicitudes para mostrar.
               </div>
             ) : null}
@@ -506,11 +506,11 @@ export const AdminAuthPage = () => {
             className="absolute inset-0 bg-black/50"
             onClick={() => setShowCreateModal(false)}
           />
-          <div className="relative w-full max-w-2xl rounded-2xl bg-white p-6 shadow-lg">
+          <div className="relative w-full max-w-2xl rounded-2xl bg-[color:var(--theme-surface)] p-6 shadow-lg">
             <button
               type="button"
               onClick={() => setShowCreateModal(false)}
-              className="absolute right-4 top-4 rounded-full bg-slate-100 px-3 py-1 text-sm"
+              className="absolute right-4 top-4 rounded-full bg-[color:var(--theme-surface-alt)] px-3 py-1 text-sm text-[color:var(--theme-text)]"
             >
               Cerrar
             </button>

@@ -37,4 +37,11 @@ app.use((req, res) => {
     res.status(404).json({ success: false, message: "Endpoint not found" });
 });
 
+app.use((err, _req, res, _next) => {
+    const status = err?.status || err?.statusCode || 500;
+    const message = err?.message || "Error interno del servidor";
+    console.error(err);
+    res.status(status).json({ success: false, message });
+});
+
 export default app;

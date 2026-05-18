@@ -4,7 +4,7 @@ import { submitSignupRequestWithAuthService } from '../../../shared/api/auth.js'
 
 const initialForm = { name: '', email: '', password: '', phone: '', profilePicture: null }
 
-export default function SignupRequestPage() {
+export const SignupRequestPage = () => {
   const navigate = useNavigate()
   const [form, setForm] = useState(initialForm)
   const [message, setMessage] = useState('')
@@ -21,7 +21,7 @@ export default function SignupRequestPage() {
     setError('')
     try {
       const result = await submitSignupRequestWithAuthService(form)
-      setMessage(result.message || 'Cuenta solicitada correctamente, esperando APROBACION de Administrador')
+      setMessage(result.message || 'Solicitud enviada correctamente.')
       setSuccess(true)
     } catch (requestError) {
       setError(requestError.message || 'No se pudo enviar la solicitud')
@@ -31,29 +31,124 @@ export default function SignupRequestPage() {
 
   useEffect(() => {
     if (!success) return
-
     const timer = setTimeout(() => {
-      navigate('/auth', { replace: true })
+      navigate('/auth', {
+        replace: true,
+        state: { infoMessage: 'Esperando autorización de Administrador' },
+      })
     }, 2500)
-
     return () => clearTimeout(timer)
   }, [success, navigate])
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
-      <form className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl" onSubmit={handleSubmit}>
-        <h1 className="text-3xl font-bold">Solicitud de acceso</h1>
-        <p className="mt-2 text-slate-300">Envía una solicitud para aprobación.</p>
-        <div className="mt-6 space-y-3">
-          <input name="name" value={form.name} onChange={handleChange} placeholder="Nombre" className="w-full rounded-2xl border px-4 py-3 text-slate-900" />
-          <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Correo" className="w-full rounded-2xl border px-4 py-3 text-slate-900" />
-          <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Contraseña" className="w-full rounded-2xl border px-4 py-3 text-slate-900" />
-          <input name="phone" value={form.phone} onChange={handleChange} placeholder="Teléfono" className="w-full rounded-2xl border px-4 py-3 text-slate-900" />
-          <input name="profilePicture" type="file" accept="image/*" onChange={handleChange} className="w-full rounded-2xl border px-4 py-3 text-slate-300" />
+    <main className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-4 py-10">
+      <form
+        onSubmit={handleSubmit}
+        className="flex w-full max-w-[460px] flex-col gap-5 rounded-[18px] border border-white/8 bg-[#111111] p-8"
+      >
+        {/* Header */}
+        <div>
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-white/35">
+            Kinal Banc
+          </p>
+          <h1 className="text-2xl font-black tracking-tight text-white">
+            Solicitud de acceso
+          </h1>
+          <p className="mt-1 text-[13px] text-white/40">
+            Envía una solicitud para aprobación del Administrador.
+          </p>
         </div>
-        {message ? <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</div> : null}
-        {error ? <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div> : null}
-        <button className="mt-6 w-full rounded-2xl bg-white px-4 py-3 text-slate-950">Enviar solicitud</button>
+
+        {/* Fields */}
+        <div className="flex flex-col gap-4">
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">
+              Nombre
+            </span>
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Tu nombre completo"
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">
+              Correo electrónico
+            </span>
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="tu@email.com"
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">
+              Contraseña
+            </span>
+            <input
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Mínimo 8 caracteres"
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">
+              Teléfono
+            </span>
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="12345678"
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">
+              Foto de perfil (opcional)
+            </span>
+            <input
+              name="profilePicture"
+              type="file"
+              accept="image/*"
+              onChange={handleChange}
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white/45 outline-none transition focus:border-white/35"
+            />
+          </label>
+        </div>
+
+        {/* Messages */}
+        {message && (
+          <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/8 px-4 py-3 text-[13px] text-emerald-400">
+            {message}
+          </div>
+        )}
+        {error && (
+          <div className="rounded-xl border border-red-500/25 bg-red-500/8 px-4 py-3 text-[13px] text-red-300">
+            {error}
+          </div>
+        )}
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full rounded-xl bg-white py-3 text-[15px] font-bold text-black transition hover:opacity-90"
+        >
+          Enviar solicitud
+        </button>
       </form>
     </main>
   )

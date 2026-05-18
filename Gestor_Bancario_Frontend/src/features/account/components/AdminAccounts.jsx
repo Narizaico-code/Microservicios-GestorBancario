@@ -646,8 +646,8 @@ export const AdminAccounts = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {filteredAccounts.map((account) => (
-                  <tr key={account._id || account.numeroCuenta} className="hover:bg-slate-50 transition">
+                {filteredAccounts.map((account, index) => (
+                  <tr key={account._id || account.numeroCuenta || index} className="hover:bg-slate-50 transition">
                     <td className="px-6 py-4 text-sm font-mono font-semibold text-slate-900">
                       {account.numeroCuenta}
                     </td>

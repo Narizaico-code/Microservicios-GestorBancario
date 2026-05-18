@@ -1,6 +1,6 @@
-import ResendVerificationForm from '../components/ResendVerificationForm.jsx'
+import { ResendVerificationForm } from '../components/ResendVerificationForm.jsx'
 
-export default function ResendVerificationPage() {
+export const ResendVerificationPage = () => {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4 text-white">
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">

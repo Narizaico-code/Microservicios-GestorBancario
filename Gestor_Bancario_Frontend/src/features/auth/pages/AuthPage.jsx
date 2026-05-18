@@ -1,7 +1,7 @@
-import UnifiedAuthForm from '../components/UnifiedAuthForm.jsx'
+import { UnifiedAuthForm } from '../components/UnifiedAuthForm.jsx'
 import cerditoFondoAzul from '../../../assets/CerditoFondoAzul.png'
 
-export default function AuthPage() {
+export const AuthPage = () => {
   return (
     <main className="min-h-screen bg-white px-3 py-3 text-[#011743] sm:px-5 sm:py-5 lg:px-8 lg:py-7">
       <div className="mx-auto grid min-h-[calc(100vh-2.5rem)] w-full max-w-[1250px] gap-5 overflow-hidden rounded-[1.6rem] border border-[#011743]/10 bg-white shadow-[0_18px_45px_rgba(1,23,67,0.10)] lg:min-h-[92vh] lg:grid-cols-[1fr_0.95fr] lg:gap-0">

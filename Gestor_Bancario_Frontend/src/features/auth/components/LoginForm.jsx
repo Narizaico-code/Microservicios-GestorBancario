@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/authStore.js'
 
 const initialForm = { email: '', password: '' }
 
-export default function LoginForm() {
+export const LoginForm = () => {
   const [form, setForm] = useState(initialForm)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')

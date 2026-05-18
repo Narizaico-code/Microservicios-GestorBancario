@@ -1,8 +1,8 @@
 import { ClientNavbar } from './ClientNavbar'
 
 export const ClientDashboardContainer = ({ children }) => (
-  <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.22),_transparent_35%),linear-gradient(180deg,_#020617_0%,_#030b1c_100%)] text-white px-5 py-5">
-    <div className="max-w-7xl mx-auto">
+  <main style={{ minHeight: '100vh', backgroundColor: '#0a0a0a', color: 'white' }}>
+    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '16px 20px 32px' }}>
       <ClientNavbar />
       {children}
     </div>

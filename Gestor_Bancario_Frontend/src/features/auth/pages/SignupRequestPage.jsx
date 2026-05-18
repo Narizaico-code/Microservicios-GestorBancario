@@ -4,8 +4,12 @@ import { submitSignupRequestWithAuthService } from '../../../shared/api/auth.js'
 
 const initialForm = { name: '', email: '', password: '', phone: '', profilePicture: null }
 
+<<<<<<< HEAD
 export default function SignupRequestPage() {
   const navigate = useNavigate()
+=======
+export const SignupRequestPage = () => {
+>>>>>>> 82b5b6ef2d0175768938cc0f9b714df51ebb5b20
   const [form, setForm] = useState(initialForm)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')

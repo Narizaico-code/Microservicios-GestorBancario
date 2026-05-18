@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-export default function UnauthorizedPage() {
+export const UnauthorizedPage = () => {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
       <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-xl">

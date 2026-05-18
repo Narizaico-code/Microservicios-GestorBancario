@@ -1,4 +1,4 @@
-export default function DashboardHeader({ title, subtitle, onLogout, userRole }) {
+export const DashboardHeader = ({ title, subtitle, onLogout, userRole }) => {
   return (
     <header className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl">
       <div>

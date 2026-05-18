@@ -17,7 +17,7 @@ const MODE = {
   WAITING_VERIFICATION: 'waiting_verification',
 }
 
-export default function UnifiedAuthForm({ onRegistered, initialMode = MODE.LOGIN, onlyRegister = false } = {}) {
+export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRegister = false } = {}) => {
   const [mode, setMode] = useState(initialMode)
   const [form, setForm] = useState({
     email: '',

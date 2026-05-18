@@ -1,30 +1,31 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuthStore } from '../../features/auth/store/authStore.js'
-import AuthPage from '../../features/auth/pages/AuthPage.jsx'
-import SignupRequestPage from '../../features/auth/pages/SignupRequestPage.jsx'
-import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage.jsx'
-import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage.jsx'
-import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage.jsx'
-import UnauthorizedPage from '../../features/auth/pages/UnauthorizedPage.jsx'
-import ProtectedRoute from './ProtectedRoute.jsx'
-import RoleGuard from './RoleGuard.jsx'
+import { AuthPage } from '../../features/auth/pages/AuthPage.jsx'
+import { SignupRequestPage } from '../../features/auth/pages/SignupRequestPage.jsx'
+import { ForgotPasswordPage } from '../../features/auth/pages/ForgotPasswordPage.jsx'
+import { ResetPasswordPage } from '../../features/auth/pages/ResetPasswordPage.jsx'
+import { VerifyEmailPage } from '../../features/auth/pages/VerifyEmailPage.jsx'
+import { UnauthorizedPage } from '../../features/auth/pages/UnauthorizedPage.jsx'
+import { ProtectedRoute } from './ProtectedRoute.jsx'
+import { RoleGuard } from './RoleGuard.jsx'
 import { DashboardPage } from '../../app/layouts/DashboardPages.jsx'
 import { ClientLayout } from '../../app/layouts/ClientPages.jsx'
-import ClientPage from '../../pages/ClientPage.jsx'
 import HomePage from '../../pages/HomePage.jsx'
+import { ClientPage } from '../../pages/ClientPage.jsx'
 import { AdminAccounts } from '../../features/account/components/AdminAccounts.jsx'
+import { MyAccounts } from '../../features/account/components/MyAccounts.jsx'
 import { Help } from '../../shared/components/layout/Help.jsx'
-import ProfilePage from '../../features/profile/pages/ProfilePage.jsx'
-import ClientProfilePage from '../../features/profile/pages/ClientProfilePage.jsx'
-import AdminAuthPage from '../../features/admin/pages/AdminAuthPage.jsx'
-import ClientFavoritesPage from '../../features/favorites/pages/ClientFavoritesPage.jsx'
+import { ProfilePage } from '../../features/profile/pages/ProfilePage.jsx'
+import { ClientProfilePage } from '../../features/profile/pages/ClientProfilePage.jsx'
+import { AdminAuthPage } from '../../features/admin/pages/AdminAuthPage.jsx'
+import { ClientFavoritesPage } from '../../features/favorites/pages/ClientFavoritesPage.jsx'
 
-function DashboardRedirect() {
+const DashboardRedirect = () => {
   const { session } = useAuthStore()
   return <Navigate to={session?.user?.role === 'ADMIN_ROLE' ? '/dashboard' : '/client'} replace />
 }
 
-export default function AppRoutes() {
+export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -49,6 +50,7 @@ export default function AppRoutes() {
             <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
               <Route path="/client" element={<ClientLayout />}>
                 <Route index element={<ClientPage />} />
+                <Route path="accounts" element={<MyAccounts />} />
                 <Route path="help" element={<Help />} />
                 <Route path="ayuda" element={<Help />} />
                 <Route path="perfil" element={<ClientProfilePage />} />

@@ -7,8 +7,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: gestorBancarioDb
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
     ports:
       - "5435:5432"
     volumes:

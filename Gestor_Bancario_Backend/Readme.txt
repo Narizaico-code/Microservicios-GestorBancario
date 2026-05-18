@@ -1,6 +1,6 @@
 # Server
 NODE_ENV=development
-PORT=3005
+PORT=4000
  
 # Database PostgreSQL
 DB_HOST=localhost
@@ -41,7 +41,7 @@ UPLOAD_PATH=./uploads
 FRONTEND_URL=http://localhost:5173
 
 # Backend URL (para links de verificacion)
-BACKEND_URL=http://localhost:3005
+BACKEND_URL=http://localhost:4000
  
 # Security
 ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000

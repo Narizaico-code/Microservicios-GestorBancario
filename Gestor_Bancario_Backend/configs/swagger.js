@@ -236,7 +236,7 @@ const swaggerDefinition = {
                 requestBody: {
                     required: true,
                     content: {
-                        "application/json": {
+                        "multipart/form-data": {
                             schema: {
                                 $ref: "#/components/schemas/ServiceCreateRequest"
                             }
@@ -287,7 +287,7 @@ const swaggerDefinition = {
                 requestBody: {
                     required: true,
                     content: {
-                        "application/json": {
+                        "multipart/form-data": {
                             schema: {
                                 $ref: "#/components/schemas/ServiceUpdateRequest"
                             }
@@ -322,7 +322,7 @@ const swaggerDefinition = {
                 requestBody: {
                     required: true,
                     content: {
-                        "application/json": {
+                        "multipart/form-data": {
                             schema: {
                                 $ref: "#/components/schemas/PromotionCreateRequest"
                             }
@@ -371,7 +371,7 @@ const swaggerDefinition = {
                 requestBody: {
                     required: true,
                     content: {
-                        "application/json": {
+                        "multipart/form-data": {
                             schema: {
                                 $ref: "#/components/schemas/PromotionUpdateRequest"
                             }
@@ -584,6 +584,10 @@ const swaggerDefinition = {
                         type: "boolean",
                         example: true
                     },
+                    image: {
+                        type: "string",
+                        format: "binary"
+                    },
                     imageUrl: {
                         type: "string",
                         example: "https://example.com/servicio.jpg"
@@ -627,6 +631,10 @@ const swaggerDefinition = {
                     active: {
                         type: "boolean"
                     },
+                    image: {
+                        type: "string",
+                        format: "binary"
+                    },
                     imageUrl: {
                         type: "string"
                     },
@@ -666,6 +674,10 @@ const swaggerDefinition = {
                         type: "boolean",
                         example: true
                     },
+                    image: {
+                        type: "string",
+                        format: "binary"
+                    },
                     validFrom: {
                         type: "string",
                         format: "date-time"
@@ -698,6 +710,10 @@ const swaggerDefinition = {
                     },
                     active: {
                         type: "boolean"
+                    },
+                    image: {
+                        type: "string",
+                        format: "binary"
                     },
                     validFrom: {
                         type: "string",

@@ -1,6 +1,7 @@
 'use strict';
 
-import { body, param, validationResult } from 'express-validator';
+import { body, param, query, validationResult } from 'express-validator';
+import { allowedPromotionFields } from './allowed-fields.js';
 
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
@@ -26,17 +27,6 @@ const respondValidationError = (res, errors) => {
     errors,
   });
 };
-
-const allowedPromotionFields = [
-  'name',
-  'description',
-  'terms',
-  'active',
-  'validFrom',
-  'validTo',
-  'imageUrl',
-  'conditions',
-];
 
 const ensureAllowedFields = (req, res, next) => {
   const errors = [];
@@ -135,6 +125,85 @@ export const validateCreatePromotion = [
       throw new Error('conditions debe ser un objeto');
     }),
 
+  body('type')
+    .optional()
+    .isIn(['CASHBACK', 'RATE_REDUCTION', 'FEE_WAIVER', 'BONUS_POINTS', 'GENERAL'])
+    .withMessage('type debe ser CASHBACK, RATE_REDUCTION, FEE_WAIVER, BONUS_POINTS o GENERAL'),
+
+  body('status')
+    .optional()
+    .isIn(['DRAFT', 'SCHEDULED', 'ACTIVE', 'PAUSED', 'EXPIRED', 'CANCELLED'])
+    .withMessage('status debe ser DRAFT, SCHEDULED, ACTIVE, PAUSED, EXPIRED o CANCELLED'),
+
+  body('targetSegment')
+    .optional()
+    .isIn(['ALL', 'VIP', 'NEW', 'INACTIVE', 'PREMIUM'])
+    .withMessage('targetSegment debe ser ALL, VIP, NEW, INACTIVE o PREMIUM'),
+
+  body('targetRoles')
+    .optional()
+    .isArray()
+    .withMessage('targetRoles debe ser un array'),
+
+  body('targetRoles.*')
+    .optional()
+    .isIn(['USER_ROLE', 'EMPLOYEE_ROLE'])
+    .withMessage('Cada rol debe ser USER_ROLE o EMPLOYEE_ROLE'),
+
+  body('maxUsesGlobal')
+    .optional()
+    .isInt({ gt: 0 })
+    .withMessage('maxUsesGlobal debe ser un entero mayor que 0'),
+
+  body('maxUsesPerUser')
+    .optional()
+    .isInt({ gt: 0 })
+    .withMessage('maxUsesPerUser debe ser un entero mayor que 0'),
+
+  body('budget')
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage('budget debe ser un numero mayor que 0'),
+
+  body('priority')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('priority debe ser un entero mayor o igual a 0'),
+
+  body('stackable')
+    .optional()
+    .isBoolean()
+    .withMessage('stackable debe ser true o false'),
+
+  body('applicableServices')
+    .optional()
+    .isArray()
+    .withMessage('applicableServices debe ser un array'),
+
+  body('applicableServices.*')
+    .optional()
+    .isMongoId()
+    .withMessage('Cada ID de servicio aplicable debe ser un MongoId valido'),
+
+  body('internalNote')
+    .optional()
+    .isString()
+    .withMessage('La nota interna debe ser texto')
+    .isLength({ max: 300 })
+    .withMessage('La nota interna no puede exceder 300 caracteres'),
+
+  body('tags')
+    .optional()
+    .isArray({ max: 10 })
+    .withMessage('tags debe ser un array con maximo 10 elementos'),
+
+  body('tags.*')
+    .optional()
+    .isString()
+    .withMessage('Cada tag debe ser texto')
+    .isLength({ max: 30 })
+    .withMessage('Cada tag no puede exceder 30 caracteres'),
+
   handleValidationErrors,
 ];
 
@@ -207,10 +276,174 @@ export const validateUpdatePromotion = [
       throw new Error('conditions debe ser un objeto');
     }),
 
+  body('type')
+    .optional()
+    .isIn(['CASHBACK', 'RATE_REDUCTION', 'FEE_WAIVER', 'BONUS_POINTS', 'GENERAL'])
+    .withMessage('type debe ser CASHBACK, RATE_REDUCTION, FEE_WAIVER, BONUS_POINTS o GENERAL'),
+
+  body('status')
+    .optional()
+    .isIn(['DRAFT', 'SCHEDULED', 'ACTIVE', 'PAUSED', 'EXPIRED', 'CANCELLED'])
+    .withMessage('status debe ser DRAFT, SCHEDULED, ACTIVE, PAUSED, EXPIRED o CANCELLED'),
+
+  body('targetSegment')
+    .optional()
+    .isIn(['ALL', 'VIP', 'NEW', 'INACTIVE', 'PREMIUM'])
+    .withMessage('targetSegment debe ser ALL, VIP, NEW, INACTIVE o PREMIUM'),
+
+  body('targetRoles')
+    .optional()
+    .isArray()
+    .withMessage('targetRoles debe ser un array'),
+
+  body('targetRoles.*')
+    .optional()
+    .isIn(['USER_ROLE', 'EMPLOYEE_ROLE'])
+    .withMessage('Cada rol debe ser USER_ROLE o EMPLOYEE_ROLE'),
+
+  body('maxUsesGlobal')
+    .optional()
+    .isInt({ gt: 0 })
+    .withMessage('maxUsesGlobal debe ser un entero mayor que 0'),
+
+  body('maxUsesPerUser')
+    .optional()
+    .isInt({ gt: 0 })
+    .withMessage('maxUsesPerUser debe ser un entero mayor que 0'),
+
+  body('budget')
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage('budget debe ser un numero mayor que 0'),
+
+  body('priority')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('priority debe ser un entero mayor o igual a 0'),
+
+  body('stackable')
+    .optional()
+    .isBoolean()
+    .withMessage('stackable debe ser true o false'),
+
+  body('applicableServices')
+    .optional()
+    .isArray()
+    .withMessage('applicableServices debe ser un array'),
+
+  body('applicableServices.*')
+    .optional()
+    .isMongoId()
+    .withMessage('Cada ID de servicio aplicable debe ser un MongoId valido'),
+
+  body('internalNote')
+    .optional()
+    .isString()
+    .withMessage('La nota interna debe ser texto')
+    .isLength({ max: 300 })
+    .withMessage('La nota interna no puede exceder 300 caracteres'),
+
+  body('tags')
+    .optional()
+    .isArray({ max: 10 })
+    .withMessage('tags debe ser un array con maximo 10 elementos'),
+
+  body('tags.*')
+    .optional()
+    .isString()
+    .withMessage('Cada tag debe ser texto')
+    .isLength({ max: 30 })
+    .withMessage('Cada tag no puede exceder 30 caracteres'),
+
   handleValidationErrors,
 ];
 
 export const validatePromotionId = [
   param('id').isMongoId().withMessage('ID de promocion invalido'),
+  handleValidationErrors,
+];
+
+// --- Nuevos validators ---
+
+export const validatePromotionQuery = [
+  query('active')
+    .optional()
+    .isIn(['true', 'false'])
+    .withMessage('active debe ser true o false'),
+
+  query('status')
+    .optional()
+    .isIn(['DRAFT', 'SCHEDULED', 'ACTIVE', 'PAUSED', 'EXPIRED', 'CANCELLED'])
+    .withMessage('status debe ser DRAFT, SCHEDULED, ACTIVE, PAUSED, EXPIRED o CANCELLED'),
+
+  query('type')
+    .optional()
+    .isIn(['CASHBACK', 'RATE_REDUCTION', 'FEE_WAIVER', 'BONUS_POINTS', 'GENERAL'])
+    .withMessage('type debe ser CASHBACK, RATE_REDUCTION, FEE_WAIVER, BONUS_POINTS o GENERAL'),
+
+  query('targetSegment')
+    .optional()
+    .isIn(['ALL', 'VIP', 'NEW', 'INACTIVE', 'PREMIUM'])
+    .withMessage('targetSegment debe ser ALL, VIP, NEW, INACTIVE o PREMIUM'),
+
+  query('q')
+    .optional()
+    .isString()
+    .withMessage('q debe ser texto')
+    .isLength({ max: 100 })
+    .withMessage('q no puede exceder 100 caracteres'),
+
+  query('page')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('page debe ser un entero mayor o igual a 1'),
+
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 100 })
+    .withMessage('limit debe ser un entero entre 1 y 100'),
+
+  query('sortBy')
+    .optional()
+    .isIn(['newest', 'oldest', 'priority_desc', 'validTo_asc'])
+    .withMessage('sortBy debe ser newest, oldest, priority_desc o validTo_asc'),
+
+  handleValidationErrors,
+];
+
+export const validateTogglePromotion = [
+  body('action')
+    .notEmpty()
+    .withMessage('La accion es obligatoria')
+    .isIn(['ACTIVATE', 'PAUSE', 'CANCEL'])
+    .withMessage('action debe ser ACTIVATE, PAUSE o CANCEL'),
+
+  body('reason')
+    .if(body('action').equals('CANCEL'))
+    .notEmpty()
+    .withMessage('reason es obligatorio cuando la accion es CANCEL')
+    .isString()
+    .withMessage('reason debe ser texto')
+    .isLength({ max: 300 })
+    .withMessage('reason no puede exceder 300 caracteres'),
+
+  handleValidationErrors,
+];
+
+export const validateApplyPromotion = [
+  body('promotionId')
+    .notEmpty()
+    .withMessage('promotionId es obligatorio')
+    .isMongoId()
+    .withMessage('promotionId debe ser un MongoId valido'),
+
+  body('accountNumber')
+    .notEmpty()
+    .withMessage('accountNumber es obligatorio')
+    .isString()
+    .withMessage('accountNumber debe ser texto')
+    .matches(/^\d{10}$/)
+    .withMessage('accountNumber debe ser una cadena de exactamente 10 digitos numericos'),
+
   handleValidationErrors,
 ];

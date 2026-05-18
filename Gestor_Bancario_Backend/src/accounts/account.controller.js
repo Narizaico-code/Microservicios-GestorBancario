@@ -255,8 +255,10 @@ export const getAccounts = async (req, res) => {
             filter.estado = estadoValue === undefined ? true : estadoValue;
         }
 
-        // Si el usuario quiere ver solo sus cuentas
-        if (misCuentas === 'true') {
+        const isAdmin = req.userRole === 'ADMIN_ROLE';
+
+        // Si el usuario quiere ver solo sus cuentas, o si NO es admin (solo puede ver las suyas)
+        if (misCuentas === 'true' || !isAdmin) {
             filter.userId = req.userId;
         }
 
@@ -279,7 +281,6 @@ export const getAccounts = async (req, res) => {
         const total = await Account.countDocuments(filter);
 
         // Sanitizar datos sensibles
-        const isAdmin = req.userRole === 'ADMIN_ROLE';
         const sanitizedAccounts = accounts.map(account => {
             // Si el usuario autenticado no es el dueño de la cuenta y no es admin, ocultamos el saldo
             if (!isAdmin && String(account.userId) !== String(req.userId)) {

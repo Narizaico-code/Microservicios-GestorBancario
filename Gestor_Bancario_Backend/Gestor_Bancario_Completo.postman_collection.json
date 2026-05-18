@@ -19,7 +19,7 @@
   ],
   "item": [
     {
-      "name": "Auth Service (Puerto 3005)",
+      "name": "Auth Service (Puerto 4000)",
       "item": [
         {
           "name": "Autenticación y Registro",
@@ -35,10 +35,10 @@
                   "options": { "raw": { "language": "json" } }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/login",
+                  "raw": "http://localhost:4000/api/v1/auth/login",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "login"]
                 }
               }
@@ -59,10 +59,10 @@
                   ]
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/signup-request",
+                  "raw": "http://localhost:4000/api/v1/auth/signup-request",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "signup-request"]
                 }
               }
@@ -78,10 +78,10 @@
                   "options": { "raw": { "language": "json" } }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/verify-email",
+                  "raw": "http://localhost:4000/api/v1/auth/verify-email",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "verify-email"]
                 }
               }
@@ -97,10 +97,10 @@
                   "options": { "raw": { "language": "json" } }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/resend-verification",
+                  "raw": "http://localhost:4000/api/v1/auth/resend-verification",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "resend-verification"]
                 }
               }
@@ -116,10 +116,10 @@
                   "options": { "raw": { "language": "json" } }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/forgot-password",
+                  "raw": "http://localhost:4000/api/v1/auth/forgot-password",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "forgot-password"]
                 }
               }
@@ -135,10 +135,10 @@
                   "options": { "raw": { "language": "json" } }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/reset-password",
+                  "raw": "http://localhost:4000/api/v1/auth/reset-password",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "reset-password"]
                 }
               }
@@ -156,10 +156,10 @@
                   { "key": "Authorization", "value": "Bearer {{userToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/profile",
+                  "raw": "http://localhost:4000/api/v1/auth/profile",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "profile"]
                 }
               }
@@ -179,11 +179,27 @@
                   ]
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/users/me",
+                  "raw": "http://localhost:4000/api/v1/users/me",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "users", "me"]
+                }
+              }
+            },
+            {
+              "name": "Listar Todos los Usuarios (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:4000/api/v1/users/all",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "4000",
+                  "path": ["api", "v1", "users", "all"]
                 }
               }
             }
@@ -209,10 +225,10 @@
                   ]
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/register",
+                  "raw": "http://localhost:4000/api/v1/auth/register",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "register"]
                 }
               }
@@ -225,10 +241,10 @@
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/signup-requests",
+                  "raw": "http://localhost:4000/api/v1/auth/signup-requests",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "signup-requests"]
                 }
               }
@@ -241,10 +257,10 @@
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/signup-requests/{{signupRequestId}}/approve",
+                  "raw": "http://localhost:4000/api/v1/auth/signup-requests/{{signupRequestId}}/approve",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "signup-requests", "{{signupRequestId}}", "approve"]
                 }
               }
@@ -257,10 +273,10 @@
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/auth/signup-requests/{{signupRequestId}}/reject",
+                  "raw": "http://localhost:4000/api/v1/auth/signup-requests/{{signupRequestId}}/reject",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "auth", "signup-requests", "{{signupRequestId}}", "reject"]
                 }
               }
@@ -273,10 +289,10 @@
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/users/update-requests?status=PENDING",
+                  "raw": "http://localhost:4000/api/v1/users/update-requests?status=PENDING",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "users", "update-requests"],
                   "query": [
                     { "key": "status", "value": "PENDING" }
@@ -292,10 +308,10 @@
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/users/update-requests/{{updateRequestId}}/approve",
+                  "raw": "http://localhost:4000/api/v1/users/update-requests/{{updateRequestId}}/approve",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "users", "update-requests", "{{updateRequestId}}", "approve"]
                 }
               }
@@ -308,10 +324,10 @@
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/users/update-requests/{{updateRequestId}}/reject",
+                  "raw": "http://localhost:4000/api/v1/users/update-requests/{{updateRequestId}}/reject",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "users", "update-requests", "{{updateRequestId}}", "reject"]
                 }
               }
@@ -329,10 +345,10 @@
                   "options": { "raw": { "language": "json" } }
                 },
                 "url": {
-                  "raw": "http://localhost:3005/api/v1/users/{{userId}}/role",
+                  "raw": "http://localhost:4000/api/v1/users/{{userId}}/role",
                   "protocol": "http",
                   "host": ["localhost"],
-                  "port": "3005",
+                  "port": "4000",
                   "path": ["api", "v1", "users", "{{userId}}", "role"]
                 }
               }
@@ -601,16 +617,36 @@
           "name": "Servicios y Productos",
           "item": [
             {
-              "name": "Crear Servicio o Producto (Admin)",
+              "name": "Crear Servicio (Admin)",
               "request": {
                 "method": "POST",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"name\": \"Corte de cabello premium\",\n    \"description\": \"Servicio exclusivo para clientes\",\n    \"category\": \"Belleza\",\n    \"type\": \"SERVICE\",\n    \"price\": 150,\n    \"active\": true,\n    \"imageUrl\": \"https://example.com/servicio.jpg\",\n    \"terms\": \"Sujeto a disponibilidad\",\n    \"validFrom\": \"2026-05-01T00:00:00.000Z\",\n    \"validTo\": \"2026-12-31T23:59:59.000Z\",\n    \"discount\": {\n        \"type\": \"PERCENT\",\n        \"value\": 10,\n        \"startAt\": \"2026-05-01T00:00:00.000Z\",\n        \"endAt\": \"2026-05-31T23:59:59.000Z\",\n        \"minAmount\": 100,\n        \"maxUses\": 50,\n        \"terms\": \"Valido en sucursales participantes\"\n    }\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Seguro de vida premium", "type": "text" },
+                    { "key": "description", "value": "Servicio de seguro de vida con cobertura completa para clientes del banco", "type": "text" },
+                    { "key": "category", "value": "Seguros", "type": "text" },
+                    { "key": "type", "value": "SERVICE", "type": "text" },
+                    { "key": "price", "value": "500", "type": "text" },
+                    { "key": "currency", "value": "GTQ", "type": "text" },
+                    { "key": "status", "value": "ACTIVE", "type": "text" },
+                    { "key": "active", "value": "true", "type": "text" },
+                    { "key": "image", "type": "file", "src": [] },
+                    { "key": "terms", "value": "Sujeto a evaluacion crediticia y disponibilidad", "type": "text" },
+                    { "key": "validFrom", "value": "2026-05-01T00:00:00.000Z", "type": "text" },
+                    { "key": "validTo", "value": "2026-12-31T23:59:59.000Z", "type": "text" },
+                    { "key": "targetRoles", "value": "[\"USER_ROLE\"]", "type": "text" },
+                    { "key": "minBalance", "value": "1000", "type": "text" },
+                    { "key": "requiresVerifiedEmail", "value": "true", "type": "text" },
+                    { "key": "maxUsesPerUser", "value": "1", "type": "text" },
+                    { "key": "totalUsesLimit", "value": "500", "type": "text" },
+                    { "key": "tags", "value": "[\"seguros\", \"premium\", \"vida\"]", "type": "text" },
+                    { "key": "internalNote", "value": "Promocion interna Q2 2026", "type": "text" },
+                    { "key": "discount", "value": "{\"type\":\"PERCENT\",\"value\":15,\"startAt\":\"2026-05-01T00:00:00.000Z\",\"endAt\":\"2026-06-30T23:59:59.000Z\",\"minAmount\":200,\"maxUses\":100,\"terms\":\"Valido solo para primera compra\"}", "type": "text" }
+                  ]
                 },
                 "url": {
                   "raw": "http://localhost:3006/gestionBancaria/api/v1/services",
@@ -622,29 +658,56 @@
               }
             },
             {
-              "name": "Listar Servicios/Productos",
+              "name": "Listar Servicios (con paginacion y filtros)",
               "request": {
                 "method": "GET",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{userToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services?type=SERVICE&active=true&category=Belleza&q=corte",
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services?type=SERVICE&category=Seguros&q=seguro&minPrice=100&maxPrice=1000&currency=GTQ&page=1&limit=10&sortBy=newest",
                   "protocol": "http",
                   "host": ["localhost"],
                   "port": "3006",
                   "path": ["gestionBancaria", "api", "v1", "services"],
                   "query": [
                     { "key": "type", "value": "SERVICE" },
-                    { "key": "active", "value": "true" },
-                    { "key": "category", "value": "Belleza" },
-                    { "key": "q", "value": "corte" }
+                    { "key": "category", "value": "Seguros" },
+                    { "key": "q", "value": "seguro" },
+                    { "key": "minPrice", "value": "100" },
+                    { "key": "maxPrice", "value": "1000" },
+                    { "key": "currency", "value": "GTQ" },
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "10" },
+                    { "key": "sortBy", "value": "newest" }
                   ]
                 }
               }
             },
             {
-              "name": "Obtener Servicio/Producto por ID",
+              "name": "Listar Servicios (Admin - todos los estados)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/services?status=DRAFT&page=1&limit=20&sortBy=oldest",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "services"],
+                  "query": [
+                    { "key": "status", "value": "DRAFT" },
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "20" },
+                    { "key": "sortBy", "value": "oldest" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Obtener Servicio por ID",
               "request": {
                 "method": "GET",
                 "header": [
@@ -660,16 +723,21 @@
               }
             },
             {
-              "name": "Actualizar Servicio/Producto (Admin)",
+              "name": "Actualizar Servicio (Admin)",
               "request": {
                 "method": "PUT",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"price\": 175,\n    \"active\": true,\n    \"discount\": {\n        \"type\": \"AMOUNT\",\n        \"value\": 20\n    }\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "price", "value": "450", "type": "text" },
+                    { "key": "status", "value": "ACTIVE", "type": "text" },
+                    { "key": "tags", "value": "[\"seguros\", \"oferta\"]", "type": "text" },
+                    { "key": "discount", "value": "{\"type\":\"AMOUNT\",\"value\":50}", "type": "text" },
+                    { "key": "image", "type": "file", "src": [] }
+                  ]
                 },
                 "url": {
                   "raw": "http://localhost:3006/gestionBancaria/api/v1/services/{{serviceId}}",
@@ -681,7 +749,7 @@
               }
             },
             {
-              "name": "Eliminar Servicio/Producto (Admin)",
+              "name": "Archivar Servicio - Soft Delete (Admin)",
               "request": {
                 "method": "DELETE",
                 "header": [
@@ -702,16 +770,35 @@
           "name": "Promociones",
           "item": [
             {
-              "name": "Crear Promocion Global (Admin)",
+              "name": "Crear Promocion (Admin)",
               "request": {
                 "method": "POST",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"name\": \"Semana del cliente\",\n    \"description\": \"Beneficios exclusivos para clientes\",\n    \"terms\": \"Aplican restricciones\",\n    \"active\": true,\n    \"validFrom\": \"2026-06-01T00:00:00.000Z\",\n    \"validTo\": \"2026-06-30T23:59:59.000Z\",\n    \"imageUrl\": \"https://example.com/promo.jpg\",\n    \"conditions\": {\n        \"segment\": \"VIP\"\n    }\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Cashback de Verano 2026", "type": "text" },
+                    { "key": "description", "value": "5% de cashback en todas las compras durante junio", "type": "text" },
+                    { "key": "terms", "value": "Aplica en compras mayores a Q100. Maximo Q500 de devolucion.", "type": "text" },
+                    { "key": "type", "value": "CASHBACK", "type": "text" },
+                    { "key": "status", "value": "DRAFT", "type": "text" },
+                    { "key": "active", "value": "false", "type": "text" },
+                    { "key": "validFrom", "value": "2026-06-01T00:00:00.000Z", "type": "text" },
+                    { "key": "validTo", "value": "2026-06-30T23:59:59.000Z", "type": "text" },
+                    { "key": "image", "type": "file", "src": [] },
+                    { "key": "targetSegment", "value": "ALL", "type": "text" },
+                    { "key": "targetRoles", "value": "[\"USER_ROLE\"]", "type": "text" },
+                    { "key": "maxUsesGlobal", "value": "1000", "type": "text" },
+                    { "key": "maxUsesPerUser", "value": "5", "type": "text" },
+                    { "key": "budget", "value": "50000", "type": "text" },
+                    { "key": "priority", "value": "10", "type": "text" },
+                    { "key": "stackable", "value": "false", "type": "text" },
+                    { "key": "tags", "value": "[\"cashback\", \"verano\"]", "type": "text" },
+                    { "key": "internalNote", "value": "Aprobado por gerencia - presupuesto Q50k", "type": "text" },
+                    { "key": "conditions", "value": "{\"minTransactionAmount\":100}", "type": "text" }
+                  ]
                 },
                 "url": {
                   "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions",
@@ -723,21 +810,47 @@
               }
             },
             {
-              "name": "Listar Promociones",
+              "name": "Listar Promociones (con paginacion y filtros)",
               "request": {
                 "method": "GET",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{userToken}}", "type": "text" }
                 ],
                 "url": {
-                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions?active=true&q=cliente",
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions?q=cashback&page=1&limit=10&sortBy=newest",
                   "protocol": "http",
                   "host": ["localhost"],
                   "port": "3006",
                   "path": ["gestionBancaria", "api", "v1", "promotions"],
                   "query": [
-                    { "key": "active", "value": "true" },
-                    { "key": "q", "value": "cliente" }
+                    { "key": "q", "value": "cashback" },
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "10" },
+                    { "key": "sortBy", "value": "newest" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Listar Promociones (Admin - por status y tipo)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions?status=DRAFT&type=CASHBACK&targetSegment=ALL&page=1&limit=20&sortBy=priority_desc",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions"],
+                  "query": [
+                    { "key": "status", "value": "DRAFT" },
+                    { "key": "type", "value": "CASHBACK" },
+                    { "key": "targetSegment", "value": "ALL" },
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "20" },
+                    { "key": "sortBy", "value": "priority_desc" }
                   ]
                 }
               }
@@ -766,9 +879,14 @@
                   { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
                 ],
                 "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"active\": false,\n    \"terms\": \"Promocion finalizada\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "budget", "value": "75000", "type": "text" },
+                    { "key": "priority", "value": "15", "type": "text" },
+                    { "key": "tags", "value": "[\"cashback\", \"verano\", \"extendida\"]", "type": "text" },
+                    { "key": "internalNote", "value": "Presupuesto ampliado a Q75k por alta demanda", "type": "text" },
+                    { "key": "image", "type": "file", "src": [] }
+                  ]
                 },
                 "url": {
                   "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}",
@@ -780,7 +898,7 @@
               }
             },
             {
-              "name": "Eliminar Promocion (Admin)",
+              "name": "Cancelar Promocion - Soft Delete (Admin)",
               "request": {
                 "method": "DELETE",
                 "header": [
@@ -792,6 +910,85 @@
                   "host": ["localhost"],
                   "port": "3006",
                   "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}"]
+                }
+              }
+            },
+            {
+              "name": "Activar Promocion (Admin) - Toggle",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"action\": \"ACTIVATE\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}/toggle",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}", "toggle"]
+                }
+              }
+            },
+            {
+              "name": "Pausar Promocion (Admin) - Toggle",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"action\": \"PAUSE\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}/toggle",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}", "toggle"]
+                }
+              }
+            },
+            {
+              "name": "Cancelar Promocion con Razon (Admin) - Toggle",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"action\": \"CANCEL\",\n    \"reason\": \"Presupuesto agotado antes de tiempo\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}/toggle",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}", "toggle"]
+                }
+              }
+            },
+            {
+              "name": "Estadisticas de Promocion (Admin)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text" }
+                ],
+                "url": {
+                  "raw": "http://localhost:3006/gestionBancaria/api/v1/promotions/{{promotionId}}/stats",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3006",
+                  "path": ["gestionBancaria", "api", "v1", "promotions", "{{promotionId}}", "stats"]
                 }
               }
             }

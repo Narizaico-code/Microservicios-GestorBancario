@@ -14,4 +14,15 @@ const createDepositTransaction = async ({ cuentaDestino, monto, descripcion, mon
   });
 };
 
-export { getTransactions, createDepositTransaction };
+const createTransferTransaction = async ({ cuentaOrigen, cuentaDestino, monto, descripcion, moneda = "GTQ" }) => {
+  return await axiosTransaction.post("/transactions/create", {
+    tipoTransaccion: "TRANSFERENCIA",
+    cuentaOrigen,
+    cuentaDestino,
+    monto,
+    descripcion,
+    moneda,
+  });
+};
+
+export { getTransactions, createDepositTransaction, createTransferTransaction };

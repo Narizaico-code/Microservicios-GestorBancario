@@ -11,7 +11,6 @@ const router = Router();
 router.post(
     '/create',
     validateJWT,
-    parseFormData,
     validateTransaction,
     requireDescriptionForTransaction,
     currencyConversionMiddleware,
@@ -21,7 +20,6 @@ router.post(
 router.put(
     '/update/:id',
     validateJWT,
-    parseFormData,
     updateTransaction
 );
 

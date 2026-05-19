@@ -3,6 +3,7 @@
 // Middleware: si la transacción es DEPOSITO o TRANSFERENCIA, la descripción es obligatoria
 export const requireDescriptionForTransaction = (req, res, next) => {
   try {
+    console.log('[transactions] payload', req.body)
     const { tipoTransaccion, descripcion } = req.body;
     if (!tipoTransaccion) return next();
 
@@ -11,17 +12,17 @@ export const requireDescriptionForTransaction = (req, res, next) => {
 
     if (needsDescription) {
       if (descripcion == null) {
-        return res.status(400).json({ success: false, message: 'La descripción es requerida para depósitos y transferencias' });
+        return res.status(400).json({ success: false, error: null, message: 'La descripción es requerida para depósitos y transferencias' });
       }
 
       if (typeof descripcion !== 'string' || descripcion.trim() === '') {
-        return res.status(400).json({ success: false, message: 'La descripción no puede estar vacía' });
+        return res.status(400).json({ success: false, error: null, message: 'La descripción no puede estar vacía' });
       }
     }
 
     return next();
   } catch (err) {
-    return res.status(500).json({ success: false, message: 'Error en validación de descripción', error: err.message });
+    return res.status(500).json({ success: false, error: err?.message || err, message: 'Error en validación de descripción' });
   }
 };
 

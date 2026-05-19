@@ -37,15 +37,18 @@ const getDailyTransferredAmountGTQByUser = async (userId) => {
         }
     }).select('monto moneda');
 
-    return transfers.reduce((acc, transfer) => {
-        const amountInGTQ = convert(
+    let totalAcc = 0;
+    for (const transfer of transfers) {
+        const amountInGTQ = await convert(
             Number(transfer.monto),
             String(transfer.moneda).toUpperCase(),
             'GTQ'
         );
+        
+        totalAcc = Number((totalAcc + amountInGTQ).toFixed(2));
+    }
 
-        return Number((acc + amountInGTQ).toFixed(2));
-    }, 0);
+    return totalAcc;
 };
 
 const getUserTransactionFilter = async (req) => {
@@ -93,7 +96,7 @@ export const createTransaction = async (req, res) => {
         let destinationAccount = null;
 
         if (normalizedType === 'TRANSFERENCIA') {
-            const transferAmountGTQ = convert(amount, String(moneda).toUpperCase(), 'GTQ');
+            const transferAmountGTQ = await convert(amount, String(moneda).toUpperCase(), 'GTQ');
 
             if (transferAmountGTQ > TRANSFER_LIMIT_PER_TRANSACTION_GTQ) {
                 return res.status(400).json({
@@ -104,6 +107,7 @@ export const createTransaction = async (req, res) => {
 
             const transferredTodayGTQ = await getDailyTransferredAmountGTQByUser(req.userId);
             const projectedDailyTotal = Number((transferredTodayGTQ + transferAmountGTQ).toFixed(2));
+            console.log(projectedDailyTotal);
 
             if (projectedDailyTotal > TRANSFER_DAILY_LIMIT_GTQ) {
                 return res.status(400).json({

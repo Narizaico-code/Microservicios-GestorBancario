@@ -56,9 +56,9 @@ export const ClientNavbar = () => {
           Mis cuentas
         </NavLink>
 
-        <NavLink to="/client/transfers" className={getNavLinkClass}>
+        <NavLink to="/client/transacciones" className={getNavLinkClass}>
           <ArrowRightLeft size={16} />
-          Transferencias
+          Transacciones
         </NavLink>
 
         <NavLink to="/client/favoritos" className={getNavLinkClass}>

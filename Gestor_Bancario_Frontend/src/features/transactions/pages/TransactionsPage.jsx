@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import toast from "react-hot-toast"
 import transactionsImage from "../../../assets/Transacciones-image.png"
-import { createDepositTransaction, getTransactions, getAccounts } from "../../../shared/api"
+import { createDepositTransaction, createTransferTransaction, getTransactions, getAccounts } from "../../../shared/api"
 import { useAuthStore } from "../../auth/store/authStore"
 
 const formatDate = (dateValue) => {
@@ -34,6 +34,7 @@ export const TransactionsPage = () => {
   const { session } = useAuthStore()
   
   const [formValues, setFormValues] = useState({
+    cuentaOrigen: "",
     cuentaDestino: "",
     monto: "",
     descripcion: "",
@@ -80,6 +81,7 @@ export const TransactionsPage = () => {
 
   const resetForm = () => {
     setFormValues({
+      cuentaOrigen: "",
       cuentaDestino: "",
       monto: "",
       descripcion: "",
@@ -90,13 +92,13 @@ export const TransactionsPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    if (!isAdmin) {
-      toast.error("Solo un administrador puede registrar depositos")
+    if (!formValues.cuentaDestino.trim()) {
+      toast.error("La cuenta destino es obligatoria")
       return
     }
 
-    if (!formValues.cuentaDestino.trim()) {
-      toast.error("La cuenta destino es obligatoria")
+    if (!isAdmin && !formValues.cuentaOrigen.trim()) {
+      toast.error("La cuenta origen es obligatoria para transferencias")
       return
     }
 
@@ -113,18 +115,49 @@ export const TransactionsPage = () => {
     try {
       setSavingTransaction(true)
 
-      await createDepositTransaction({
-        cuentaDestino: formValues.cuentaDestino.trim(),
-        monto: Number(formValues.monto),
-        descripcion: formValues.descripcion.trim(),
-        moneda: formValues.moneda
-      })
+      if (isAdmin) {
+        console.log('[transactions] request', {
+          tipoTransaccion: 'DEPOSITO',
+          cuentaDestino: formValues.cuentaDestino.trim(),
+          monto: Number(formValues.monto),
+          descripcion: formValues.descripcion.trim(),
+          moneda: formValues.moneda
+        })
+        await createDepositTransaction({
+          cuentaDestino: formValues.cuentaDestino.trim(),
+          monto: Number(formValues.monto),
+          descripcion: formValues.descripcion.trim(),
+          moneda: formValues.moneda
+        })
+        toast.success("Deposito creado exitosamente")
+      } else {
+        console.log('[transactions] request', {
+          tipoTransaccion: 'TRANSFERENCIA',
+          cuentaOrigen: formValues.cuentaOrigen.trim(),
+          cuentaDestino: formValues.cuentaDestino.trim(),
+          monto: Number(formValues.monto),
+          descripcion: formValues.descripcion.trim(),
+          moneda: formValues.moneda
+        })
+        await createTransferTransaction({
+          cuentaOrigen: formValues.cuentaOrigen.trim(),
+          cuentaDestino: formValues.cuentaDestino.trim(),
+          monto: Number(formValues.monto),
+          descripcion: formValues.descripcion.trim(),
+          moneda: formValues.moneda
+        })
+        toast.success("Transferencia realizada exitosamente")
+      }
 
-      toast.success("Deposito creado exitosamente")
       resetForm()
       await fetchInitialData()
     } catch (error) {
-      const message = error?.response?.data?.message || "No se pudo crear el deposito"
+      console.log('[transactions] error', {
+        status: error?.response?.status,
+        data: error?.response?.data,
+        message: error?.message
+      })
+      const message = error?.response?.data?.message || `No se pudo procesar la ${isAdmin ? 'transaccion' : 'transferencia'}`
       toast.error(message)
     } finally {
       setSavingTransaction(false)
@@ -178,32 +211,56 @@ export const TransactionsPage = () => {
         </div>
       </header>
 
-      <div className={`grid gap-4 ${isAdmin ? 'xl:grid-cols-[2.25fr_1fr]' : 'xl:grid-cols-1'}`}>
-        {isAdmin && (
-          <article className="rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] p-5 shadow-[var(--theme-shadow)]">
-            <h2 className="text-3xl font-extrabold text-[var(--theme-text)]" style={{ fontFamily: 'var(--font-display)' }}>Nuevo deposito</h2>
-            <p className="mt-1 text-sm text-[var(--theme-text-muted)]">Completa los datos para registrar un deposito en la cuenta indicada.</p>
+      <div className="grid gap-4 xl:grid-cols-[2.25fr_1fr]">
+        <article className="rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] p-5 shadow-[var(--theme-shadow)]">
+          <h2 className="text-3xl font-extrabold text-[var(--theme-text)]" style={{ fontFamily: 'var(--font-display)' }}>
+            {isAdmin ? "Nuevo deposito" : "Nueva transferencia"}
+          </h2>
+          <p className="mt-1 text-sm text-[var(--theme-text-muted)]">
+            {isAdmin ? "Completa los datos para registrar un deposito en la cuenta indicada." : "Transfiere fondos desde tu cuenta hacia otra cuenta destino."}
+          </p>
 
-            <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
-              <label className="space-y-2" title="Número de cuenta donde se realizará el depósito">
-                <span className="text-sm font-semibold">Cuenta destino</span>
-                <input
-                  type="text"
-                  placeholder="Ej. 1000000001"
-                  name="cuentaDestino"
-                  value={formValues.cuentaDestino}
+          <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
+            {!isAdmin && (
+              <label className="space-y-2" title="Tu cuenta desde donde saldrá el dinero">
+                <span className="text-sm font-semibold">Cuenta origen (Tu cuenta)</span>
+                <select
+                  name="cuentaOrigen"
+                  value={formValues.cuentaOrigen}
                   onChange={handleChange}
-                  list="cuentas-destino"
-                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
-                />
+                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                >
+                  <option value="" disabled>Selecciona tu cuenta</option>
+                  {accounts.map((account) => (
+                    <option key={account.numeroCuenta} value={account.numeroCuenta}>
+                      {account.numeroCuenta} - Q{account.saldo?.toFixed(2) || '0.00'}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+
+            <label className="space-y-2" title={isAdmin ? "Número de cuenta donde se realizará el depósito" : "Número de cuenta a la que deseas transferir"}>
+              <span className="text-sm font-semibold">Cuenta destino</span>
+              <input
+                type="text"
+                placeholder="Ej. 1000000001"
+                name="cuentaDestino"
+                value={formValues.cuentaDestino}
+                onChange={handleChange}
+                list="cuentas-destino"
+                className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+              />
+              {isAdmin && (
                 <datalist id="cuentas-destino">
                   {accounts.map((account) => (
                     <option key={account.numeroCuenta} value={account.numeroCuenta} />
                   ))}
                 </datalist>
-              </label>
+              )}
+            </label>
 
-              <label className="space-y-2" title="Cantidad de dinero a transferir o depositar">
+            <label className="space-y-2" title="Cantidad de dinero a transferir o depositar">
                 <span className="text-sm font-semibold">Monto</span>
                 <input
                   type="number"
@@ -236,7 +293,7 @@ export const TransactionsPage = () => {
               <label className="space-y-2" title="El tipo de transacción que se realizará">
                 <span className="text-sm font-semibold">Tipo de transaccion</span>
                 <div className="flex h-12 items-center justify-between rounded-xl border border-[var(--theme-primary)] bg-[var(--theme-primary)]/10 px-4 text-sm font-semibold text-[var(--theme-primary)]">
-                  <span>Deposito</span>
+                  <span>{isAdmin ? "Deposito" : "Transferencia"}</span>
                   <span className="text-lg">⌄</span>
                 </div>
               </label>
@@ -245,7 +302,7 @@ export const TransactionsPage = () => {
                 <span className="text-sm font-semibold">Descripcion</span>
                 <textarea
                   rows="3"
-                  placeholder="Motivo del deposito..."
+                  placeholder={isAdmin ? "Motivo del deposito..." : "Motivo de la transferencia..."}
                   name="descripcion"
                   value={formValues.descripcion}
                   onChange={handleChange}
@@ -256,10 +313,10 @@ export const TransactionsPage = () => {
               <div className="md:col-span-2 flex flex-wrap gap-3 pt-1">
                 <button
                   type="submit"
-                  disabled={savingTransaction || !isAdmin}
+                  disabled={savingTransaction}
                   className="h-11 rounded-xl bg-[var(--theme-primary)] px-7 text-sm font-bold text-white transition hover:brightness-95 disabled:opacity-50"
                 >
-                  {savingTransaction ? "Guardando..." : "Guardar deposito"}
+                  {savingTransaction ? "Procesando..." : isAdmin ? "Guardar deposito" : "Realizar transferencia"}
                 </button>
                 <button
                   type="button"
@@ -271,9 +328,8 @@ export const TransactionsPage = () => {
               </div>
             </form>
           </article>
-        )}
 
-        <aside className={`space-y-4 ${!isAdmin ? 'grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3' : ''}`}>
+        <aside className="space-y-4">
           {isAdmin && (
             <div className="overflow-hidden rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] shadow-[var(--theme-shadow)]">
               <div className="h-28 bg-[var(--theme-surface-alt)]">
@@ -283,6 +339,19 @@ export const TransactionsPage = () => {
                 <h3 className="text-base font-bold">Regla de negocio</h3>
                 <p className="mt-1 text-sm opacity-90">
                   El administrador unicamente puede crear transacciones de tipo <span className="font-bold">deposito</span>.
+                </p>
+              </div>
+            </div>
+          )}
+          {!isAdmin && (
+            <div className="overflow-hidden rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] shadow-[var(--theme-shadow)]">
+              <div className="h-28 bg-[var(--theme-surface-alt)]">
+                <img src={transactionsImage} alt="Ilustracion de transferencias" className="h-full w-full object-cover opacity-80 mix-blend-luminosity" />
+              </div>
+              <div className="m-4 rounded-xl border border-sky-500/30 bg-sky-500/10 px-4 py-4 text-sky-700 dark:text-sky-300">
+                <h3 className="text-base font-bold">Transferencias seguras</h3>
+                <p className="mt-1 text-sm opacity-90">
+                  Puedes enviar dinero seleccionando una de tus cuentas y proporcionando el número de cuenta de destino válido.
                 </p>
               </div>
             </div>

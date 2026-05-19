@@ -40,6 +40,38 @@
   --theme-accent: #1a56db;
   --theme-accent-strong: #011743;
   --theme-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+
+  --btn-edit-bg: rgba(26, 86, 219, 0.15);
+  --btn-edit-text: #0f172a;
+  --btn-edit-border: rgba(26, 86, 219, 0.3);
+
+  --btn-delete-bg: rgba(225, 29, 72, 0.15);
+  --btn-delete-text: #b91c1c;
+  --btn-delete-border: rgba(225, 29, 72, 0.3);
+
+  --btn-cancel-bg: rgba(244, 63, 94, 0.15);
+  --btn-cancel-text: #b91c1c;
+  --btn-cancel-border: rgba(244, 63, 94, 0.3);
+
+  --status-emerald-bg: rgba(16, 185, 129, 0.15);
+  --status-emerald-text: #047857;
+  --status-emerald-border: rgba(16, 185, 129, 0.3);
+
+  --status-rose-bg: rgba(244, 63, 94, 0.15);
+  --status-rose-text: #be123c;
+  --status-rose-border: rgba(244, 63, 94, 0.3);
+
+  --status-slate-bg: rgba(100, 116, 139, 0.15);
+  --status-slate-text: #334155;
+  --status-slate-border: rgba(100, 116, 139, 0.3);
+
+  --status-amber-bg: rgba(245, 158, 11, 0.15);
+  --status-amber-text: #b45309;
+  --status-amber-border: rgba(245, 158, 11, 0.3);
+
+  --status-sky-bg: rgba(14, 165, 233, 0.15);
+  --status-sky-text: #0369a1;
+  --status-sky-border: rgba(14, 165, 233, 0.3);
 } /* <--- ¡AQUÍ FALTABA ESTA LLAVE DE CIERRE! */
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -102,6 +134,49 @@ html[data-theme='dark'] {
   --theme-accent: #1a56db;
   --theme-accent-strong: #011743;
   --theme-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+
+  --btn-edit-bg: rgba(26, 86, 219, 0.2);
+  --btn-edit-text: #ffffff;
+  --btn-edit-border: rgba(255, 255, 255, 0.1);
+
+  --btn-delete-bg: rgba(244, 63, 94, 0.15);
+  --btn-delete-text: #fecdd3;
+  --btn-delete-border: rgba(244, 63, 94, 0.3);
+
+  --btn-cancel-bg: rgba(244, 63, 94, 0.15);
+  --btn-cancel-text: #fecdd3;
+  --btn-cancel-border: rgba(244, 63, 94, 0.3);
+
+  --status-emerald-bg: rgba(16, 185, 129, 0.15);
+  --status-emerald-text: #6ee7b7;
+  --status-emerald-border: rgba(52, 211, 153, 0.3);
+
+  --status-rose-bg: rgba(244, 63, 94, 0.15);
+  --status-rose-text: #fda4af;
+  --status-rose-border: rgba(251, 113, 133, 0.3);
+
+  --status-slate-bg: rgba(100, 116, 139, 0.15);
+  --status-slate-text: #cbd5e1;
+  --status-slate-border: rgba(148, 163, 184, 0.3);
+
+  --status-amber-bg: rgba(245, 158, 11, 0.15);
+  --status-amber-text: #fcd34d;
+  --status-amber-border: rgba(251, 191, 36, 0.3);
+
+  --status-sky-bg: rgba(14, 165, 233, 0.15);
+  --status-sky-text: #7dd3fc;
+  --status-sky-border: rgba(56, 189, 248, 0.3);
+}
+
+html[data-theme='dark'] select {
+  background-color: var(--theme-surface-alt) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+
+html[data-theme='dark'] select option {
+  background-color: var(--theme-surface-alt) !important;
+  color: var(--theme-text) !important;
 }
 
 @keyframes fadeIn {

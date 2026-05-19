@@ -10,6 +10,9 @@ export const createSignupRequest = async ({
   email,
   password,
   phone,
+  fechaNacimiento,
+  dpi,
+  ingresosMensuales,
   profilePicture,
 }) => {
   const normalizedEmail = email.toLowerCase();
@@ -39,6 +42,9 @@ export const createSignupRequest = async ({
       existingAny.Name = name
       existingAny.PasswordHash = passwordHash
       existingAny.Phone = phone
+      existingAny.FechaNacimiento = fechaNacimiento
+      existingAny.Dpi = dpi
+      existingAny.IngresosMensuales = ingresosMensuales
       existingAny.ProfilePicture = profilePicture || null
       existingAny.Status = 'PENDING'
       existingAny.ApprovedBy = null
@@ -61,6 +67,9 @@ export const createSignupRequest = async ({
     Email: normalizedEmail,
     PasswordHash: passwordHash,
     Phone: phone,
+    FechaNacimiento: fechaNacimiento,
+    Dpi: dpi,
+    IngresosMensuales: ingresosMensuales,
     ProfilePicture: profilePicture || null,
     Status: 'PENDING',
   });

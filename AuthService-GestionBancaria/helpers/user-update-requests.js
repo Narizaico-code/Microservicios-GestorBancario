@@ -83,6 +83,7 @@ const applyUserUpdates = async ({
   userId,
   email,
   phone,
+  ingresosMensuales,
   passwordHash,
   profilePicture,
   sensitiveChanged,
@@ -114,6 +115,9 @@ const applyUserUpdates = async ({
     const profileUpdates = {};
     if (phone) {
       profileUpdates.Phone = phone;
+    }
+    if (ingresosMensuales !== undefined && ingresosMensuales !== null) {
+      profileUpdates.IngresosMensuales = ingresosMensuales;
     }
     if (profilePicture) {
       profileUpdates.Imagen = profilePicture;
@@ -182,19 +186,22 @@ export const requestUserUpdate = async ({ user, input }) => {
   const emailRaw = (input.email || '').trim();
   const email = emailRaw ? emailRaw.toLowerCase() : null;
   const phone = (input.phone || '').trim();
+  const ingresosMensuales = input.ingresosMensuales !== undefined ? input.ingresosMensuales : null;
   const newPassword = input.newPassword || null;
   const currentPassword = input.currentPassword || null;
   const profilePictureInput = input.profilePicture || null;
 
   const currentEmail = (user.Email || '').toLowerCase();
   const currentPhone = user.UserProfile?.Phone || '';
+  const currentIngresosMensuales = user.UserProfile?.IngresosMensuales;
 
   const emailChanged = email && email !== currentEmail;
   const phoneChanged = phone && phone !== currentPhone;
+  const ingresosMensualesChanged = ingresosMensuales !== null && Number(ingresosMensuales) !== Number(currentIngresosMensuales);
   const passwordChanged = !!newPassword;
   const profilePictureChanged = !!profilePictureInput;
 
-  if (!emailChanged && !phoneChanged && !passwordChanged && !profilePictureChanged) {
+  if (!emailChanged && !phoneChanged && !passwordChanged && !profilePictureChanged && !ingresosMensualesChanged) {
     const err = new Error('No hay cambios para actualizar');
     err.status = 400;
     throw err;
@@ -245,6 +252,7 @@ export const requestUserUpdate = async ({ user, input }) => {
       UserId: user.Id,
       Email: emailChanged ? email : null,
       Phone: phoneChanged ? phone : null,
+      IngresosMensuales: ingresosMensualesChanged ? ingresosMensuales : null,
       PasswordHash: passwordChanged ? passwordHash : null,
       ProfilePicture: profilePictureChanged ? profilePicture : null,
       Status: 'PENDING',
@@ -261,6 +269,7 @@ export const requestUserUpdate = async ({ user, input }) => {
     userId: user.Id,
     email: emailChanged ? email : null,
     phone: phoneChanged ? phone : null,
+    ingresosMensuales: ingresosMensualesChanged ? ingresosMensuales : null,
     passwordHash: passwordChanged ? passwordHash : null,
     profilePicture: profilePictureChanged ? profilePicture : null,
     sensitiveChanged,
@@ -317,8 +326,9 @@ export const approveUserUpdateRequest = async (id, approverId) => {
 
   const { updatedUser, verificationToken } = await applyUserUpdates({
     userId: request.UserId,
-    email: email ? email : null,
+    email: request.Email ? request.Email : null,
     phone: request.Phone ? request.Phone : null,
+    ingresosMensuales: request.IngresosMensuales !== undefined && request.IngresosMensuales !== null ? request.IngresosMensuales : null,
     passwordHash: request.PasswordHash ? request.PasswordHash : null,
     profilePicture: request.ProfilePicture ? request.ProfilePicture : null,
     sensitiveChanged,

@@ -80,7 +80,7 @@ export const createNewUser = async (userData) => {
   const transaction = await User.sequelize.transaction();
 
   try {
-    const { name, email, password, phone, profilePicture, hashedPassword } =
+    const { name, email, password, phone, fechaNacimiento, dpi, ingresosMensuales, profilePicture, hashedPassword } =
       userData;
 
     // Allow passing a pre-hashed password (e.g., from a pending signup request)
@@ -109,6 +109,9 @@ export const createNewUser = async (userData) => {
       {
         UserId: user.Id,
         Phone: phone,
+        FechaNacimiento: fechaNacimiento,
+        Dpi: dpi,
+        IngresosMensuales: ingresosMensuales,
         Imagen: profilePicture || defaultAvatarFilename,
       },
       { transaction }

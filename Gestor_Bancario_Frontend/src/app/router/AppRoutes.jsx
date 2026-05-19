@@ -66,6 +66,7 @@ export const AppRoutes = () => {
             <Route path="ayuda" element={<Help />} />
             <Route path="perfil" element={<ClientProfilePage />} />
             <Route path="favoritos" element={<ClientFavoritesPage />} />
+            <Route path="transacciones" element={<TransactionsPage />} />
           </Route>
         </Route>
 

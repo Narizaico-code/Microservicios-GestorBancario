@@ -7,7 +7,7 @@ import {
 } from '../../helpers/signup-request-db.js';
 
 export const submitSignupRequest = asyncHandler(async (req, res) => {
-  const { name, email, password, phone } = req.body || {};
+  const { name, email, password, phone, fechaNacimiento, dpi, ingresosMensuales } = req.body || {};
 
   const uploadedFile =
     req.file ||
@@ -21,6 +21,9 @@ export const submitSignupRequest = asyncHandler(async (req, res) => {
     email,
     password,
     phone,
+    fechaNacimiento,
+    dpi,
+    ingresosMensuales,
     profilePicture,
   });
 

@@ -39,6 +39,9 @@ export const seedData = async () => {
         UserId: userId,
         Imagen: '',
         Phone: '39539423',
+        FechaNacimiento: new Date('1990-01-01'),
+        Dpi: '1234567890123',
+        IngresosMensuales: 15000.00
       });
 
       await UserEmail.create({
@@ -83,6 +86,9 @@ export const seedData = async () => {
         UserId: userId,
         Imagen: '',
         Phone: '30000000',
+        FechaNacimiento: new Date('1995-05-05'),
+        Dpi: '9876543210987',
+        IngresosMensuales: 8000.00
       });
 
       await UserEmail.create({

@@ -25,6 +25,7 @@ import defaultAvatarImg from '../../../assets/DefaultAvatarUser.png'
 const initialForm = {
   email: '',
   phone: '',
+  ingresosMensuales: '',
   currentPassword: '',
   newPassword: '',
   profilePicture: null,
@@ -96,6 +97,7 @@ export const ProfilePage = () => {
           ...current,
           email: userData?.email || '',
           phone: userData?.phone || '',
+          ingresosMensuales: userData?.ingresosMensuales || '',
         }))
       } catch (error) {
         if (!isMounted) return
@@ -159,27 +161,31 @@ export const ProfilePage = () => {
     }
   }, [form.profilePicture])
 
-  const { emailChanged, phoneChanged, passwordChanged, profilePictureChanged, sensitiveCount } = useMemo(() => {
+  const { emailChanged, phoneChanged, ingresosMensualesChanged, passwordChanged, profilePictureChanged, sensitiveCount } = useMemo(() => {
     const normalizedEmail = (form.email || '').trim().toLowerCase()
     const normalizedProfileEmail = (profile?.email || '').trim().toLowerCase()
     const normalizedPhone = (form.phone || '').trim()
     const normalizedProfilePhone = (profile?.phone || '').trim()
+    const normalizedIngresos = form.ingresosMensuales
+    const normalizedProfileIngresos = profile?.ingresosMensuales
 
     const emailDiff = Boolean(normalizedEmail && normalizedEmail !== normalizedProfileEmail)
     const phoneDiff = Boolean(normalizedPhone && normalizedPhone !== normalizedProfilePhone)
+    const ingresosDiff = Boolean(normalizedIngresos !== undefined && normalizedIngresos !== null && Number(normalizedIngresos) !== Number(normalizedProfileIngresos))
     const passwordDiff = Boolean(form.newPassword)
     const pictureDiff = Boolean(form.profilePicture)
 
     return {
       emailChanged: emailDiff,
       phoneChanged: phoneDiff,
+      ingresosMensualesChanged: ingresosDiff,
       passwordChanged: passwordDiff,
       profilePictureChanged: pictureDiff,
       sensitiveCount: [emailDiff, phoneDiff, passwordDiff].filter(Boolean).length,
     }
   }, [form, profile])
 
-  const hasAnyChange = emailChanged || phoneChanged || passwordChanged || profilePictureChanged
+  const hasAnyChange = emailChanged || phoneChanged || ingresosMensualesChanged || passwordChanged || profilePictureChanged
 
   const handleChange = (event) => {
     const { name, value, files, type } = event.target
@@ -212,6 +218,7 @@ export const ProfilePage = () => {
     const payload = new FormData()
     if (emailChanged) payload.append('email', form.email.trim())
     if (phoneChanged) payload.append('phone', form.phone.trim())
+    if (ingresosMensualesChanged) payload.append('ingresosMensuales', form.ingresosMensuales)
     if (passwordChanged) {
       payload.append('newPassword', form.newPassword)
       payload.append('currentPassword', form.currentPassword)
@@ -254,6 +261,7 @@ export const ProfilePage = () => {
           ...current,
           email: nextProfile.email || '',
           phone: nextProfile.phone || '',
+          ingresosMensuales: nextProfile.ingresosMensuales || '',
           currentPassword: '',
           newPassword: '',
           profilePicture: null,
@@ -377,6 +385,22 @@ export const ProfilePage = () => {
                   {formatDate(profile.createdAt)}
                 </p>
               </div>
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <ClipboardCheck className="h-4 w-4" />
+                  DPI
+                </div>
+                <p className="mt-2 text-sm font-medium text-slate-900">{profile.dpi || 'N/D'}</p>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-4">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <UserCircle className="h-4 w-4" />
+                  Nacimiento
+                </div>
+                <p className="mt-2 text-sm font-medium text-slate-900">
+                  {formatDate(profile.fechaNacimiento)}
+                </p>
+              </div>
             </div>
           </article>
 
@@ -483,6 +507,17 @@ export const ProfilePage = () => {
                 name="newPassword"
                 type="password"
                 value={form.newPassword}
+                onChange={handleChange}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-300 focus:bg-white"
+              />
+            </label>
+            <label className="block space-y-2 text-sm text-slate-700">
+              Ingresos Mensuales
+              <input
+                name="ingresosMensuales"
+                type="number"
+                step="0.01"
+                value={form.ingresosMensuales}
                 onChange={handleChange}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-300 focus:bg-white"
               />

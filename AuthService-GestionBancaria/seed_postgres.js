@@ -52,7 +52,14 @@ const seed = async () => {
 
       if (created) {
         // Crear las entidades relacionadas (Profile, Email, PasswordReset, UserRole)
-        await UserProfile.create({ UserId: user.Id, Phone: '12345678', Imagen: 'default.jpg' });
+        await UserProfile.create({ 
+          UserId: user.Id, 
+          Phone: '12345678', 
+          Imagen: 'default.jpg',
+          FechaNacimiento: new Date('1990-01-01'),
+          Dpi: `100000000000${usersToSeed.indexOf(u)}`,
+          IngresosMensuales: 10000.00
+        });
         await UserEmail.create({ UserId: user.Id, EmailVerified: true });
         await UserPasswordReset.create({ UserId: user.Id });
         await UserRole.create({ UserId: user.Id, RoleId: u.role });

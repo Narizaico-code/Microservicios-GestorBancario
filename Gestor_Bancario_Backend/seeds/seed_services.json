@@ -1,6 +1,5 @@
 [
   {
-    "_id": "60d5ecb54cb8a919c098d7a1",
     "name": "Tarjeta de Crédito Oro",
     "description": "Tarjeta de crédito con beneficios exclusivos y tasa preferencial.",
     "category": "Tarjetas",
@@ -35,7 +34,6 @@
     "internalNote": "Campaña de adquisición de tarjetas."
   },
   {
-    "_id": "60d5ecb54cb8a919c098d7a2",
     "name": "Seguro de Vida Básico",
     "description": "Cobertura en caso de fallecimiento accidental o natural.",
     "category": "Seguros",
@@ -60,7 +58,6 @@
     "internalNote": null
   },
   {
-    "_id": "60d5ecb54cb8a919c098d7a3",
     "name": "Chequera Personalizada 50 cheques",
     "description": "Talonario de 50 cheques con diseño personalizado.",
     "category": "Insumos",
@@ -93,7 +90,6 @@
     "internalNote": "Falta aprobación del gerente de producto."
   },
   {
-    "_id": "60d5ecb54cb8a919c098d7a4",
     "name": "Servicio de Alertas SMS Premium",
     "description": "Notificación inmediata por SMS para cualquier transacción.",
     "category": "Digital",
@@ -118,7 +114,6 @@
     "internalNote": "Servicio reemplazado por notificaciones push en la app."
   },
   {
-    "_id": "60d5ecb54cb8a919c098d7a5",
     "name": "Emisión de Cheque de Caja",
     "description": "Cheque garantizado emitido por el banco.",
     "category": "Operaciones",
@@ -141,7 +136,6 @@
     "internalNote": null
   },
   {
-    "_id": "60d5ecb54cb8a919c098d7a6",
     "name": "Reposición de Tarjeta de Débito",
     "description": "Emisión de nueva tarjeta por robo o extravío.",
     "category": "Tarjetas",
@@ -164,7 +158,6 @@
     "internalNote": "Suspendido temporalmente por falta de plásticos en inventario."
   },
   {
-    "_id": "60d5ecb54cb8a919c098d7a7",
     "name": "Transferencia Internacional SWIFT",
     "description": "Envío de fondos a cuentas de bancos en el extranjero.",
     "category": "Operaciones",
@@ -187,7 +180,6 @@
     "internalNote": "Verificar en listas OFAC antes de procesar."
   },
   {
-    "_id": "60d5ecb54cb8a919c098d7a8",
     "name": "Asistencia Vial Premium",
     "description": "Servicio de grúa, cambio de llantas y paso de corriente 24/7.",
     "category": "Seguros",

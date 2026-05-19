@@ -15,8 +15,8 @@ export const PromotionDetailModal = ({ promotion, onClose }) => {
   return (
     <Modal title="Detalle de la promocion" onClose={onClose} maxWidth="max-w-2xl">
       <div className="grid gap-6 lg:grid-cols-[200px_1fr]">
-        <div className="h-48 w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-          {promotion.imageUrl ? (
+        <div className="h-48 w-full overflow-hidden rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)]">
+          {promotion.imageUrl && promotion.imageUrl.trim() !== '' && promotion.imageUrl !== 'null' ? (
             <img src={promotion.imageUrl} alt={promotion.name} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs text-[var(--theme-text-muted)]">

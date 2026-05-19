@@ -1,12 +1,12 @@
 import { Edit3, PauseCircle, PlayCircle, BarChart3, Ban, Eye } from 'lucide-react'
 
 const statusStyles = {
-  ACTIVE: 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30',
-  DRAFT: 'bg-slate-500/15 text-slate-300 border-slate-400/30',
-  SCHEDULED: 'bg-sky-500/15 text-sky-300 border-sky-400/30',
-  PAUSED: 'bg-amber-500/15 text-amber-300 border-amber-400/30',
-  EXPIRED: 'bg-rose-500/15 text-rose-300 border-rose-400/30',
-  CANCELLED: 'bg-rose-500/20 text-rose-200 border-rose-400/30',
+  ACTIVE: 'bg-[var(--status-emerald-bg)] text-[var(--status-emerald-text)] border-[var(--status-emerald-border)]',
+  DRAFT: 'bg-[var(--status-slate-bg)] text-[var(--status-slate-text)] border-[var(--status-slate-border)]',
+  SCHEDULED: 'bg-[var(--status-sky-bg)] text-[var(--status-sky-text)] border-[var(--status-sky-border)]',
+  PAUSED: 'bg-[var(--status-amber-bg)] text-[var(--status-amber-text)] border-[var(--status-amber-border)]',
+  EXPIRED: 'bg-[var(--status-rose-bg)] text-[var(--status-rose-text)] border-[var(--status-rose-border)]',
+  CANCELLED: 'bg-[var(--status-rose-bg)] text-[var(--status-rose-text)] border-[var(--status-rose-border)]',
 }
 
 const formatDate = (value) => {
@@ -23,7 +23,7 @@ export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, o
   const statusClass = statusStyles[status] || statusStyles.DRAFT
 
   return (
-    <article className="relative overflow-hidden rounded-[18px] border border-white/10 bg-[var(--theme-surface)] p-5 shadow-[var(--theme-shadow)]">
+    <article className="relative overflow-hidden rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] p-5 shadow-[var(--theme-shadow)]">
       <div className="absolute inset-0 opacity-0 transition duration-300 hover:opacity-100" aria-hidden>
         <div className="absolute -top-12 right-6 h-28 w-28 rounded-full bg-[#1a56db]/20 blur-2xl" />
         <div className="absolute -bottom-16 left-6 h-32 w-32 rounded-full bg-emerald-400/10 blur-2xl" />
@@ -49,11 +49,11 @@ export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, o
         </p>
 
         <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--theme-text-muted)]">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+          <span className="rounded-full border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-3 py-1">
             Vigencia: {formatDate(promotion?.validFrom)} - {formatDate(promotion?.validTo)}
           </span>
           {promotion?.stackable === false ? (
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">No acumulable</span>
+            <span className="rounded-full border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-3 py-1">No acumulable</span>
           ) : null}
         </div>
 
@@ -61,7 +61,7 @@ export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, o
           <button
             type="button"
             onClick={() => onView?.(promotion)}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-[var(--theme-text)] transition hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-3 py-2 text-xs font-semibold text-[var(--theme-text)] transition hover:opacity-80"
           >
             <Eye size={14} />
             Ver
@@ -72,7 +72,7 @@ export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, o
               <button
                 type="button"
                 onClick={() => onEdit?.(promotion)}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-[#1a56db]/20 px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#1a56db]/35"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--btn-edit-border)] bg-[var(--btn-edit-bg)] px-3 py-2 text-xs font-bold text-[var(--btn-edit-text)] transition hover:opacity-80"
               >
                 <Edit3 size={14} />
                 Editar
@@ -80,7 +80,7 @@ export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, o
               <button
                 type="button"
                 onClick={() => onToggle?.(promotion)}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-[var(--theme-text)]"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-3 py-2 text-xs font-semibold text-[var(--theme-text)] transition hover:opacity-80"
               >
                 {status === 'ACTIVE' ? <PauseCircle size={14} /> : <PlayCircle size={14} />}
                 Toggle
@@ -88,7 +88,7 @@ export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, o
               <button
                 type="button"
                 onClick={() => onStats?.(promotion)}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-[var(--theme-text)]"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-3 py-2 text-xs font-semibold text-[var(--theme-text)] transition hover:opacity-80"
               >
                 <BarChart3 size={14} />
                 Stats
@@ -96,7 +96,7 @@ export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, o
               <button
                 type="button"
                 onClick={() => onCancel?.(promotion)}
-                className="inline-flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-200"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--btn-cancel-border)] bg-[var(--btn-cancel-bg)] px-3 py-2 text-xs font-bold text-[var(--btn-cancel-text)] transition hover:opacity-80"
               >
                 <Ban size={14} />
                 Cancelar

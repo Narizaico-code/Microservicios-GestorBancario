@@ -42,6 +42,17 @@ export const UserUpdateRequest = sequelize.define(
       allowNull: true,
       field: 'profile_picture',
     },
+    IngresosMensuales: {
+      type: DataTypes.DECIMAL(18, 2),
+      allowNull: true,
+      field: 'ingresos_mensuales',
+      validate: {
+        min: {
+          args: [0.01],
+          msg: 'Los ingresos mensuales deben ser mayores a 0.',
+        }
+      }
+    },
     Status: {
       type: DataTypes.ENUM('PENDING', 'APPROVED', 'REJECTED'),
       allowNull: false,

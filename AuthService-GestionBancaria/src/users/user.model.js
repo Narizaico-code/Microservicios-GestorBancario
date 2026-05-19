@@ -101,6 +101,42 @@ export const UserProfile = sequelize.define(
         isNumeric: { msg: 'El teléfono solo debe contener números.' },
       },
     },
+    FechaNacimiento: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: new Date('2000-01-01'),
+      field: 'fecha_nacimiento',
+      validate: {
+        notEmpty: { msg: 'La fecha de nacimiento es obligatoria.' },
+        isDate: { msg: 'La fecha de nacimiento no es válida.' }
+      }
+    },
+    Dpi: {
+      type: DataTypes.STRING(13),
+      allowNull: true,
+      unique: true,
+      field: 'dpi',
+      validate: {
+        notEmpty: { msg: 'El DPI es obligatorio.' },
+        len: {
+          args: [13, 13],
+          msg: 'El DPI debe tener exactamente 13 dígitos.',
+        },
+        isNumeric: { msg: 'El DPI solo debe contener números.' },
+      }
+    },
+    IngresosMensuales: {
+      type: DataTypes.DECIMAL(18, 2),
+      allowNull: true,
+      field: 'ingresos_mensuales',
+      validate: {
+        notEmpty: { msg: 'Los ingresos mensuales son obligatorios.' },
+        min: {
+          args: [0.01],
+          msg: 'Los ingresos mensuales deben ser mayores a 0.',
+        }
+      }
+    },
   },
   {
     tableName: 'user_profiles',

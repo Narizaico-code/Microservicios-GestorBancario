@@ -38,6 +38,23 @@ export const SignupRequest = sequelize.define(
       allowNull: true,
       field: 'profile_picture',
     },
+    FechaNacimiento: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: new Date('2000-01-01'),
+      field: 'fecha_nacimiento',
+    },
+    Dpi: {
+      type: DataTypes.STRING(13),
+      allowNull: true,
+      unique: true,
+      field: 'dpi',
+    },
+    IngresosMensuales: {
+      type: DataTypes.DECIMAL(18, 2),
+      allowNull: true,
+      field: 'ingresos_mensuales',
+    },
     Status: {
       type: DataTypes.ENUM('PENDING', 'APPROVED', 'REJECTED'),
       allowNull: false,

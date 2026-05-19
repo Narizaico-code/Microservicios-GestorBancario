@@ -2,33 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import toast from "react-hot-toast"
 import transactionsImage from "../../../assets/Transacciones-image.png"
 import { createDepositTransaction, getTransactions, getAccounts } from "../../../shared/api"
-
-const getTokenPayload = () => {
-  const tokenKeys = ["token", "authToken", "accessToken", "x-token"]
-
-  let token = null
-  for (const key of tokenKeys) {
-    token = localStorage.getItem(key) || sessionStorage.getItem(key)
-    if (token) break
-  }
-
-  if (!token) return null
-
-  try {
-    const payloadBase64 = token.split(".")[1]
-    if (!payloadBase64) return null
-    const base64 = payloadBase64.replace(/-/g, "+").replace(/_/g, "/")
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((char) => `%${(`00${char.charCodeAt(0).toString(16)}`).slice(-2)}`)
-        .join("")
-    )
-    return JSON.parse(jsonPayload)
-  } catch {
-    return null
-  }
-}
+import { useAuthStore } from "../../auth/store/authStore"
 
 const formatDate = (dateValue) => {
   if (!dateValue) return "-"
@@ -57,6 +31,8 @@ const normalizeTypeLabel = (type) => {
 }
 
 export const TransactionsPage = () => {
+  const { session } = useAuthStore()
+  
   const [formValues, setFormValues] = useState({
     cuentaDestino: "",
     monto: "",
@@ -68,8 +44,7 @@ export const TransactionsPage = () => {
   const [loadingData, setLoadingData] = useState(false)
   const [savingTransaction, setSavingTransaction] = useState(false)
 
-  const tokenPayload = useMemo(() => getTokenPayload(), [])
-  const userRole = tokenPayload?.role || ""
+  const userRole = session?.user?.role || ""
   const isAdmin = userRole === "ADMIN_ROLE"
 
   const fetchInitialData = async () => {
@@ -190,166 +165,167 @@ export const TransactionsPage = () => {
   }, [transactions])
 
   return (
-    <section className="space-y-5 text-[#011743]">
-      <header className="flex flex-col gap-3 rounded-2xl bg-[#F3F2F2] py-2 md:flex-row md:items-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#F8D80D] shadow-sm">
+    <section className="space-y-5 text-[var(--theme-text)]">
+      <header className="flex flex-col gap-3 rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] p-4 md:flex-row md:items-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--theme-primary)] text-white shadow-sm">
           <span className="text-3xl font-bold">↔</span>
         </div>
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight">Transacciones</h1>
-          <p className="mt-1 text-base text-[#011743]/70">Registro y creacion de depositos en cuentas de usuarios.</p>
+          <h1 className="text-4xl font-extrabold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>Transacciones</h1>
+          <p className="mt-1 text-base text-[var(--theme-text-muted)]">
+            {isAdmin ? "Registro y creacion de depositos en cuentas de usuarios." : "Historial de tus movimientos y transferencias."}
+          </p>
         </div>
       </header>
 
-      <div className="grid gap-4 xl:grid-cols-[2.25fr_1fr]">
-        <article className="rounded-2xl border border-[#011743]/10 bg-white p-5 shadow-sm">
-          <h2 className="text-3xl font-extrabold text-[#011743]">Nuevo deposito</h2>
-          <p className="mt-1 text-sm text-[#011743]/65">Completa los datos para registrar un deposito en la cuenta indicada.</p>
-          {!isAdmin && (
-            <p className="mt-2 rounded-lg bg-[#d55353]/10 px-3 py-2 text-sm font-semibold text-[#d55353]">
-              Tu usuario no es administrador. Solo ADMIN_ROLE puede crear depositos.
-            </p>
+      <div className={`grid gap-4 ${isAdmin ? 'xl:grid-cols-[2.25fr_1fr]' : 'xl:grid-cols-1'}`}>
+        {isAdmin && (
+          <article className="rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] p-5 shadow-[var(--theme-shadow)]">
+            <h2 className="text-3xl font-extrabold text-[var(--theme-text)]" style={{ fontFamily: 'var(--font-display)' }}>Nuevo deposito</h2>
+            <p className="mt-1 text-sm text-[var(--theme-text-muted)]">Completa los datos para registrar un deposito en la cuenta indicada.</p>
+
+            <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
+              <label className="space-y-2" title="Número de cuenta donde se realizará el depósito">
+                <span className="text-sm font-semibold">Cuenta destino</span>
+                <input
+                  type="text"
+                  placeholder="Ej. 1000000001"
+                  name="cuentaDestino"
+                  value={formValues.cuentaDestino}
+                  onChange={handleChange}
+                  list="cuentas-destino"
+                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                />
+                <datalist id="cuentas-destino">
+                  {accounts.map((account) => (
+                    <option key={account.numeroCuenta} value={account.numeroCuenta} />
+                  ))}
+                </datalist>
+              </label>
+
+              <label className="space-y-2" title="Cantidad de dinero a transferir o depositar">
+                <span className="text-sm font-semibold">Monto</span>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Ej. 100.00"
+                  name="monto"
+                  value={formValues.monto}
+                  onChange={handleChange}
+                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                />
+              </label>
+
+              <label className="space-y-2" title="Divisa de la transacción">
+                <span className="text-sm font-semibold">Moneda</span>
+                <select
+                  name="moneda"
+                  value={formValues.moneda}
+                  onChange={handleChange}
+                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                >
+                  <option value="GTQ">GTQ</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="MXN">MXN</option>
+                  <option value="COP">COP</option>
+                  <option value="JPY">JPY</option>
+                </select>
+              </label>
+
+              <label className="space-y-2" title="El tipo de transacción que se realizará">
+                <span className="text-sm font-semibold">Tipo de transaccion</span>
+                <div className="flex h-12 items-center justify-between rounded-xl border border-[var(--theme-primary)] bg-[var(--theme-primary)]/10 px-4 text-sm font-semibold text-[var(--theme-primary)]">
+                  <span>Deposito</span>
+                  <span className="text-lg">⌄</span>
+                </div>
+              </label>
+
+              <label className="space-y-2 md:col-span-2">
+                <span className="text-sm font-semibold">Descripcion</span>
+                <textarea
+                  rows="3"
+                  placeholder="Motivo del deposito..."
+                  name="descripcion"
+                  value={formValues.descripcion}
+                  onChange={handleChange}
+                  className="w-full resize-none rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                />
+              </label>
+
+              <div className="md:col-span-2 flex flex-wrap gap-3 pt-1">
+                <button
+                  type="submit"
+                  disabled={savingTransaction || !isAdmin}
+                  className="h-11 rounded-xl bg-[var(--theme-primary)] px-7 text-sm font-bold text-white transition hover:brightness-95 disabled:opacity-50"
+                >
+                  {savingTransaction ? "Guardando..." : "Guardar deposito"}
+                </button>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="h-11 rounded-xl border border-[var(--status-rose-border)] px-7 text-sm font-bold text-[var(--status-rose-text)] transition hover:bg-[var(--status-rose-bg)]"
+                >
+                  Limpiar
+                </button>
+              </div>
+            </form>
+          </article>
+        )}
+
+        <aside className={`space-y-4 ${!isAdmin ? 'grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3' : ''}`}>
+          {isAdmin && (
+            <div className="overflow-hidden rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] shadow-[var(--theme-shadow)]">
+              <div className="h-28 bg-[var(--theme-surface-alt)]">
+                <img src={transactionsImage} alt="Ilustracion de transacciones" className="h-full w-full object-cover opacity-80 mix-blend-luminosity" />
+              </div>
+              <div className="m-4 rounded-xl border border-sky-500/30 bg-sky-500/10 px-4 py-4 text-sky-700 dark:text-sky-300">
+                <h3 className="text-base font-bold">Regla de negocio</h3>
+                <p className="mt-1 text-sm opacity-90">
+                  El administrador unicamente puede crear transacciones de tipo <span className="font-bold">deposito</span>.
+                </p>
+              </div>
+            </div>
           )}
 
-          <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
-            <label className="space-y-2" title="Número de cuenta donde se realizará el depósito">
-              <span className="text-sm font-semibold">Cuenta destino</span>
-              <input
-                type="text"
-                placeholder="Ej. 1000000001"
-                name="cuentaDestino"
-                value={formValues.cuentaDestino}
-                onChange={handleChange}
-                list="cuentas-destino"
-                className="h-12 w-full rounded-xl border border-[#011743]/15 bg-[#F3F2F2] px-4 text-sm outline-none placeholder:text-[#011743]/35 focus:border-[#011743]"
-              />
-              <datalist id="cuentas-destino">
-                {accounts.map((account) => (
-                  <option key={account.numeroCuenta} value={account.numeroCuenta} />
-                ))}
-              </datalist>
-            </label>
-
-            <label className="space-y-2" title="Cantidad de dinero a transferir o depositar">
-              <span className="text-sm font-semibold">Monto</span>
-              <input
-                type="number"
-                min="0"
-                placeholder="Ej. 100.00"
-                name="monto"
-                value={formValues.monto}
-                onChange={handleChange}
-                className="h-12 w-full rounded-xl border border-[#011743]/15 bg-[#F3F2F2] px-4 text-sm outline-none placeholder:text-[#011743]/35 focus:border-[#011743]"
-              />
-            </label>
-
-            <label className="space-y-2" title="Divisa de la transacción">
-              <span className="text-sm font-semibold">Moneda</span>
-              <select
-                name="moneda"
-                value={formValues.moneda}
-                onChange={handleChange}
-                className="h-12 w-full rounded-xl border border-[#011743]/15 bg-[#F3F2F2] px-4 text-sm outline-none placeholder:text-[#011743]/35 focus:border-[#011743]"
-              >
-                <option value="GTQ">GTQ</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="MXN">MXN</option>
-                <option value="COP">COP</option>
-                <option value="JPY">JPY</option>
-              </select>
-            </label>
-
-            <label className="space-y-2" title="El tipo de transacción que se realizará">
-              <span className="text-sm font-semibold">Tipo de transaccion</span>
-              <div className="flex h-12 items-center justify-between rounded-xl border border-[#F8D80D]/90 bg-[#F8D80D]/20 px-4 text-sm font-semibold">
-                <span>Deposito</span>
-                <span className="text-lg">⌄</span>
-              </div>
-            </label>
-
-            <label className="space-y-2">
-              <span className="text-sm font-semibold">Descripcion</span>
-              <textarea
-                rows="3"
-                placeholder="Motivo del deposito..."
-                name="descripcion"
-                value={formValues.descripcion}
-                onChange={handleChange}
-                className="w-full resize-none rounded-xl border border-[#011743]/15 bg-[#F3F2F2] px-4 py-3 text-sm outline-none placeholder:text-[#011743]/35 focus:border-[#011743]"
-              />
-            </label>
-
-            <div className="md:col-span-2 flex flex-wrap gap-3 pt-1">
-              <button
-                type="submit"
-                disabled={savingTransaction || !isAdmin}
-                className="h-11 rounded-xl bg-[#F8D80D] px-7 text-sm font-bold text-[#011743] transition hover:brightness-95"
-              >
-                {savingTransaction ? "Guardando..." : "Guardar deposito"}
-              </button>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="h-11 rounded-xl border border-[#d55353] px-7 text-sm font-bold text-[#d55353] transition hover:bg-[#d55353] hover:text-white"
-              >
-                Limpiar
-              </button>
-            </div>
-          </form>
-        </article>
-
-        <aside className="space-y-4">
-          <div className="overflow-hidden rounded-2xl border border-[#011743]/10 bg-white shadow-sm">
-            <div className="h-28 bg-[#F3F2F2]">
-              <img src={transactionsImage} alt="Ilustracion de transacciones" className="h-full w-full object-cover" />
-            </div>
-            <div className="m-4 rounded-2xl bg-[#011743] px-4 py-4 text-white">
-              <h3 className="text-base font-bold">Regla de negocio</h3>
-              <p className="mt-1 text-sm text-white/85">
-                El administrador unicamente puede crear transacciones de tipo <span className="font-bold text-[#F8D80D]">deposito</span>.
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-[#011743]/10 bg-white p-4 shadow-sm">
+          <div className="rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] p-4 shadow-[var(--theme-shadow)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-extrabold">Resumen del dia</h3>
-              <div className="rounded-xl border border-[#011743]/15 p-2">📅</div>
+              <h3 className="text-2xl font-extrabold text-[var(--theme-text)]" style={{ fontFamily: 'var(--font-display)' }}>Resumen del dia</h3>
+              <div className="rounded-xl border border-[var(--theme-border)] p-2">📅</div>
             </div>
-            <p className="mt-1 text-xs text-[#011743]/55">{new Date().toLocaleDateString("es-GT")}</p>
+            <p className="mt-1 text-xs text-[var(--theme-text-muted)]">{new Date().toLocaleDateString("es-GT")}</p>
 
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-[#F3F2F2] p-3">
-                <p className="text-xs text-[#011743]/60">Depositos</p>
-                <p className="mt-1 text-2xl font-bold text-emerald-600">Q{todaySummary.deposits.toFixed(2)}</p>
-                <p className="text-xs text-[#011743]/60">{todaySummary.depositsCount} transacciones</p>
+              <div className="rounded-xl bg-[var(--theme-surface-alt)] p-3">
+                <p className="text-xs text-[var(--theme-text-muted)]">Depositos</p>
+                <p className="mt-1 text-2xl font-bold text-[var(--status-emerald-text)]">Q{todaySummary.deposits.toFixed(2)}</p>
+                <p className="text-xs text-[var(--theme-text-muted)]">{todaySummary.depositsCount} transacciones</p>
               </div>
-              <div className="rounded-xl bg-[#F3F2F2] p-3">
-                <p className="text-xs text-[#011743]/60">Retiros / Pagos</p>
-                <p className="mt-1 text-2xl font-bold text-[#d55353]">Q{todaySummary.withdrawals.toFixed(2)}</p>
-                <p className="text-xs text-[#011743]/60">{todaySummary.withdrawalsCount} transacciones</p>
+              <div className="rounded-xl bg-[var(--theme-surface-alt)] p-3">
+                <p className="text-xs text-[var(--theme-text-muted)]">Retiros / Pagos</p>
+                <p className="mt-1 text-2xl font-bold text-[var(--status-rose-text)]">Q{todaySummary.withdrawals.toFixed(2)}</p>
+                <p className="text-xs text-[var(--theme-text-muted)]">{todaySummary.withdrawalsCount} transacciones</p>
               </div>
             </div>
 
-            <button type="button" onClick={fetchInitialData} className="mt-4 h-11 w-full rounded-xl bg-[#F8D80D] px-4 text-left text-sm font-bold">
+            <button type="button" onClick={fetchInitialData} className="mt-4 h-11 w-full rounded-xl bg-[var(--theme-primary)] px-4 text-left text-sm font-bold text-white transition hover:brightness-95">
               Actualizar resumen
             </button>
           </div>
         </aside>
       </div>
 
-      <article className="overflow-hidden rounded-2xl border border-[#011743]/10 bg-white shadow-sm">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#011743]/10 px-4 py-4">
-          <h3 className="text-2xl font-extrabold">Transacciones recientes</h3>
-          <button type="button" onClick={fetchInitialData} className="text-sm font-bold text-[#011743]">
+      <article className="overflow-hidden rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] shadow-[var(--theme-shadow)]">
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--theme-border)] px-4 py-4">
+          <h3 className="text-2xl font-extrabold text-[var(--theme-text)]" style={{ fontFamily: 'var(--font-display)' }}>Transacciones recientes</h3>
+          <button type="button" onClick={fetchInitialData} className="text-sm font-bold text-[var(--theme-primary)] transition hover:opacity-80">
             {loadingData ? "Cargando..." : "Actualizar"}
           </button>
         </header>
 
         <div className="overflow-x-auto">
           <table className="min-w-[940px] w-full text-left text-sm">
-            <thead className="bg-[#F3F2F2] text-xs uppercase tracking-wide text-[#011743]/70">
+            <thead className="bg-[var(--theme-surface-alt)] text-xs uppercase tracking-wide text-[var(--theme-text-muted)]">
               <tr>
                 <th className="px-4 py-3">Fecha</th>
                 <th className="px-4 py-3">Tipo</th>
@@ -363,19 +339,19 @@ export const TransactionsPage = () => {
             <tbody>
               {transactions.length === 0 && (
                 <tr>
-                  <td colSpan="7" className="px-4 py-8 text-center text-[#011743]/60">
+                  <td colSpan="7" className="px-4 py-8 text-center text-[var(--theme-text-muted)]">
                     No hay transacciones registradas.
                   </td>
                 </tr>
               )}
 
               {transactions.map((transaction, index) => (
-                <tr key={transaction.id || transaction._id || `${transaction.createdAt}-${transaction.cuentaDestino}` || index} className="border-t border-[#011743]/10">
+                <tr key={transaction.id || transaction._id || `${transaction.createdAt}-${transaction.cuentaDestino}` || index} className="border-t border-[var(--theme-border)]">
                   <td className="px-4 py-3">{formatDate(transaction.createdAt)}</td>
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                        transaction.tipoTransaccion === "DEPOSITO" ? "bg-[#F8D80D]/25 text-[#011743]" : "bg-[#d55353]/15 text-[#d55353]"
+                        transaction.tipoTransaccion === "DEPOSITO" ? "bg-[var(--status-emerald-bg)] text-[var(--status-emerald-text)] border border-[var(--status-emerald-border)]" : "bg-[var(--status-rose-bg)] text-[var(--status-rose-text)] border border-[var(--status-rose-border)]"
                       }`}
                     >
                       {normalizeTypeLabel(transaction.tipoTransaccion)}
@@ -385,12 +361,12 @@ export const TransactionsPage = () => {
                   <td className="px-4 py-3">{transaction.descripcion || "Sin descripcion"}</td>
                   <td
                     className={`px-4 py-3 font-bold ${
-                      transaction.tipoTransaccion === "DEPOSITO" ? "text-emerald-600" : "text-[#d55353]"
+                      transaction.tipoTransaccion === "DEPOSITO" ? "text-[var(--status-emerald-text)]" : "text-[var(--status-rose-text)]"
                     }`}
                   >
                     {formatAmount(transaction.monto, transaction.tipoTransaccion)}
                   </td>
-                  <td className="px-4 py-3">{tokenPayload?.name || tokenPayload?.nombre || "Admin"}</td>
+                  <td className="px-4 py-3">{session?.user?.name || session?.user?.nombre || "Admin"}</td>
                   <td className="px-4 py-3 text-sm">{transaction.estado || "COMPLETADA"}</td>
                 </tr>
               ))}

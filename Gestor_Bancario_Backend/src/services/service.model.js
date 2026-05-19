@@ -46,7 +46,6 @@ const serviceSchema = new Schema(
       type: String,
       required: [true, 'El nombre es requerido'],
       trim: true,
-      unique: true,
     },
     description: {
       type: String,

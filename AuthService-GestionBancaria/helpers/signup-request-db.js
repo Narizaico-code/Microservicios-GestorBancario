@@ -86,6 +86,12 @@ export const listSignupRequests = async ({ status = 'PENDING' } = {}) => {
   });
 };
 
+export const getSignupRequestByEmail = async (email) => {
+  return SignupRequest.findOne({
+    where: { Email: email }
+  });
+};
+
 export const getSignupRequestById = async (id) => {
   return SignupRequest.findByPk(id);
 };

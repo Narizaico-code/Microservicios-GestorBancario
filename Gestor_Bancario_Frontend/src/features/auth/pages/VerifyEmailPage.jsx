@@ -26,7 +26,7 @@ export const VerifyEmailPage = () => {
       setSuccess('Correo verificado correctamente. Redirigiendo al login...')
       setTimeout(() => {
         navigate('/auth', { replace: true })
-      }, 2000)
+      }, 1000)
     } catch (requestError) {
       setError(requestError.message || 'No fue posible verificar el correo')
     } finally {

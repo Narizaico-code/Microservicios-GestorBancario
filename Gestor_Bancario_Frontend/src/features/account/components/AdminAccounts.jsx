@@ -206,11 +206,12 @@ export const AdminAccounts = () => {
 
       if (action === "approve") {
         await approveAccountCreationRequest(requestId)
-        await loadAccounts()
+        await loadAccounts() // Refresh accounts table
       } else {
         await denyAccountCreationRequest(requestId)
       }
 
+      // Optimistic update: remove from local state immediately
       setAccountRequests((current) => current.filter((item) => item._id !== requestId))
     } catch (err) {
       setActionError(err.message || "No fue posible procesar la solicitud")

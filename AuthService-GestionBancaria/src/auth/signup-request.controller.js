@@ -4,7 +4,9 @@ import {
   createSignupRequest,
   listSignupRequests,
   rejectSignupRequest,
+  getSignupRequestByEmail
 } from '../../helpers/signup-request-db.js';
+import { checkUserExists } from '../../helpers/user-db.js';
 
 export const submitSignupRequest = asyncHandler(async (req, res) => {
   const { name, email, password, phone, fechaNacimiento, dpi, ingresosMensuales } = req.body || {};
@@ -76,5 +78,34 @@ export const rejectRequest = asyncHandler(async (req, res) => {
       id: request.Id,
       status: request.Status,
     },
+  });
+});
+
+export const checkRequestStatus = asyncHandler(async (req, res) => {
+  const { email } = req.params;
+  
+  // Buscar en User table primero
+  const userExists = await checkUserExists(email.toLowerCase());
+  
+  if (userExists) {
+    return res.status(200).json({
+      success: true,
+      status: 'VERIFIED'
+    });
+  }
+
+  // Si no es usuario, buscar en SignupRequest
+  const request = await getSignupRequestByEmail(email.toLowerCase());
+  
+  if (request) {
+    return res.status(200).json({
+      success: true,
+      status: request.Status // PENDING, APPROVED, REJECTED
+    });
+  }
+
+  return res.status(404).json({
+    success: false,
+    message: 'No se encontró solicitud',
   });
 });

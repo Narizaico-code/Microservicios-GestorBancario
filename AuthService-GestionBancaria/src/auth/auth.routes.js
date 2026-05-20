@@ -20,6 +20,7 @@ import {
   listPendingRequests,
   approveRequest,
   rejectRequest,
+  checkRequestStatus,
 } from './signup-request.controller.js';
 
 const router = Router();
@@ -115,6 +116,11 @@ router.post(
   validateJWT,
   requireAdmin,
   rejectRequest
+);
+
+router.get(
+  '/signup-requests/status/:email',
+  checkRequestStatus
 );
 
 /**

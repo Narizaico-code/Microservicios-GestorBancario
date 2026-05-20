@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react"
 import toast from "react-hot-toast"
 import transactionsImage from "../../../assets/Transacciones-image.png"
-import { createDepositTransaction, createTransferTransaction, getTransactions, getAccounts } from "../../../shared/api"
+import { createDepositTransaction, createTransferTransaction } from "../../../shared/api"
 import { useAuthStore } from "../../auth/store/authStore"
+import { useAccountStore } from "../../account/store/useAccountStore"
+import { useTransactionStore } from "../store/useTransactionStore"
 
 const formatDate = (dateValue) => {
   if (!dateValue) return "-"
@@ -32,6 +34,8 @@ const normalizeTypeLabel = (type) => {
 
 export const TransactionsPage = () => {
   const { session } = useAuthStore()
+  const { accounts, getAccounts } = useAccountStore()
+  const { transactions, loading: loadingData, getTransactionsData } = useTransactionStore()
   
   const [formValues, setFormValues] = useState({
     cuentaOrigen: "",
@@ -40,34 +44,15 @@ export const TransactionsPage = () => {
     descripcion: "",
     moneda: "GTQ"
   })
-  const [accounts, setAccounts] = useState([])
-  const [transactions, setTransactions] = useState([])
-  const [loadingData, setLoadingData] = useState(false)
   const [savingTransaction, setSavingTransaction] = useState(false)
 
   const userRole = session?.user?.role || ""
   const isAdmin = userRole === "ADMIN_ROLE"
 
   const fetchInitialData = async () => {
-    try {
-      setLoadingData(true)
-
-      const [accountsResponse, transactionsResponse] = await Promise.all([
-        getAccounts({ limit: 100 }),
-        getTransactions({ limit: 10 })
-      ])
-
-      const accountsData = Array.isArray(accountsResponse?.data?.data) ? accountsResponse.data.data : []
-      const transactionData = Array.isArray(transactionsResponse?.data?.data) ? transactionsResponse.data.data : []
-
-      setAccounts(accountsData)
-      setTransactions(transactionData)
-    } catch (error) {
-      const message = error?.response?.data?.message || "No se pudieron cargar los datos de transacciones"
-      toast.error(message)
-    } finally {
-      setLoadingData(false)
-    }
+    // Si no existen las cuentas, cargarlas del store. No se hacen promise.all de axios aqui.
+    getAccounts()
+    getTransactionsData({ limit: 100 })
   }
 
   useEffect(() => {
@@ -150,7 +135,14 @@ export const TransactionsPage = () => {
       }
 
       resetForm()
-      await fetchInitialData()
+      
+      // Sincronizacion global en tiempo real:
+      // Se recargan cuentas y transacciones en todos los stores
+      await Promise.all([
+        getAccounts(),
+        getTransactionsData({ limit: 100 })
+      ])
+      
     } catch (error) {
       console.log('[transactions] error', {
         status: error?.response?.status,

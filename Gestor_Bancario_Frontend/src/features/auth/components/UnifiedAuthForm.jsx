@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   forgotPasswordWithAuthService,
   loginWithAuthService,
   registerWithAuthService,
   resendVerificationWithAuthService,
+  checkSignupRequestStatus,
 } from '../../../shared/api/auth.js'
 import { useAuthStore } from '../store/authStore.js'
 import cerditoFondoBlanco from '../../../assets/CerditoFondoBlanco.png'
@@ -23,9 +24,8 @@ const Avatar = ({ dynamic }) => (
     <img
       src={cerditoFondoBlanco}
       alt="Kinal Banc"
-      className={`h-[70px] w-[70px] rounded-full border object-contain p-2 ${
-        dynamic ? 'border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)]' : 'border-white/8 bg-white/5'
-      }`}
+      className={`h-[70px] w-[70px] rounded-full border object-contain p-2 ${dynamic ? 'border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)]' : 'border-white/8 bg-white/5'
+        }`}
     />
   </div>
 )
@@ -62,11 +62,10 @@ const InputField = ({ label, name, type = 'text', value, onChange, placeholder, 
       pattern={pattern}
       accept={accept}
       placeholder={placeholder}
-      className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition focus:ring-0 ${
-        dynamic
-          ? 'border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] text-[color:var(--theme-text)] placeholder:text-[color:var(--theme-text-muted)] focus:border-[color:var(--theme-accent)]'
-          : 'border-white/10 bg-[#1a1a1a] text-white placeholder-white/25 focus:border-white/35'
-      }`}
+      className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition focus:ring-0 ${dynamic
+        ? 'border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] text-[color:var(--theme-text)] placeholder:text-[color:var(--theme-text-muted)] focus:border-[color:var(--theme-accent)]'
+        : 'border-white/10 bg-[#1a1a1a] text-white placeholder-white/25 focus:border-white/35'
+        }`}
     />
   </label>
 )
@@ -76,9 +75,8 @@ const PrimaryButton = ({ children, onClick, disabled, type = 'submit', dynamic }
     type={type}
     onClick={onClick}
     disabled={disabled}
-    className={`mt-4 w-full rounded-xl py-3 text-[15px] font-bold transition hover:opacity-90 disabled:opacity-50 ${
-      dynamic ? 'bg-[color:var(--theme-accent)] text-white' : 'bg-white text-black'
-    }`}
+    className={`mt-4 w-full rounded-xl py-3 text-[15px] font-bold transition hover:opacity-90 disabled:opacity-50 ${dynamic ? 'bg-[color:var(--theme-accent)] text-white' : 'bg-white text-black'
+      }`}
   >
     {children}
   </button>
@@ -88,11 +86,10 @@ const LinkButton = ({ onClick, children, muted = false, dynamic }) => (
   <button
     type="button"
     onClick={onClick}
-    className={`text-[13px] font-bold transition hover:opacity-80 ${
-      dynamic
-        ? muted ? 'text-[color:var(--theme-text-muted)]' : 'text-[color:var(--theme-accent)]'
-        : muted ? 'text-white/45' : 'text-white/65'
-    }`}
+    className={`text-[13px] font-bold transition hover:opacity-80 ${dynamic
+      ? muted ? 'text-[color:var(--theme-text-muted)]' : 'text-[color:var(--theme-accent)]'
+      : muted ? 'text-white/45' : 'text-white/65'
+      }`}
   >
     {children}
   </button>
@@ -106,12 +103,22 @@ const Card = ({ children, dynamic }) => (
 
 export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRegister = false, dynamic = false } = {}) => {
   const [mode, setMode] = useState(initialMode)
-  const [form, setForm] = useState({ email: '', password: '', name: '', phone: '', profilePicture: null })
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    name: '',
+    phone: '',
+    fechaNacimiento: '',
+    dpi: '',
+    ingresosMensuales: '',
+    profilePicture: null
+  })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [registeredEmail, setRegisteredEmail] = useState('')
+  const [requestStatus, setRequestStatus] = useState('PENDING')
   const { login } = useAuthStore()
   const navigate = useNavigate()
 
@@ -147,13 +154,19 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
       const fd = new FormData()
       fd.append('name', form.name); fd.append('email', form.email)
       fd.append('password', form.password); fd.append('phone', form.phone)
+      fd.append('fechaNacimiento', form.fechaNacimiento);
+      fd.append('dpi', form.dpi);
+      fd.append('ingresosMensuales', form.ingresosMensuales)
       if (form.profilePicture) fd.append('profilePicture', form.profilePicture)
+
       await registerWithAuthService(fd)
       setRegisteredEmail(form.email)
       setSuccess('Cuenta creada. Revisa tu correo para verificarla.')
-      setForm((c) => ({ ...c, password: '', name: '', phone: '', profilePicture: null }))
+      setForm((c) => ({
+        ...c, password: '', name: '', phone: '', fechaNacimiento: '', dpi: '', ingresosMensuales: '', profilePicture: null
+      }))
       setMode(MODE.WAITING_VERIFICATION)
-      if (typeof onRegistered === 'function') try { onRegistered() } catch (_) {}
+      if (typeof onRegistered === 'function') try { onRegistered() } catch (_) { }
     } catch (err) { setError(getReadableError(err, 'No se pudo crear la cuenta')) }
     finally { setLoading(false) }
   }
@@ -188,6 +201,48 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
     } catch (err) { setError(getReadableError(err, 'No se pudo reenviar el correo')) }
     finally { setLoading(false) }
   }
+
+  /* ── Polling logic for waiting mode ──────────────────────────────────── */
+  useEffect(() => {
+    if (mode !== MODE.WAITING_VERIFICATION) return
+    const email = registeredEmail || form.email
+    if (!email) return
+
+    let isPolling = true;
+
+    const checkStatus = async () => {
+      if (!isPolling) return;
+      try {
+        const res = await checkSignupRequestStatus(email)
+        if (res.status === 'APPROVED' && requestStatus !== 'APPROVED') {
+          setRequestStatus('APPROVED')
+        } else if (res.status === 'VERIFIED') {
+          setSuccess('¡Cuenta verificada! Ya puedes iniciar sesión.')
+          isPolling = false;
+          setTimeout(() => setModeWithReset(MODE.LOGIN), 1000)
+        } else if (res.status === 'REJECTED') {
+          setError('Tu solicitud ha sido denegada por el Administrador.')
+          isPolling = false;
+        }
+      } catch (e) {
+        // Ignorar errores de 404 para que siga buscando
+      }
+    }
+
+    // Comprobación inmediata
+    checkStatus();
+
+    // Polling más frecuente (1.5s)
+    const interval = setInterval(() => {
+      if (isPolling) checkStatus();
+      else clearInterval(interval);
+    }, 1500)
+
+    return () => {
+      isPolling = false;
+      clearInterval(interval)
+    }
+  }, [mode, registeredEmail, form.email, requestStatus])
 
   /* ── Render: LOGIN ───────────────────────────────────────────────────── */
   const renderLoginMode = () => (
@@ -236,8 +291,8 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
                 aria-label={showPassword ? 'Ocultar' : 'Mostrar'}
               >
                 {showPassword
-                  ? <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.042.15-2.046.425-2.99"/><path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18"/></svg>
-                  : <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/><circle cx="12" cy="12" r="3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
+                  ? <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.042.15-2.046.425-2.99" /><path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" /></svg>
+                  : <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /><circle cx="12" cy="12" r="3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
                 }
               </button>
             </div>
@@ -281,6 +336,11 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
           <InputField label="Nombre" name="name" value={form.name} onChange={handleChange} required placeholder="Tu nombre completo" dynamic={dynamic} />
           <InputField label="Correo electrónico" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="tu@email.com" dynamic={dynamic} />
           <InputField label="Teléfono" name="phone" type="tel" value={form.phone} onChange={handleChange} required pattern="\d{8}" placeholder="12345678" dynamic={dynamic} />
+
+          <InputField label="DPI" name="dpi" type="text" value={form.dpi} onChange={handleChange} required pattern="\d{13}" placeholder="13 dígitos" dynamic={dynamic} />
+          <InputField label="Fecha de Nacimiento" name="fechaNacimiento" type="date" value={form.fechaNacimiento} onChange={handleChange} required dynamic={dynamic} />
+          <InputField label="Ingresos Mensuales (GTQ)" name="ingresosMensuales" type="number" value={form.ingresosMensuales} onChange={handleChange} required placeholder="Ej. 5000.00" dynamic={dynamic} />
+
           <InputField label="Contraseña" name="password" type="password" value={form.password} onChange={handleChange} required minLength="8" placeholder="Mínimo 8 caracteres" dynamic={dynamic} />
           <InputField label="Foto de perfil (opcional)" name="profilePicture" type="file" accept="image/*" onChange={handleChange} dynamic={dynamic} />
         </div>
@@ -344,48 +404,78 @@ export const UnifiedAuthForm = ({ onRegistered, initialMode = MODE.LOGIN, onlyRe
   )
 
   /* ── Render: WAITING VERIFICATION ────────────────────────────────────── */
-  const renderWaitingMode = () => (
-    <div className="flex flex-col gap-4">
-      <Avatar />
-      <Heading title="Verifica tu correo" sub="Tu cuenta está pendiente de activación" />
+  const renderWaitingMode = () => {
+    const isApproved = requestStatus === 'APPROVED' || requestStatus === 'VERIFIED'
+    const emailToUse = registeredEmail || form.email || 'Sin email registrado'
 
-      <Card>
-        <div className="mb-3 rounded-xl border border-white/7 bg-white/3 px-4 py-3 text-[13px] text-white/50">
-          <p className="mb-1 font-bold">Cuenta creada correctamente</p>
-          <p className="break-words">
-            Esperando verificación del correo:{' '}
-            <span className="font-semibold text-white">{registeredEmail || form.email || 'Sin email registrado'}</span>
-          </p>
+    return (
+      <div className="flex flex-col gap-4">
+        <Avatar />
+        <Heading title="Activación en curso" sub="Sigue el estado de tu cuenta" />
+
+        <Card>
+          <div className="mb-4 rounded-xl border border-white/7 bg-white/3 px-4 py-3 text-[13px] text-white/50">
+            <p className="mb-1 font-bold text-white">Solicitud enviada correctamente</p>
+            <p className="break-words">
+              Cuenta: <span className="font-semibold text-white">{emailToUse}</span>
+            </p>
+          </div>
+
+          <div className="mb-4 flex flex-col gap-3">
+            {/* Paso 1: Admin */}
+            <div className={`flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${isApproved ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-white/10 bg-white/5'}`}>
+              {isApproved ? (
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500">
+                  <svg className="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                </div>
+              ) : (
+                <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-[3px] border-white/20 border-t-white" />
+              )}
+              <div className="flex flex-col">
+                <p className={`text-[13px] font-bold ${isApproved ? 'text-emerald-400' : 'text-white'}`}>Aprobación de Administrador</p>
+                <p className={`text-[11px] ${isApproved ? 'text-emerald-400/70' : 'text-white/40'}`}>
+                  {isApproved ? 'Solicitud aprobada' : 'Tu solicitud está siendo revisada...'}
+                </p>
+              </div>
+            </div>
+
+            {/* Paso 2: Email */}
+            <div className={`flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors ${!isApproved ? 'border-white/5 bg-transparent opacity-50' : 'border-white/10 bg-white/5'}`}>
+              <span className={`h-5 w-5 shrink-0 rounded-full border-[3px] ${isApproved ? 'animate-spin border-white/20 border-t-white' : 'border-white/10'}`} />
+              <div className="flex flex-col">
+                <p className={`text-[13px] font-bold ${isApproved ? 'text-white' : 'text-white/50'}`}>Verificación de Correo</p>
+                <p className={`text-[11px] ${isApproved ? 'text-white/70' : 'text-white/30'}`}>
+                  {isApproved ? 'Se ha enviado un enlace a tu correo. Revisa también la carpeta de Spam.' : 'Esperando aprobación previa...'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {error && <div className="mb-4 whitespace-pre-line rounded-xl border border-red-500/25 bg-red-500/8 px-4 py-3 text-[13px] text-red-300">{error}</div>}
+          {success && <div className="mb-4 rounded-xl border border-emerald-500/25 bg-emerald-500/8 px-4 py-3 text-[13px] text-emerald-400">{success}</div>}
+
+          {isApproved && (
+            <PrimaryButton type="button" onClick={handleResendFromWaiting} disabled={loading}>
+              {loading ? 'Reenviando...' : 'Reenviar enlace de verificación'}
+            </PrimaryButton>
+          )}
+        </Card>
+
+        <div className="flex flex-col items-center gap-2">
+          <LinkButton muted onClick={() => setModeWithReset(MODE.LOGIN)}>Ya verifiqué mi correo, iniciar sesión</LinkButton>
         </div>
-
-        <div className="mb-3 flex items-center gap-3 rounded-xl border border-white/7 bg-white/3 px-4 py-3">
-          <span className="h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-          <p className="text-[13px] text-white/40">Pendiente de verificación. Revisa bandeja de entrada y spam.</p>
-        </div>
-
-        {error && <div className="mb-3 whitespace-pre-line rounded-xl border border-red-500/25 bg-red-500/8 px-4 py-3 text-[13px] text-red-300">{error}</div>}
-        {success && <div className="mb-3 rounded-xl border border-emerald-500/25 bg-emerald-500/8 px-4 py-3 text-[13px] text-emerald-400">{success}</div>}
-
-        <PrimaryButton type="button" onClick={handleResendFromWaiting} disabled={loading}>
-          {loading ? 'Reenviando...' : 'Reenviar correo de verificación'}
-        </PrimaryButton>
-      </Card>
-
-      <div className="flex flex-col items-center gap-2">
-        <LinkButton muted onClick={() => setModeWithReset(MODE.LOGIN)}>Ya verifiqué mi correo, iniciar sesión</LinkButton>
-        <LinkButton onClick={() => setModeWithReset(MODE.RESEND_VERIFICATION)}>Usar otro correo</LinkButton>
       </div>
-    </div>
-  )
+    )
+  }
 
   /* ── Render root ─────────────────────────────────────────────────────── */
   if (onlyRegister) return <div className="mx-auto w-full max-w-[540px]">{renderRegisterMode()}</div>
 
   return (
     <div className="mx-auto w-full max-w-[480px]">
-      {mode === MODE.LOGIN               && renderLoginMode()}
-      {mode === MODE.REGISTER            && renderRegisterMode()}
-      {mode === MODE.FORGOT_PASSWORD     && renderForgotPasswordMode()}
+      {mode === MODE.LOGIN && renderLoginMode()}
+      {mode === MODE.REGISTER && renderRegisterMode()}
+      {mode === MODE.FORGOT_PASSWORD && renderForgotPasswordMode()}
       {mode === MODE.RESEND_VERIFICATION && renderResendMode()}
       {mode === MODE.WAITING_VERIFICATION && renderWaitingMode()}
     </div>

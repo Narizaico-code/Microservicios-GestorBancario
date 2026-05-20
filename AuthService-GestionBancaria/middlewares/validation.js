@@ -22,6 +22,9 @@ export const handleValidationErrors = (req, res, next) => {
 /**
  * Validaciones para el registro de usuario
  */
+/**
+ * Validaciones para el registro de usuario
+ */
 export const validateRegister = [
   body('name')
     .trim()
@@ -53,9 +56,28 @@ export const validateRegister = [
     .matches(/^\d{8}$/)
     .withMessage('El número de teléfono debe tener exactamente 8 dígitos'),
 
+  body('fechaNacimiento')
+    .notEmpty()
+    .withMessage('La fecha de nacimiento es obligatoria')
+    .isISO8601()
+    .withMessage('Debe proporcionar una fecha de nacimiento válida'),
+
+  body('dpi')
+    .notEmpty()
+    .withMessage('El DPI es obligatorio')
+    .matches(/^\d{13}$/)
+    .withMessage('El DPI debe tener exactamente 13 dígitos'),
+
+  body('ingresosMensuales')
+    .notEmpty()
+    .withMessage('Los ingresos mensuales son obligatorios')
+    .isNumeric()
+    .withMessage('Los ingresos mensuales deben ser un número')
+    .isFloat({ min: 0 })
+    .withMessage('Los ingresos mensuales no pueden ser negativos'),
+
   handleValidationErrors,
 ];
-
 /**
  * Validaciones para el login
  */

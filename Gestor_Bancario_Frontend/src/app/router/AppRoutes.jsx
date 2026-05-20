@@ -24,6 +24,8 @@ import { AdminPromotionsPage } from '../../features/promotions/pages/AdminPromot
 import { ClientServicesPage } from '../../features/services/pages/ClientServicesPage.jsx'
 import { ClientPromotionsPage } from '../../features/promotions/pages/ClientPromotionsPage.jsx'
 import { TransactionsPage } from '../../features/transactions/pages/TransactionsPage.jsx'
+import { CurrenciesPage } from '../../pages/CurrenciesPage.jsx'
+
 
 const DashboardRedirect = () => {
   const { session } = useAuthStore()
@@ -53,7 +55,9 @@ export const AppRoutes = () => {
             <Route path="transacciones" element={<TransactionsPage />} />
             <Route path="perfil" element={<ProfilePage />} />
             <Route path="ayuda" element={<Help />} />
+            <Route path="divisas" element={<CurrenciesPage />} />
           </Route>
+
         </Route>
 
         <Route element={<RoleGuard allowedRoles={['USER_ROLE', 'CLIENT_ROLE']} />}>
@@ -67,7 +71,9 @@ export const AppRoutes = () => {
             <Route path="perfil" element={<ClientProfilePage />} />
             <Route path="favoritos" element={<ClientFavoritesPage />} />
             <Route path="transacciones" element={<TransactionsPage />} />
+            <Route path="divisas" element={<CurrenciesPage />} />
           </Route>
+
         </Route>
 
         <Route path="/home" element={<DashboardRedirect />} />

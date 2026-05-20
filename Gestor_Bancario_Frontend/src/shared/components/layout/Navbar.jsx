@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
-import { ArrowRightLeft, Moon, Package, Sun, Tag } from "lucide-react"
+import { ArrowRightLeft, Moon, Package, Sun, Tag, TrendingUp } from "lucide-react"
+
 import imgLogo from "../../../assets/IMGLogoSinLetra.png"
 import { AvatarUser } from "../ui/AvatarUser"
 import { useTheme } from "../../store/themeStore.js"
@@ -14,7 +15,9 @@ export const Navbar = () => {
         { label: "Servicios", to: "/dashboard/servicios", icon: Package },
         { label: "Promociones", to: "/dashboard/promociones", icon: Tag },
         { label: "Transacciones", to: "/dashboard/transacciones", icon: ArrowRightLeft },
+        { label: "Divisas", to: "/dashboard/divisas", icon: TrendingUp },
         { label: "Ayuda", to: "/dashboard/ayuda" },
+
     ]
 
     const navClass = theme === 'dark'

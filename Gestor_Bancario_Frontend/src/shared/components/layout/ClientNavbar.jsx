@@ -7,8 +7,10 @@ import {
   Package,
   Tag,
   Sun,
-  Moon
+  Moon,
+  TrendingUp
 } from 'lucide-react'
+
 
 import { AvatarUser } from '../ui/AvatarUser'
 import { useTheme } from '../../store/themeStore.js'
@@ -75,6 +77,12 @@ export const ClientNavbar = () => {
           <Tag size={16} />
           Promociones
         </NavLink>
+
+        <NavLink to="/client/divisas" className={getNavLinkClass}>
+          <TrendingUp size={16} />
+          Divisas
+        </NavLink>
+
 
       </nav>
 

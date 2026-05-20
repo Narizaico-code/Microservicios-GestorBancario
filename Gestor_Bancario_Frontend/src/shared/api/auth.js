@@ -30,6 +30,10 @@ export async function getSignupRequestsWithAuthService(token) {
   })
 }
 
+export async function checkSignupRequestStatus(email) {
+  return requestJson(`${API_CONFIG.authBaseUrl}/auth/signup-requests/status/${encodeURIComponent(email)}`)
+}
+
 export async function approveSignupRequestWithAuthService(token, requestId) {
   return requestJson(`${API_CONFIG.authBaseUrl}/auth/signup-requests/${requestId}/approve`, {
     method: 'POST',

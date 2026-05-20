@@ -2,7 +2,16 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { submitSignupRequestWithAuthService } from '../../../shared/api/auth.js'
 
-const initialForm = { name: '', email: '', password: '', phone: '', profilePicture: null }
+const initialForm = {
+  name: '',
+  email: '',
+  password: '',
+  phone: '',
+  fechaNacimiento: '',
+  dpi: '',
+  ingresosMensuales: '',
+  profilePicture: null
+}
 
 export const SignupRequestPage = () => {
   const navigate = useNavigate()
@@ -36,7 +45,7 @@ export const SignupRequestPage = () => {
         replace: true,
         state: { infoMessage: 'Esperando autorización de Administrador' },
       })
-    }, 2500)
+    }, 1000)
     return () => clearTimeout(timer)
   }, [success, navigate])
 
@@ -112,6 +121,30 @@ export const SignupRequestPage = () => {
               value={form.phone}
               onChange={handleChange}
               placeholder="12345678"
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">DPI</span>
+            <input
+              name="dpi" value={form.dpi} onChange={handleChange} required placeholder="13 dígitos" pattern="\d{13}"
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">Fecha de Nacimiento</span>
+            <input
+              name="fechaNacimiento" type="date" value={form.fechaNacimiento} onChange={handleChange} required
+              className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white outline-none transition focus:border-white/35"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-white/40">Ingresos Mensuales (GTQ)</span>
+            <input
+              name="ingresosMensuales" type="number" min="0" value={form.ingresosMensuales} onChange={handleChange} required placeholder="Ej. 5000.00"
               className="w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition focus:border-white/35"
             />
           </label>

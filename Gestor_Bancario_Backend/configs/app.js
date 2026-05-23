@@ -13,6 +13,7 @@ import transactionRoutes from "../src/transactions/transaction.routes.js";
 import serviceRoutes from "../src/services/service.routes.js";
 import promotionRoutes from "../src/promotions/promotion.routes.js";
 import currencyRoutes from "../src/currencies/currency.routes.js";
+import chatbotRoutes from "../src/chatbot/chatbot.routes.js";
 
 
 const app = express();
@@ -35,7 +36,7 @@ app.use("/gestionBancaria/api/v1/transactions", transactionRoutes);
 app.use("/gestionBancaria/api/v1/services", serviceRoutes);
 app.use("/gestionBancaria/api/v1/promotions", promotionRoutes);
 app.use("/gestionBancaria/api/v1/currencies", currencyRoutes);
-
+app.use("/gestionBancaria/api/v1/chatbot", chatbotRoutes);
 
 app.use((req, res) => {
     res.status(404).json({ success: false, message: "Endpoint not found" });

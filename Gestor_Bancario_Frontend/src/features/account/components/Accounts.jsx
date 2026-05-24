@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAccountStore } from "../store/useAccountStore";
 import { Spinner } from "../../../shared/components/layout/Spinner";
 import { AccountModal } from "./AccountModal";
@@ -14,6 +15,7 @@ import {
 
 export const Accounts = () => {
     const { accounts, loading, error, getAccounts } = useAccountStore();
+    const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedAccount, setSelectedAccount] = useState(null);
@@ -165,12 +167,20 @@ export const Accounts = () => {
                                     Verificada
                                 </div>
 
-                                <button
-                                    onClick={() => openModal(account)}
-                                    className="rounded-xl bg-slate-900 px-4 py-2 text-sm text-white transition hover:bg-slate-800"
-                                >
-                                    Ver detalles
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => navigate("../transacciones", { state: { cuentaOrigen: account.numeroCuenta } })}
+                                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                                    >
+                                        Transferir
+                                    </button>
+                                    <button
+                                        onClick={() => openModal(account)}
+                                        className="rounded-xl bg-slate-900 px-4 py-2 text-sm text-white transition hover:bg-slate-800"
+                                    >
+                                        Ver detalles
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

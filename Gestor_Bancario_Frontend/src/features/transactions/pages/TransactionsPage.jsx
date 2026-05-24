@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import { useLocation } from "react-router-dom"
 import toast from "react-hot-toast"
 import transactionsImage from "../../../assets/Transacciones-image.png"
 import { createDepositTransaction, createTransferTransaction } from "../../../shared/api"
@@ -36,9 +37,10 @@ export const TransactionsPage = () => {
   const { session } = useAuthStore()
   const { accounts, getAccounts } = useAccountStore()
   const { transactions, loading: loadingData, getTransactionsData } = useTransactionStore()
+  const location = useLocation()
   
   const [formValues, setFormValues] = useState({
-    cuentaOrigen: "",
+    cuentaOrigen: location.state?.cuentaOrigen || "",
     cuentaDestino: "",
     monto: "",
     descripcion: "",

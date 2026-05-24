@@ -34,6 +34,14 @@ const ChatbotWidget = () => {
         setInput('');
     };
 
+    const formatMessage = (text) => {
+        if (!text) return '';
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Negritas
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')             // Cursivas
+            .replace(/\n/g, '<br/>');                          // Saltos de línea
+    };
+
     if (!isOpen) {
         return (
             <button 
@@ -124,7 +132,7 @@ const ChatbotWidget = () => {
                                     key={idx} 
                                     className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-blue-600 text-white self-end rounded-br-none' : 'bg-gray-100 text-gray-800 self-start rounded-bl-none'}`}
                                 >
-                                    <div dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, '<br/>') }} />
+                                    <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }} />
                                 </div>
                             ))
                         )}

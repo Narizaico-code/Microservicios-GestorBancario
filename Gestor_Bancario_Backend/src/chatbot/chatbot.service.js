@@ -2,7 +2,10 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { chatbotSystemPrompt } from './system-prompt.js';
 import Account from '../accounts/account.model.js';
 import Transaction from '../transactions/transaction.model.js';
-// Importamos los demás si los necesitamos
+import Promotion from '../promotions/promotion.model.js';
+import Service from '../services/service.model.js';
+import Favorite from '../favorites/favorite.model.js';
+import { getAllRates } from '../../helpers/currency-logic.js';
 
 // Asegúrate de tener esta variable en el .env de backend: GEMINI_API_KEY
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
@@ -25,6 +28,43 @@ const tools = [
                 parameters: {
                     type: 'OBJECT',
                     properties: {},
+                },
+            },
+            {
+                name: 'get_active_promotions',
+                description: 'Obtiene la lista de promociones bancarias que actualmente están activas para los usuarios.',
+                parameters: {
+                    type: 'OBJECT',
+                    properties: {},
+                },
+            },
+            {
+                name: 'get_active_services',
+                description: 'Obtiene la lista de servicios o productos bancarios que actualmente están activos.',
+                parameters: {
+                    type: 'OBJECT',
+                    properties: {},
+                },
+            },
+            {
+                name: 'get_user_favorites',
+                description: 'Obtiene la lista de cuentas favoritas (contactos guardados para transferencias) del usuario.',
+                parameters: {
+                    type: 'OBJECT',
+                    properties: {},
+                },
+            },
+            {
+                name: 'get_exchange_rates',
+                description: 'Obtiene el tipo de cambio actual de las divisas (GTQ, USD, EUR, etc) con respecto a una moneda base (por defecto USD).',
+                parameters: {
+                    type: 'OBJECT',
+                    properties: {
+                        base: {
+                            type: 'STRING',
+                            description: 'Moneda base para calcular el tipo de cambio, ej. USD o GTQ. Si no se provee, usa USD.'
+                        }
+                    },
                 },
             }
         ],
@@ -66,6 +106,49 @@ const toolFunctions = {
         } catch (error) {
             return { error: "Ocurrió un error al buscar las transacciones." };
         }
+    },
+    get_active_promotions: async () => {
+        try {
+            const promotions = await Promotion.find({ active: true, status: 'ACTIVE' })
+                .select('name description terms type targetSegment -_id')
+                .lean();
+            if (promotions.length === 0) return { response: "No hay promociones activas en este momento." };
+            return { response: promotions };
+        } catch (error) {
+            return { error: "Ocurrió un error al buscar las promociones." };
+        }
+    },
+    get_active_services: async () => {
+        try {
+            const services = await Service.find({ active: true, status: 'ACTIVE' })
+                .select('name description category type price discount -_id')
+                .lean();
+            if (services.length === 0) return { response: "No hay servicios activos en este momento." };
+            return { response: services };
+        } catch (error) {
+            return { error: "Ocurrió un error al buscar los servicios." };
+        }
+    },
+    get_user_favorites: async (userId) => {
+        try {
+            const favorites = await Favorite.find({ userId })
+                .select('alias cuenta tipo -_id')
+                .lean();
+            if (favorites.length === 0) return { response: "El usuario no tiene cuentas favoritas agregadas." };
+            return { response: favorites };
+        } catch (error) {
+            return { error: "Ocurrió un error al buscar los favoritos." };
+        }
+    },
+    get_exchange_rates: async (userId, args) => {
+        try {
+            // El modelo pasa los argumentos en "args" cuando hay parámetros.
+            const base = args?.base || 'USD';
+            const rates = await getAllRates(base);
+            return { base, rates };
+        } catch (error) {
+            return { error: "Ocurrió un error al obtener los tipos de cambio." };
+        }
     }
 };
 
@@ -76,7 +159,7 @@ export const generateChatResponse = async (messagesHistory, userId) => {
     }
 
     const model = genAI.getGenerativeModel({
-        model: 'gemini-3-flash-preview',
+        model: 'gemini-3.1-flash-lite-preview',
         systemInstruction: chatbotSystemPrompt,
         tools: tools,
     });
@@ -98,15 +181,18 @@ export const generateChatResponse = async (messagesHistory, userId) => {
 
     // Bucle para procesar llamadas a funciones si Gemini las pide
     let responseText = "";
-    while (result.response.functionCalls && result.response.functionCalls().length > 0) {
-        const calls = result.response.functionCalls();
+    let calls = result.response.functionCalls ? result.response.functionCalls() : null;
+    
+    while (calls && calls.length > 0) {
         const call = calls[0]; // Ejecutamos la primera que pida
         
         console.log(`[Chatbot] AI invocó la herramienta: ${call.name}`);
         
         let toolResponseData;
         if (toolFunctions[call.name]) {
-            toolResponseData = await toolFunctions[call.name](userId); // Aquí forzamos el userId del token
+            // Pasamos el userId y también los argumentos que Gemini decidió enviarnos
+            const args = call.args || {};
+            toolResponseData = await toolFunctions[call.name](userId, args); 
         } else {
             toolResponseData = { error: "Función no encontrada." };
         }
@@ -118,6 +204,8 @@ export const generateChatResponse = async (messagesHistory, userId) => {
                 response: toolResponseData
             }
         }]);
+        
+        calls = result.response.functionCalls ? result.response.functionCalls() : null;
     }
 
     // Ya no hay más function calls, retornar el texto final

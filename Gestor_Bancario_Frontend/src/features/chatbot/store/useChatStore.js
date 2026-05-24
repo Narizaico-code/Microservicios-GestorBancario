@@ -18,7 +18,14 @@ const useChatStore = create((set, get) => ({
         try {
             const { data } = await axiosChatbot.get('/');
             if (data.success) {
-                set({ chats: data.chats });
+                const currentChats = data.chats;
+                set({ chats: currentChats });
+                
+                // Si hay chats y no estamos en uno actualmente, cargar el más reciente
+                const { currentChatId } = get();
+                if (currentChats.length > 0 && !currentChatId) {
+                    get().fetchChatById(currentChats[0]._id);
+                }
             }
         } catch (error) {
             console.error('Error fetching chats:', error);

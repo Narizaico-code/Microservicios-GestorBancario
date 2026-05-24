@@ -21,7 +21,7 @@ const CURRENCY_NAMES = {
     JPY: 'Yen Japonés'
 }
 
-export const CurrencyDashboard = () => {
+export const CurrencyDashboard = ({ allowedCurrencies }) => {
     const [rates, setRates] = useState({})
     const [loading, setLoading] = useState(true)
     const [base, setBase] = useState('USD')
@@ -48,6 +48,13 @@ export const CurrencyDashboard = () => {
         const interval = setInterval(fetchRates, 300000)
         return () => clearInterval(interval)
     }, [base])
+
+    // Filtrar las divisas a mostrar si el componente recibe allowedCurrencies
+    const displayedRates = Object.entries(rates).filter(([code]) => {
+        if (!allowedCurrencies || allowedCurrencies.length === 0) return true;
+        // Siempre mostramos la moneda base + las monedas permitidas
+        return allowedCurrencies.includes(code) || code === base;
+    });
 
     return (
         <section className="space-y-6">
@@ -87,7 +94,7 @@ export const CurrencyDashboard = () => {
 
             {/* Rates Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Object.entries(rates).map(([code, rate]) => (
+                {displayedRates.map(([code, rate]) => (
                     <div 
                         key={code}
                         className="group relative overflow-hidden p-6 rounded-[2rem] border border-[var(--theme-border)] bg-[var(--theme-surface)] hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"

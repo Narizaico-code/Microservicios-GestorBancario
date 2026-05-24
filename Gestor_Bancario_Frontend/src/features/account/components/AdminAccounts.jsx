@@ -13,6 +13,7 @@ import { Spinner } from "../../../shared/components/layout/Spinner.jsx"
 import { AccountModal } from "./AccountModal.jsx"
 import ExcelJS from "exceljs"
 import { AdminCreateAccountModal } from "./AdminCreateAccountModal.jsx"
+import { AdminRequestDetailsModal } from "./AdminRequestDetailsModal.jsx"
 import { useAuthStore } from "../../auth/store/authStore.js"
 
 const resolveUser = (user) => {
@@ -28,6 +29,10 @@ const resolveUser = (user) => {
     role: user?.role || roleRecord.Name || "USER_ROLE",
     isActive: user?.isActive ?? user?.IsActive ?? false,
     emailVerified: user?.isEmailVerified ?? emailRecord.EmailVerified ?? false,
+    dpi: profile.DPI || profile.dpi || "No registrado",
+    address: profile.Address || profile.address || "No registrada",
+    monthlyIncome: profile.MonthlyIncome || profile.monthlyIncome || 0,
+    occupation: profile.Occupation || profile.occupation || "No registrada",
   }
 }
 export const AdminAccounts = () => {
@@ -47,6 +52,9 @@ export const AdminAccounts = () => {
   const [accountRequestsLoading, setAccountRequestsLoading] = useState(false)
   const [accountRequestsError, setAccountRequestsError] = useState("")
   const [requestActionId, setRequestActionId] = useState("")
+  
+  const [selectedRequest, setSelectedRequest] = useState(null)
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false)
 
   // Filters
   const [search, setSearch] = useState("")
@@ -213,11 +221,25 @@ export const AdminAccounts = () => {
 
       // Optimistic update: remove from local state immediately
       setAccountRequests((current) => current.filter((item) => item._id !== requestId))
+      handleCloseRequestModal()
     } catch (err) {
       setActionError(err.message || "No fue posible procesar la solicitud")
     } finally {
       setRequestActionId("")
     }
+  }
+
+  const handleOpenRequestModal = (request) => {
+    setSelectedRequest(request)
+    setIsRequestModalOpen(true)
+    if (!users.length && !usersLoading) {
+      loadUsers()
+    }
+  }
+
+  const handleCloseRequestModal = () => {
+    setSelectedRequest(null)
+    setIsRequestModalOpen(false)
   }
 
   const handleDownloadReport = async () => {
@@ -507,19 +529,10 @@ export const AdminAccounts = () => {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => handleRequestAction(request._id, "approve")}
-                    disabled={requestActionId === request._id}
-                    className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-70"
+                    onClick={() => handleOpenRequestModal(request)}
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition"
                   >
-                    {requestActionId === request._id ? "Procesando..." : "Aprobar"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRequestAction(request._id, "deny")}
-                    disabled={requestActionId === request._id}
-                    className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-70"
-                  >
-                    {requestActionId === request._id ? "Procesando..." : "Denegar"}
+                    Ver detalles
                   </button>
                 </div>
               </div>
@@ -733,6 +746,16 @@ export const AdminAccounts = () => {
         usersLoading={usersLoading}
         usersError={usersError}
         onReloadUsers={loadUsers}
+      />
+
+      <AdminRequestDetailsModal
+        isOpen={isRequestModalOpen}
+        onClose={handleCloseRequestModal}
+        request={selectedRequest}
+        user={users.find((u) => u.id === selectedRequest?.userId)}
+        onApprove={(id) => handleRequestAction(id, "approve")}
+        onDeny={(id) => handleRequestAction(id, "deny")}
+        actionLoadingId={requestActionId}
       />
     </div>
   )

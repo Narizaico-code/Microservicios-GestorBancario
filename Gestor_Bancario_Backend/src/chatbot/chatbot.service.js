@@ -159,7 +159,7 @@ export const generateChatResponse = async (messagesHistory, userId) => {
     }
 
     const model = genAI.getGenerativeModel({
-        model: 'gemini-3.1-flash-lite-preview',
+        model: 'gemini-3.5-flash',
         systemInstruction: chatbotSystemPrompt,
         tools: tools,
     });

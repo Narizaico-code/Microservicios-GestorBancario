@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User, Wallet, Headphones, ArrowRight, Plus } from 'lucide-react'
 import { requestAccountCreation } from '../../shared/api/account.js'
 import { useAccountStore } from '../account/store/useAccountStore.js'
 import { clearSession } from '../../shared/utils/session-storage.js'
+import { CurrencyDashboard } from '../currency/components/CurrencyDashboard.jsx'
+import useChatStore from '../chatbot/store/useChatStore.js'
 
 export const ClientDashboard = ({ session, onLogout }) => {
   const { accounts, loading: accountsLoading, error: accountsError, getAccounts } = useAccountStore()
+  const { startNewChat, sendMessage } = useChatStore()
   
   const [requestForm, setRequestForm] = useState({ tipoCuenta: 'AHORRO', moneda: 'GTQ' })
   const [requestLoading, setRequestLoading] = useState(false)
@@ -52,6 +55,13 @@ export const ClientDashboard = ({ session, onLogout }) => {
     setRequestForm({ tipoCuenta: 'AHORRO', moneda: 'GTQ' })
     setShowModal(true)
   }
+
+  // Extraer divisas únicas de las cuentas del usuario
+  const userCurrencies = useMemo(() => {
+    if (!accounts || accounts.length === 0) return ['GTQ', 'USD']; // Fallback si no tiene cuentas
+    const currenciesSet = new Set(accounts.map(acc => acc.moneda).filter(Boolean));
+    return Array.from(currenciesSet);
+  }, [accounts])
 
   return (
     <div className="text-[color:var(--theme-text)] font-sans">
@@ -120,6 +130,7 @@ export const ClientDashboard = ({ session, onLogout }) => {
             {accounts.slice(0, 3).map((account, index) => (
               <div
                 key={account._id || account.id || index}
+                onClick={() => navigate('/client/accounts')}
                 className="relative overflow-hidden rounded-[14px] border border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] px-[18px] py-4 flex items-center justify-between cursor-pointer transition-colors hover:bg-[color:var(--theme-bg)]"
               >
                 <div className="absolute right-0 top-0 h-full w-[6px] bg-[color:var(--theme-accent)] rounded-r-[14px]" />
@@ -139,25 +150,36 @@ export const ClientDashboard = ({ session, onLogout }) => {
         </div>
       </div>
 
-      {/* SUPPORT BANNER */}
-      <div className="mt-5 rounded-[18px] border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-8 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-wrap">
+      {/* CURRENCY DASHBOARD SECTION */}
+      <div className="mt-8">
+        <div className="mb-4">
+          <h3 className="text-[22px] font-black text-[color:var(--theme-text)]">Tipo de Cambio</h3>
+          <p className="text-[13px] text-[color:var(--theme-text-muted)]">Tasas de conversión actuales basadas en las divisas de tus cuentas.</p>
+        </div>
+        <CurrencyDashboard allowedCurrencies={userCurrencies} />
+      </div>
+
+      {/* SUPPORT BANNER (MOVED) */}
+      <div className="mt-8 rounded-[18px] border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-8 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
           <div className="w-[46px] h-[46px] rounded-[12px] bg-[color:var(--theme-surface-alt)] border border-[color:var(--theme-border)] flex items-center justify-center shrink-0">
             <Headphones size={22} className="text-[color:var(--theme-text)]" />
           </div>
           <div>
             <h3 className="text-[18px] font-black text-[color:var(--theme-text)] mb-1">¿Necesitas ayuda?</h3>
-            <p className="text-[13px] text-[color:var(--theme-text-muted)]">Estamos aquí para ayudarte con cualquier consulta o problema.</p>
+            <p className="text-[13px] text-[color:var(--theme-text-muted)]">Nuestro asistente virtual está listo para ayudarte en tiempo real.</p>
           </div>
         </div>
         <button
-          onClick={() => navigate('/client/ayuda')}
+          onClick={() => {
+            startNewChat();
+            sendMessage("Hola, necesito ayuda con mi cuenta.");
+          }}
           className="self-start sm:self-auto h-[44px] px-7 rounded-[12px] border border-[color:var(--theme-border)] text-[color:var(--theme-text)] text-[14px] font-bold flex items-center gap-2 hover:bg-[color:var(--theme-surface-alt)] transition-colors whitespace-nowrap"
         >
-          Ir a ayuda <ArrowRight size={14} />
+          Hablar con soporte <ArrowRight size={14} />
         </button>
       </div>
-
 
     </div>
   )

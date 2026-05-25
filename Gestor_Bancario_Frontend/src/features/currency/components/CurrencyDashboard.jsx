@@ -26,6 +26,7 @@ export const CurrencyDashboard = ({ allowedCurrencies }) => {
     const [loading, setLoading] = useState(true)
     const [base, setBase] = useState('USD')
     const [lastUpdate, setLastUpdate] = useState(null)
+    const [amount, setAmount] = useState(1) // Nueva cantidad para convertir
 
     const fetchRates = async () => {
         setLoading(true)
@@ -71,7 +72,18 @@ export const CurrencyDashboard = ({ allowedCurrencies }) => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--theme-surface-alt)] border border-[var(--theme-border)]">
+                        <span className="text-sm font-bold text-[var(--theme-text-muted)]">{base}</span>
+                        <input 
+                            type="number" 
+                            value={amount}
+                            onChange={(e) => setAmount(Number(e.target.value))}
+                            className="w-24 bg-transparent text-[var(--theme-text)] font-bold focus:outline-none"
+                            placeholder="Cantidad"
+                        />
+                    </div>
+
                     <select 
                         value={base}
                         onChange={(e) => setBase(e.target.value)}
@@ -116,10 +128,10 @@ export const CurrencyDashboard = ({ allowedCurrencies }) => {
                             </div>
                             <div className="text-right">
                                 <span className="text-2xl font-black text-[var(--theme-text)] tracking-tight">
-                                    {rate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                                    {(rate * amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </span>
                                 <p className="text-[10px] text-[var(--theme-text-muted)] font-medium">
-                                    1 {base} = {rate.toFixed(4)} {code}
+                                    {amount} {base} = {(rate * amount).toFixed(2)} {code}
                                 </p>
                             </div>
                         </div>

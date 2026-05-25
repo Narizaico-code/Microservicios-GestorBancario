@@ -308,7 +308,7 @@ export const TransactionsPage = () => {
                 <button
                   type="submit"
                   disabled={savingTransaction}
-                  className="h-11 rounded-xl bg-[var(--theme-primary)] px-7 text-sm font-bold text-white transition hover:brightness-95 disabled:opacity-50"
+                  className="h-11 rounded-xl bg-[var(--theme-primary)] px-7 text-sm font-bold text-black transition hover:brightness-95 disabled:opacity-50"
                 >
                   {savingTransaction ? "Procesando..." : isAdmin ? "Guardar deposito" : "Realizar transferencia"}
                 </button>

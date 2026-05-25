@@ -54,16 +54,16 @@ const ChatbotWidget = () => {
     }
 
     return (
-        <div className="fixed bottom-6 right-6 w-96 h-[32rem] bg-white rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-gray-200">
+        <div className="fixed bottom-6 right-6 w-96 h-[32rem] bg-[var(--theme-surface)] rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-[var(--theme-border)] transition-colors duration-300">
             {/* Header */}
-            <div className="bg-blue-600 p-4 flex justify-between items-center text-white">
+            <div className="bg-[var(--theme-accent)] p-4 flex justify-between items-center text-white">
                 <div className="flex items-center gap-2">
                     {showSidebar ? (
-                        <button onClick={() => setShowSidebar(false)} className="hover:bg-blue-700 p-1 rounded">
+                        <button onClick={() => setShowSidebar(false)} className="hover:opacity-80 p-1 rounded transition-opacity">
                             <ChevronLeft size={20} />
                         </button>
                     ) : (
-                        <button onClick={() => setShowSidebar(true)} className="hover:bg-blue-700 p-1 rounded" title="Ver historial">
+                        <button onClick={() => setShowSidebar(true)} className="hover:opacity-80 p-1 rounded transition-opacity" title="Ver historial">
                             <MessageCircle size={20} />
                         </button>
                     )}
@@ -73,11 +73,11 @@ const ChatbotWidget = () => {
                 </div>
                 <div className="flex gap-2">
                     {!showSidebar && (
-                        <button onClick={startNewChat} className="hover:bg-blue-700 p-1 rounded" title="Nuevo Chat">
+                        <button onClick={startNewChat} className="hover:opacity-80 p-1 rounded transition-opacity" title="Nuevo Chat">
                             <Plus size={20} />
                         </button>
                     )}
-                    <button onClick={toggleChat} className="hover:bg-blue-700 p-1 rounded">
+                    <button onClick={toggleChat} className="hover:opacity-80 p-1 rounded transition-opacity">
                         <X size={20} />
                     </button>
                 </div>
@@ -86,21 +86,21 @@ const ChatbotWidget = () => {
             {/* Content Area */}
             <div className="flex-1 overflow-hidden relative">
                 {/* Sidebar - Historial de Chats */}
-                <div className={`absolute inset-0 bg-gray-50 z-10 transition-transform duration-300 ${showSidebar ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
-                    <div className="p-3 border-b border-gray-200">
+                <div className={`absolute inset-0 bg-[var(--theme-surface-alt)] z-10 transition-transform duration-300 ${showSidebar ? 'translate-x-0' : '-translate-x-full'} flex flex-col`}>
+                    <div className="p-3 border-b border-[var(--theme-border)]">
                         <button 
                             onClick={() => {
                                 startNewChat();
                                 setShowSidebar(false);
                             }}
-                            className="w-full py-2 bg-white border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2"
+                            className="w-full py-2 bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded text-sm text-[var(--theme-text)] hover:opacity-80 flex items-center justify-center gap-2 transition-all"
                         >
                             <Plus size={16} /> Nueva conversación
                         </button>
                     </div>
                     <div className="flex-1 overflow-y-auto p-2">
                         {chats.length === 0 ? (
-                            <p className="text-center text-gray-500 text-sm mt-4">No tienes conversaciones previas.</p>
+                            <p className="text-center text-[var(--theme-text-muted)] text-sm mt-4">No tienes conversaciones previas.</p>
                         ) : (
                             chats.map((c) => (
                                 <div 
@@ -109,7 +109,7 @@ const ChatbotWidget = () => {
                                         fetchChatById(c._id);
                                         setShowSidebar(false);
                                     }}
-                                    className={`p-3 rounded mb-1 cursor-pointer truncate text-sm transition-colors ${currentChatId === c._id ? 'bg-blue-100 text-blue-800' : 'hover:bg-gray-200 text-gray-700'}`}
+                                    className={`p-3 rounded mb-1 cursor-pointer truncate text-sm transition-colors ${currentChatId === c._id ? 'bg-[var(--theme-accent)] text-white' : 'hover:bg-[var(--theme-surface)] text-[var(--theme-text)]'}`}
                                 >
                                     {c.title}
                                 </div>
@@ -119,10 +119,10 @@ const ChatbotWidget = () => {
                 </div>
 
                 {/* Chat Area */}
-                <div className="h-full flex flex-col bg-white">
+                <div className="h-full flex flex-col bg-[var(--theme-surface)]">
                     <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
                         {messages.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-full text-gray-400 space-y-2">
+                            <div className="flex flex-col items-center justify-center h-full text-[var(--theme-text-muted)] space-y-2">
                                 <MessageSquare size={48} className="opacity-20" />
                                 <p className="text-sm">¡Hola! ¿En qué puedo ayudarte hoy?</p>
                             </div>
@@ -130,37 +130,37 @@ const ChatbotWidget = () => {
                             messages.map((msg, idx) => (
                                 <div 
                                     key={idx} 
-                                    className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-blue-600 text-white self-end rounded-br-none' : 'bg-gray-100 text-gray-800 self-start rounded-bl-none'}`}
+                                    className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-[var(--theme-accent)] text-white self-end rounded-br-none' : 'bg-[var(--theme-surface-alt)] text-[var(--theme-text)] self-start rounded-bl-none'}`}
                                 >
                                     <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }} />
                                 </div>
                             ))
                         )}
                         {isLoading && (
-                            <div className="bg-gray-100 text-gray-800 self-start p-3 rounded-xl rounded-bl-none text-sm max-w-[80%] flex gap-1 items-center">
-                                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
-                                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-75"></span>
-                                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
+                            <div className="bg-[var(--theme-surface-alt)] text-[var(--theme-text)] self-start p-3 rounded-xl rounded-bl-none text-sm max-w-[80%] flex gap-1 items-center">
+                                <span className="w-2 h-2 bg-[var(--theme-text-muted)] rounded-full animate-bounce"></span>
+                                <span className="w-2 h-2 bg-[var(--theme-text-muted)] rounded-full animate-bounce delay-75"></span>
+                                <span className="w-2 h-2 bg-[var(--theme-text-muted)] rounded-full animate-bounce delay-150"></span>
                             </div>
                         )}
                         <div ref={messagesEndRef} />
                     </div>
 
                     {/* Input Area */}
-                    <div className="p-3 border-t border-gray-200 bg-gray-50">
+                    <div className="p-3 border-t border-[var(--theme-border)] bg-[var(--theme-surface-alt)]">
                         <form onSubmit={handleSend} className="flex gap-2">
                             <input 
                                 type="text" 
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder="Escribe tu mensaje..." 
-                                className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                className="flex-1 border border-[var(--theme-border)] bg-[var(--theme-surface)] rounded-full px-4 py-2 text-sm text-[var(--theme-text)] focus:outline-none focus:border-[var(--theme-accent)] focus:ring-1 focus:ring-[var(--theme-accent)]"
                                 disabled={isLoading}
                             />
                             <button 
                                 type="submit" 
                                 disabled={!input.trim() || isLoading}
-                                className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                                className="p-2 bg-[var(--theme-accent)] text-white rounded-full hover:opacity-80 disabled:opacity-50 transition-all"
                             >
                                 <Send size={18} />
                             </button>

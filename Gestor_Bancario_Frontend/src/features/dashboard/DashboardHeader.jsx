@@ -1,21 +1,21 @@
 export const DashboardHeader = ({ title, subtitle, onLogout, userRole }) => {
   return (
-    <header className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-xl">
+    <header className="flex items-center justify-between rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-surface)] px-5 py-4 shadow-sm backdrop-blur-xl transition-colors">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300/80">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--theme-accent)]">
           Gestor Bancario
         </p>
-        <h1 className="mt-1 text-lg font-semibold text-white">{title}</h1>
-        <p className="mt-1 text-sm text-slate-300">{subtitle}</p>
+        <h1 className="mt-1 text-lg font-bold text-[var(--theme-text)]">{title}</h1>
+        <p className="mt-1 text-sm text-[var(--theme-text-muted)]">{subtitle}</p>
       </div>
       <div className="flex items-center gap-3">
-        <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-200">
+        <span className="rounded-full border border-[var(--theme-accent)]/30 bg-[var(--theme-accent)]/10 px-4 py-2 text-sm font-semibold text-[var(--theme-accent)]">
           {userRole}
         </span>
         <button
           type="button"
           onClick={onLogout}
-          className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
+          className="rounded-full border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 py-2 text-sm font-bold text-[var(--theme-text)] transition hover:opacity-80"
         >
           Cerrar sesión
         </button>

@@ -41,7 +41,7 @@ export const TransactionsPage = () => {
   
   const [formValues, setFormValues] = useState({
     cuentaOrigen: location.state?.cuentaOrigen || "",
-    cuentaDestino: "",
+    cuentaDestino: location.state?.cuentaDestino || "",
     monto: "",
     descripcion: "",
     moneda: "GTQ"
@@ -194,7 +194,7 @@ export const TransactionsPage = () => {
   return (
     <section className="space-y-5 text-[var(--theme-text)]">
       <header className="flex flex-col gap-3 rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] p-4 md:flex-row md:items-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--theme-primary)] text-white shadow-sm">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--theme-accent)] text-white shadow-sm">
           <span className="text-3xl font-bold">↔</span>
         </div>
         <div>
@@ -222,7 +222,7 @@ export const TransactionsPage = () => {
                   name="cuentaOrigen"
                   value={formValues.cuentaOrigen}
                   onChange={handleChange}
-                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none focus:border-[var(--theme-accent)] focus:ring-1 focus:ring-[var(--theme-accent)]"
                 >
                   <option value="" disabled>Selecciona tu cuenta</option>
                   {accounts.map((account) => (
@@ -243,7 +243,7 @@ export const TransactionsPage = () => {
                 value={formValues.cuentaDestino}
                 onChange={handleChange}
                 list="cuentas-destino"
-                className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-accent)] focus:ring-1 focus:ring-[var(--theme-accent)]"
               />
               {isAdmin && (
                 <datalist id="cuentas-destino">
@@ -263,7 +263,7 @@ export const TransactionsPage = () => {
                   name="monto"
                   value={formValues.monto}
                   onChange={handleChange}
-                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-accent)] focus:ring-1 focus:ring-[var(--theme-accent)]"
                 />
               </label>
 
@@ -273,7 +273,7 @@ export const TransactionsPage = () => {
                   name="moneda"
                   value={formValues.moneda}
                   onChange={handleChange}
-                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                  className="h-12 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 text-sm text-[var(--theme-text)] outline-none focus:border-[var(--theme-accent)] focus:ring-1 focus:ring-[var(--theme-accent)]"
                 >
                   <option value="GTQ">GTQ</option>
                   <option value="USD">USD</option>
@@ -286,7 +286,7 @@ export const TransactionsPage = () => {
 
               <label className="space-y-2" title="El tipo de transacción que se realizará">
                 <span className="text-sm font-semibold">Tipo de transaccion</span>
-                <div className="flex h-12 items-center justify-between rounded-xl border border-[var(--theme-primary)] bg-[var(--theme-primary)]/10 px-4 text-sm font-semibold text-[var(--theme-primary)]">
+                <div className="flex h-12 items-center justify-between rounded-xl border border-[var(--theme-accent)] bg-[var(--theme-accent)]/10 px-4 text-sm font-semibold text-[var(--theme-accent)]">
                   <span>{isAdmin ? "Deposito" : "Transferencia"}</span>
                   <span className="text-lg">⌄</span>
                 </div>
@@ -300,7 +300,7 @@ export const TransactionsPage = () => {
                   name="descripcion"
                   value={formValues.descripcion}
                   onChange={handleChange}
-                  className="w-full resize-none rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)] focus:ring-1 focus:ring-[var(--theme-primary)]"
+                  className="w-full resize-none rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface-alt)] px-4 py-3 text-sm text-[var(--theme-text)] outline-none placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-accent)] focus:ring-1 focus:ring-[var(--theme-accent)]"
                 />
               </label>
 
@@ -308,7 +308,7 @@ export const TransactionsPage = () => {
                 <button
                   type="submit"
                   disabled={savingTransaction}
-                  className="h-11 rounded-xl bg-[var(--theme-primary)] px-7 text-sm font-bold text-black transition hover:brightness-95 disabled:opacity-50"
+                  className="h-11 rounded-xl bg-[var(--theme-accent)] px-7 text-sm font-bold text-white transition hover:bg-[var(--theme-accent-strong)] disabled:opacity-50"
                 >
                   {savingTransaction ? "Procesando..." : isAdmin ? "Guardar deposito" : "Realizar transferencia"}
                 </button>
@@ -371,7 +371,7 @@ export const TransactionsPage = () => {
               </div>
             </div>
 
-            <button type="button" onClick={fetchInitialData} className="mt-4 h-11 w-full rounded-xl bg-[var(--theme-primary)] px-4 text-left text-sm font-bold text-white transition hover:brightness-95">
+            <button type="button" onClick={fetchInitialData} className="mt-4 h-11 w-full rounded-xl bg-[var(--theme-accent)] px-4 text-left text-sm font-bold text-white transition hover:bg-[var(--theme-accent-strong)]">
               Actualizar resumen
             </button>
           </div>
@@ -381,7 +381,7 @@ export const TransactionsPage = () => {
       <article className="overflow-hidden rounded-[18px] border border-[var(--theme-border)] bg-[var(--theme-surface)] shadow-[var(--theme-shadow)]">
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--theme-border)] px-4 py-4">
           <h3 className="text-2xl font-extrabold text-[var(--theme-text)]" style={{ fontFamily: 'var(--font-display)' }}>Transacciones recientes</h3>
-          <button type="button" onClick={fetchInitialData} className="text-sm font-bold text-[var(--theme-primary)] transition hover:opacity-80">
+          <button type="button" onClick={fetchInitialData} className="text-sm font-bold text-[var(--theme-accent)] transition hover:opacity-80">
             {loadingData ? "Cargando..." : "Actualizar"}
           </button>
         </header>

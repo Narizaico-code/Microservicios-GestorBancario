@@ -1,115 +1,26 @@
-import { useEffect, useMemo, useState } from 'react'
 import { Heart, Plus, Trash2, Search } from 'lucide-react'
-import { addFavorite, deleteFavorite, getFavorites } from '../../../shared/api/favorites.js'
-
-const initialForm = {
-  cuenta: '',
-  alias: '',
-  tipo: 'AHORRO',
-}
+import { useNavigate } from 'react-router-dom'
+import { useFavorites } from '../hooks/useFavorites'
 
 export const FavoritesPage = () => {
-  const [favorites, setFavorites] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [form, setForm] = useState(initialForm)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState('')
-  const [message, setMessage] = useState('')
-  const [search, setSearch] = useState('')
-  const [actionId, setActionId] = useState('')
+  const {
+    favorites,
+    filteredFavorites,
+    loading,
+    error,
+    form,
+    submitting,
+    submitError,
+    message,
+    search,
+    actionId,
+    handleChange,
+    handleSubmit,
+    handleDelete,
+    setSearch,
+  } = useFavorites()
 
-  useEffect(() => {
-    let isMounted = true
-
-    const loadFavorites = async () => {
-      try {
-        setLoading(true)
-        setError('')
-        const response = await getFavorites()
-        if (!isMounted) return
-        const favs = response?.data?.favorites || response?.favorites
-        setFavorites(Array.isArray(favs) ? favs : [])
-      } catch (err) {
-        if (!isMounted) return
-        const apiError = err.response?.data?.message || err.response?.data?.error || err.message
-        setError(apiError || 'No fue posible cargar favoritos')
-      } finally {
-        if (isMounted) setLoading(false)
-      }
-    }
-
-    loadFavorites()
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
-
-  const filteredFavorites = useMemo(() => {
-    const normalized = search.trim().toLowerCase()
-    if (!normalized) return favorites
-
-    return favorites.filter((item) => {
-      return (
-        String(item.cuenta || '').toLowerCase().includes(normalized) ||
-        String(item.alias || '').toLowerCase().includes(normalized) ||
-        String(item.tipo || '').toLowerCase().includes(normalized)
-      )
-    })
-  }, [favorites, search])
-
-  const handleChange = (event) => {
-    const { name, value } = event.target
-    setForm((current) => ({ ...current, [name]: value }))
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    setSubmitError('')
-    setMessage('')
-
-    if (!form.cuenta.trim() || !form.alias.trim()) {
-      setSubmitError('Completa cuenta y alias para guardar')
-      return
-    }
-
-    try {
-      setSubmitting(true)
-      const response = await addFavorite({
-        cuenta: form.cuenta.trim(),
-        alias: form.alias.trim(),
-        tipo: form.tipo,
-      })
-
-      const favorite = response?.data?.favorite || response?.favorite
-      if (favorite) {
-        setFavorites((current) => [favorite, ...current])
-      }
-
-      setForm(initialForm)
-      setMessage('Favorito agregado')
-    } catch (err) {
-      const apiError = err.response?.data?.message || err.response?.data?.error || err.message
-      setSubmitError(apiError || 'No fue posible agregar el favorito')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleDelete = async (favoriteId) => {
-    try {
-      setActionId(favoriteId)
-      setError('')
-      await deleteFavorite(favoriteId)
-      setFavorites((current) => current.filter((item) => item._id !== favoriteId))
-    } catch (err) {
-      const apiError = err.response?.data?.message || err.response?.data?.error || err.message
-      setError(apiError || 'No fue posible eliminar el favorito')
-    } finally {
-      setActionId('')
-    }
-  }
+  const navigate = useNavigate()
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 text-[color:var(--theme-text)]">
@@ -219,19 +130,32 @@ export const FavoritesPage = () => {
                       {item.tipo}
                     </span>
                   </div>
-                  <div className="mt-4 flex items-center justify-between">
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                     <p className="text-xs text-[color:var(--theme-text-muted)]">
                       Creado: {item.createdAt ? new Date(item.createdAt).toLocaleDateString('es-GT') : 'N/D'}
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(item._id)}
-                      disabled={actionId === item._id}
-                      className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-600 transition hover:bg-rose-100 disabled:opacity-70"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      {actionId === item._id ? 'Eliminando...' : 'Eliminar'}
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate('../transacciones', {
+                            state: { cuentaDestino: item.cuenta },
+                          })
+                        }
+                        className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--theme-border)] bg-[color:var(--theme-surface)] px-3 py-2 text-xs font-semibold text-[color:var(--theme-text)] transition hover:bg-[color:var(--theme-surface-alt)]"
+                      >
+                        ↔ Transferir
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(item._id)}
+                        disabled={actionId === item._id}
+                        className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-600 transition hover:bg-rose-100 disabled:opacity-70"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        {actionId === item._id ? 'Eliminando...' : 'Eliminar'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

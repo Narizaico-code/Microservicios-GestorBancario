@@ -29,9 +29,10 @@ export const useSignupRequests = () => {
     } finally {
       setLoading(false)
     }
-  }, [session?.token])
+  }, [session])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-en-montaje; loadRequests es estable (useCallback)
     loadRequests()
   }, [loadRequests])
 
@@ -52,7 +53,7 @@ export const useSignupRequests = () => {
         setActionId('')
       }
     },
-    [session?.token]
+    [session]
   )
 
   return { requests, loading, error, actionError, actionId, handleRequestAction, refreshRequests: loadRequests }

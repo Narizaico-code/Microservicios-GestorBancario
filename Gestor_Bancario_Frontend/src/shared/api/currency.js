@@ -11,6 +11,6 @@ export const getCurrencies = async (base = 'USD') => {
         const response = await apiClient.get(`/currencies?base=${base}`);
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Error al obtener divisas');
+        throw new Error(error.response?.data?.message || 'Error al obtener divisas', { cause: error });
     }
 };

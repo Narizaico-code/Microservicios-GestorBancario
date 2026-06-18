@@ -19,6 +19,7 @@ export const useCurrencyConversion = (accounts) => {
   useEffect(() => {
     if (!availableCurrencies.length) return
     if (!availableCurrencies.includes(selectedCurrency)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clamp de la moneda seleccionada cuando cambian las cuentas
       setSelectedCurrency(availableCurrencies[0])
     }
   }, [availableCurrencies, selectedCurrency])

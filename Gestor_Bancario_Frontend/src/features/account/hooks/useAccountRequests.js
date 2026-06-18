@@ -31,6 +31,7 @@ export const useAccountRequests = ({ onApproved } = {}) => {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-en-montaje; loadRequests es estable (useCallback)
     loadRequests()
   }, [loadRequests])
 

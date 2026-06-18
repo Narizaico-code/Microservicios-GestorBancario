@@ -1,41 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { getFavorites } from '../../../shared/api/favorites.js'
+import { useAsync } from '../../../shared/hooks/useAsync.js'
 
 export const useProfileFavorites = (token) => {
-  const [favorites, setFavorites] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    let isMounted = true
-
-    const loadFavorites = async () => {
-      try {
-        setLoading(true)
-        setError('')
-        const response = await getFavorites()
-        if (!isMounted) return
-        const favs = response?.data?.favorites || response?.favorites
-        setFavorites(Array.isArray(favs) ? favs : [])
-      } catch (err) {
-        if (!isMounted) return
-        const apiError = err.response?.data?.message || err.response?.data?.error || err.message
-        setError(apiError || 'No fue posible cargar favoritos')
-      } finally {
-        if (isMounted) setLoading(false)
-      }
+  const fetchFavorites = useCallback(async () => {
+    try {
+      const response = await getFavorites()
+      const favs = response?.data?.favorites || response?.favorites
+      return Array.isArray(favs) ? favs : []
+    } catch (err) {
+      const apiError = err.response?.data?.message || err.response?.data?.error || err.message
+      throw new Error(apiError || 'No fue posible cargar favoritos', { cause: err })
     }
+    // token solo controla `enabled`; getFavorites() no lo recibe
+  }, [])
 
-    if (token) {
-      loadFavorites()
-    } else {
-      setLoading(false)
-    }
+  const { data, loading, error } = useAsync(fetchFavorites, { enabled: !!token, initialData: [] })
 
-    return () => {
-      isMounted = false
-    }
-  }, [token])
-
-  return { favorites, loading, error }
+  return { favorites: data, loading, error }
 }

@@ -4,7 +4,6 @@ import { useFavorites } from '../hooks/useFavorites'
 
 export const FavoritesPage = () => {
   const {
-    favorites,
     filteredFavorites,
     loading,
     error,

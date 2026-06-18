@@ -25,9 +25,10 @@ export const useUsersDirectory = () => {
     } finally {
       setLoading(false)
     }
-  }, [session?.token])
+  }, [session])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-en-montaje; loadUsers es estable (useCallback)
     loadUsers()
   }, [loadUsers])
 

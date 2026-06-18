@@ -56,6 +56,7 @@ export const AdminUpdateRequests = ({ token }) => {
     if (token) {
       loadRequests()
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-en-montaje con guard isMounted
       setLoading(false)
     }
 

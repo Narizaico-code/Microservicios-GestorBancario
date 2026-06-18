@@ -26,7 +26,7 @@ export const useAdminUsers = () => {
     } finally {
       setUsersLoading(false)
     }
-  }, [session?.token])
+  }, [session])
 
   return { users, usersLoading, usersError, loadUsers }
 }

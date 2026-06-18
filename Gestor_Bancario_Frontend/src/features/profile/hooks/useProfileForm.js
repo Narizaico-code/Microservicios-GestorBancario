@@ -20,6 +20,7 @@ export const useProfileForm = ({ profile, token, setProfile, updateUser }) => {
   // Seed editable fields from profile (initial load + after a successful update)
   useEffect(() => {
     if (!profile) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- seed del form desde profile (carga inicial / tras update)
     setForm((current) => ({
       ...current,
       email: profile.email || '',
@@ -29,6 +30,7 @@ export const useProfileForm = ({ profile, token, setProfile, updateUser }) => {
   }, [profile])
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- sincroniza previewUrl con el objectURL del archivo (recurso del navegador) */
     if (!form.profilePicture) {
       setPreviewUrl('')
       return undefined
@@ -40,6 +42,7 @@ export const useProfileForm = ({ profile, token, setProfile, updateUser }) => {
     return () => {
       URL.revokeObjectURL(url)
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [form.profilePicture])
 
   const {

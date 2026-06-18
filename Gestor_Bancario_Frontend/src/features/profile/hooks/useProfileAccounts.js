@@ -1,39 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { getRecentAccounts } from '../../../shared/api/bank.js'
+import { useAsync } from '../../../shared/hooks/useAsync.js'
 
 export const useProfileAccounts = (token) => {
-  const [accounts, setAccounts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    let isMounted = true
-
-    const loadAccounts = async () => {
-      try {
-        setLoading(true)
-        setError('')
-        const response = await getRecentAccounts(token)
-        if (!isMounted) return
-        setAccounts(Array.isArray(response?.data) ? response.data : [])
-      } catch (err) {
-        if (!isMounted) return
-        setError(err.message || 'No fue posible cargar cuentas')
-      } finally {
-        if (isMounted) setLoading(false)
-      }
-    }
-
-    if (token) {
-      loadAccounts()
-    } else {
-      setLoading(false)
-    }
-
-    return () => {
-      isMounted = false
+  const fetchAccounts = useCallback(async () => {
+    try {
+      const response = await getRecentAccounts(token)
+      return Array.isArray(response?.data) ? response.data : []
+    } catch (err) {
+      throw new Error(err.message || 'No fue posible cargar cuentas', { cause: err })
     }
   }, [token])
 
-  return { accounts, loading, error }
+  const { data, loading, error } = useAsync(fetchAccounts, { enabled: !!token, initialData: [] })
+
+  return { accounts: data, loading, error }
 }

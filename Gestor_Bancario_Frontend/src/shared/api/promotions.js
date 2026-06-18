@@ -2,7 +2,7 @@ import { axiosAccount, requestFormData, API_CONFIG } from './api'
 
 export const getPromotions = (params = {}) => {
   const cleanParams = Object.fromEntries(
-    Object.entries(params).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+    Object.entries(params).filter(([, v]) => v !== '' && v !== null && v !== undefined)
   )
   return axiosAccount.get('/promotions', { params: cleanParams })
 }

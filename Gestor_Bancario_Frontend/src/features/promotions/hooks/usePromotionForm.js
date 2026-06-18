@@ -39,7 +39,7 @@ export const usePromotionForm = ({ promotion, onSuccess, onClose }) => {
         setLoadingServices(true)
         const response = await getServices({ limit: 100 })
         setServices(response?.data?.data || [])
-      } catch (error) {
+      } catch {
         toast.error('No se pudo cargar servicios')
       } finally {
         setLoadingServices(false)
@@ -50,6 +50,7 @@ export const usePromotionForm = ({ promotion, onSuccess, onClose }) => {
 
   useEffect(() => {
     if (!promotion) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- seed/reset del form según la promo seleccionada
       setForm(emptyForm)
       setImageFile(null)
       return
@@ -128,7 +129,7 @@ export const usePromotionForm = ({ promotion, onSuccess, onClose }) => {
     if (!form.conditions.trim()) return null
     try {
       return JSON.parse(form.conditions)
-    } catch (error) {
+    } catch {
       toast.error('El JSON de condiciones no es valido')
       return 'invalid'
     }

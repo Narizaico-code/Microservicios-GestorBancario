@@ -24,7 +24,7 @@ export const PromotionStatsModal = ({ promotion, onClose }) => {
         setLoading(true)
         const response = await getPromotionStats(promotion._id || promotion.id)
         setStats(response?.data?.data || response?.data || null)
-      } catch (error) {
+      } catch {
         toast.error('No se pudieron cargar las estadisticas')
       } finally {
         setLoading(false)

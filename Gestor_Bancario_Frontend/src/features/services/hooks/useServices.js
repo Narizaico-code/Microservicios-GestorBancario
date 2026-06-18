@@ -1,29 +1,25 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { getServices } from '../../../shared/api/services.js'
+import { useAsync } from '../../../shared/hooks/useAsync.js'
 
 export const useServices = (initialFilters = {}) => {
-  const [services, setServices] = useState([])
-  const [pagination, setPagination] = useState(null)
-  const [loading, setLoading] = useState(false)
   const [filters, setFilters] = useState({ page: 1, limit: 10, ...initialFilters })
 
   const fetchServices = useCallback(async () => {
-    setLoading(true)
     try {
       const response = await getServices(filters)
-      setServices(response?.data?.data || [])
-      setPagination(response?.data?.pagination || null)
-    } catch (error) {
+      return response?.data || null
+    } catch (err) {
       toast.error('Error al cargar servicios')
-    } finally {
-      setLoading(false)
+      throw err
     }
   }, [filters])
 
-  useEffect(() => {
-    fetchServices()
-  }, [fetchServices])
+  const { data, loading, refetch } = useAsync(fetchServices, { initialData: null })
+
+  const services = useMemo(() => data?.data || [], [data])
+  const pagination = data?.pagination || null
 
   return {
     services,
@@ -31,6 +27,6 @@ export const useServices = (initialFilters = {}) => {
     loading,
     filters,
     setFilters,
-    refetch: fetchServices,
+    refetch,
   }
 }

@@ -1,60 +1,19 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Wallet, Headphones, ArrowRight, Plus } from 'lucide-react'
-import { requestAccountCreation } from '../../shared/api/account.js'
+import { User, Wallet, Headphones, ArrowRight } from 'lucide-react'
 import { useAccountStore } from '../account/store/useAccountStore.js'
-import { clearSession } from '../../shared/utils/session-storage.js'
 import { CurrencyDashboard } from '../currency/components/CurrencyDashboard.jsx'
 import useChatStore from '../chatbot/store/useChatStore.js'
 
-export const ClientDashboard = ({ session, onLogout }) => {
-  const { accounts, loading: accountsLoading, error: accountsError, getAccounts } = useAccountStore()
+export const ClientDashboard = ({ session }) => {
+  const { accounts, loading: accountsLoading, getAccounts } = useAccountStore()
   const { startNewChat, sendMessage } = useChatStore()
-  
-  const [requestForm, setRequestForm] = useState({ tipoCuenta: 'AHORRO', moneda: 'GTQ' })
-  const [requestLoading, setRequestLoading] = useState(false)
-  const [requestError, setRequestError] = useState('')
-  const [requestSuccess, setRequestSuccess] = useState('')
-  const [showModal, setShowModal] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
     // Solo recargar si esta vacio o forzar la recarga inicial
     getAccounts()
   }, [getAccounts])
-
-  const handleLogout = () => {
-    clearSession()
-    onLogout && onLogout()
-  }
-
-  const handleRequestFormChange = (event) => {
-    const { name, value } = event.target
-    setRequestForm((current) => ({ ...current, [name]: value }))
-  }
-
-  const handleSubmitAccountRequest = async (event) => {
-    event.preventDefault()
-    setRequestLoading(true)
-    setRequestError('')
-    setRequestSuccess('')
-    try {
-      const response = await requestAccountCreation(requestForm)
-      setRequestSuccess(response?.message || 'Solicitud enviada al administrador')
-      setShowModal(false)
-    } catch (error) {
-      setRequestError(error.message || 'No fue posible enviar la solicitud')
-    } finally {
-      setRequestLoading(false)
-    }
-  }
-
-  const handleOpenModal = () => {
-    setRequestError('')
-    setRequestSuccess('')
-    setRequestForm({ tipoCuenta: 'AHORRO', moneda: 'GTQ' })
-    setShowModal(true)
-  }
 
   // Extraer divisas únicas de las cuentas del usuario
   const userCurrencies = useMemo(() => {

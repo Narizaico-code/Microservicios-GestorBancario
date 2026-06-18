@@ -29,6 +29,7 @@ export const useAdminAccounts = () => {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-en-montaje; loadAccounts es estable (useCallback)
     loadAccounts()
   }, [loadAccounts])
 

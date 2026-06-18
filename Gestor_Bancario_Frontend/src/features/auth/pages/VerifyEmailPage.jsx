@@ -36,6 +36,7 @@ export const VerifyEmailPage = () => {
 
   useEffect(() => {
     if (tokenFromQuery) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- verificación de un solo disparo atada al token de la URL
       handleVerify()
       return
     }

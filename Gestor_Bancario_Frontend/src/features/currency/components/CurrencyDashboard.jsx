@@ -44,6 +44,7 @@ export const CurrencyDashboard = ({ allowedCurrencies }) => {
     }
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch inicial + auto-refresh por intervalo
         fetchRates()
         // Auto-refresh cada 5 minutos
         const interval = setInterval(fetchRates, 300000)

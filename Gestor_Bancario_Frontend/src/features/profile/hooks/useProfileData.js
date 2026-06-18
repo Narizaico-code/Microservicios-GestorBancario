@@ -37,6 +37,7 @@ export const useProfileData = (token, updateUser) => {
     if (token) {
       loadProfile()
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- carga de perfil + sync a store (updateUser); efecto de montaje
       setLoading(false)
     }
 

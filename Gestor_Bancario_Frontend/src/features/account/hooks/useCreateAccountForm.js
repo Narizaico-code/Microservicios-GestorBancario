@@ -43,6 +43,7 @@ export const useCreateAccountForm = ({ isOpen, onCreated }) => {
 
   useEffect(() => {
     if (!isOpen) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset del form al abrir el modal
     setForm(initialForm)
     setSelectedUserId('')
     setSubmitting(false)

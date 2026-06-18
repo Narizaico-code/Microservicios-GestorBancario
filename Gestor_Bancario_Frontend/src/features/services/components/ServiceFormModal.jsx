@@ -1,5 +1,6 @@
 import { useServiceForm } from '../hooks/useServiceForm.js'
-import { Modal } from '../../../shared/components/ui/Modal.jsx'
+import { Modal, Field, SelectField, TextareaField, Button } from '../../../shared/components/ui/index.js'
+import { ServiceDiscountForm } from './ServiceDiscountForm.jsx'
 
 export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
   const {
@@ -21,113 +22,42 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
     <Modal title={isEdit ? 'Editar servicio' : 'Nuevo servicio'} onClose={onClose} maxWidth="max-w-3xl">
       <form onSubmit={handleSubmit} className="grid gap-5">
         <div className="grid gap-4 md:grid-cols-2">
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Nombre</span>
-            <input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-              placeholder="Servicio premium"
-            />
-          </label>
+          <Field label="Nombre" name="name" value={form.name} onChange={handleChange} placeholder="Servicio premium" />
+          <Field label="Categoria" name="category" value={form.category} onChange={handleChange} placeholder="Seguros, salud..." />
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Categoria</span>
-            <input
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-              placeholder="Seguros, salud..."
-            />
-          </label>
+          <div className="md:col-span-2">
+            <TextareaField label="Descripcion" name="description" rows="3" value={form.description} onChange={handleChange} />
+          </div>
 
-          <label className="grid gap-2 text-sm md:col-span-2">
-            <span className="text-[var(--theme-text-muted)]">Descripcion</span>
-            <textarea
-              name="description"
-              rows="3"
-              value={form.description}
-              onChange={handleChange}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            />
-          </label>
+          <SelectField label="Tipo de ítem" name="type" value={form.type} onChange={handleChange}>
+            <option value="SERVICE">Servicio</option>
+            <option value="PRODUCT">Producto</option>
+          </SelectField>
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Tipo de ítem</span>
-            <select
-              name="type"
-              value={form.type}
-              onChange={handleChange}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            >
-              <option value="SERVICE">Servicio</option>
-              <option value="PRODUCT">Producto</option>
-            </select>
-          </label>
-
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Precio</span>
-            <input
-              name="price"
-              type="number"
-              value={form.price}
-              onChange={handleChange}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            />
-          </label>
+          <Field label="Precio" name="price" type="number" value={form.price} onChange={handleChange} />
 
           {form.type === 'SERVICE' ? (
-            <label className="grid gap-2 text-sm md:col-span-2">
-              <span className="text-[var(--theme-text-muted)]">Terminos</span>
-              <textarea
-                name="terms"
-                rows="3"
-                value={form.terms}
-                onChange={handleChange}
-                className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-              />
-            </label>
+            <div className="md:col-span-2">
+              <TextareaField label="Terminos" name="terms" rows="3" value={form.terms} onChange={handleChange} />
+            </div>
           ) : null}
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Moneda</span>
-            <select
-              name="currency"
-              value={form.currency}
-              onChange={handleChange}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            >
-              <option value="GTQ">GTQ</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="MXN">MXN</option>
-            </select>
-          </label>
+          <SelectField label="Moneda" name="currency" value={form.currency} onChange={handleChange}>
+            <option value="GTQ">GTQ</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="MXN">MXN</option>
+          </SelectField>
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Estado actual</span>
-            <select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            >
-              <option value="DRAFT">Borrador</option>
-              <option value="ACTIVE">Activo</option>
-              <option value="INACTIVE">Inactivo</option>
-            </select>
-          </label>
+          <SelectField label="Estado actual" name="status" value={form.status} onChange={handleChange}>
+            <option value="DRAFT">Borrador</option>
+            <option value="ACTIVE">Activo</option>
+            <option value="INACTIVE">Inactivo</option>
+          </SelectField>
 
           <div className="flex items-center gap-3 text-sm">
             <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="active"
-                checked={form.active}
-                onChange={handleChange}
-              />
+              <input type="checkbox" name="active" checked={form.active} onChange={handleChange} />
               <span className="text-[var(--theme-text-muted)]">Activo</span>
             </label>
             <label className="flex items-center gap-2" title="Indica si el usuario debe tener su correo verificado para usar esto">
@@ -141,66 +71,53 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
             </label>
           </div>
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Fecha de inicio</span>
-            <input
-              type="date"
-              name="validFrom"
-              value={form.validFrom}
-              onChange={handleChange}
-              title="Fecha en que el servicio comenzará a estar activo"
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            />
-          </label>
+          <Field
+            label="Fecha de inicio"
+            type="date"
+            name="validFrom"
+            value={form.validFrom}
+            onChange={handleChange}
+            title="Fecha en que el servicio comenzará a estar activo"
+          />
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Fecha de finalización</span>
-            <input
-              type="date"
-              name="validTo"
-              value={form.validTo}
-              onChange={handleChange}
-              title="Fecha en que el servicio dejará de estar activo"
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            />
-          </label>
+          <Field
+            label="Fecha de finalización"
+            type="date"
+            name="validTo"
+            value={form.validTo}
+            onChange={handleChange}
+            title="Fecha en que el servicio dejará de estar activo"
+          />
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Saldo mínimo requerido</span>
-            <input
+          <label className="grid gap-1.5 text-sm">
+            <span className="font-medium text-[var(--theme-text-muted)]">Saldo mínimo requerido</span>
+            <Field
               name="minBalance"
               type="number"
               value={form.minBalance}
               onChange={handleChange}
               title="Saldo mínimo requerido en la cuenta para poder adquirirlo"
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
             />
             <small className="text-xs text-[var(--theme-text-muted)] opacity-70">Saldo mínimo requerido para adquirir.</small>
           </label>
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Límite de usos por usuario</span>
-            <input
-              name="maxUsesPerUser"
-              type="number"
-              value={form.maxUsesPerUser}
-              onChange={handleChange}
-              title="Límite máximo de veces que un usuario puede adquirir esto"
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            />
-          </label>
+          <Field
+            label="Límite de usos por usuario"
+            name="maxUsesPerUser"
+            type="number"
+            value={form.maxUsesPerUser}
+            onChange={handleChange}
+            title="Límite máximo de veces que un usuario puede adquirir esto"
+          />
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Límite total de usos global</span>
-            <input
-              name="totalUsesLimit"
-              type="number"
-              value={form.totalUsesLimit}
-              onChange={handleChange}
-              title="Límite máximo global en todo el sistema"
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            />
-          </label>
+          <Field
+            label="Límite total de usos global"
+            name="totalUsesLimit"
+            type="number"
+            value={form.totalUsesLimit}
+            onChange={handleChange}
+            title="Límite máximo global en todo el sistema"
+          />
         </div>
 
         <div className="grid gap-3">
@@ -220,19 +137,10 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Tags (coma)</span>
-            <input
-              name="tags"
-              value={form.tags}
-              onChange={handleChange}
-              placeholder="vip, premium"
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-            />
-          </label>
+          <Field label="Tags (coma)" name="tags" value={form.tags} onChange={handleChange} placeholder="vip, premium" />
 
-          <label className="grid gap-2 text-sm">
-            <span className="text-[var(--theme-text-muted)]">Imagen</span>
+          <label className="grid gap-1.5 text-sm">
+            <span className="font-medium text-[var(--theme-text-muted)]">Imagen</span>
             <input
               type="file"
               accept="image/*"
@@ -242,129 +150,30 @@ export const ServiceFormModal = ({ service, onClose, onSuccess }) => {
           </label>
         </div>
 
-        <label className="grid gap-2 text-sm" title="Información exclusiva para el equipo administrativo">
-          <span className="text-[var(--theme-text-muted)]">Nota interna administrativa</span>
-          <textarea
-            name="internalNote"
-            rows="2"
-            value={form.internalNote}
-            onChange={handleChange}
-            placeholder="Solo visible para administradores..."
-            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-          />
-        </label>
+        <TextareaField
+          label="Nota interna administrativa"
+          name="internalNote"
+          rows="2"
+          value={form.internalNote}
+          onChange={handleChange}
+          placeholder="Solo visible para administradores..."
+          title="Información exclusiva para el equipo administrativo"
+        />
 
-        <div className="rounded-[18px] border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-[var(--theme-text)]">Descuento</p>
-            <button
-              type="button"
-              onClick={() => setShowDiscount((current) => !current)}
-              className="text-xs font-semibold text-[#1a56db]"
-            >
-              {showDiscount ? 'Ocultar' : 'Agregar'}
-            </button>
-          </div>
-
-          {showDiscount ? (
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <label className="grid gap-2 text-sm">
-                <span className="text-[var(--theme-text-muted)]">Tipo de Descuento</span>
-                <select
-                  name="type"
-                  value={discount.type}
-                  onChange={handleDiscountChange}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-                >
-                  <option value="PERCENT">Porcentaje</option>
-                  <option value="AMOUNT">Monto Fijo</option>
-                </select>
-              </label>
-
-              <label className="grid gap-2 text-sm">
-                <span className="text-[var(--theme-text-muted)]">Valor</span>
-                <input
-                  name="value"
-                  type="number"
-                  value={discount.value}
-                  onChange={handleDiscountChange}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm">
-                <span className="text-[var(--theme-text-muted)]">Inicio</span>
-                <input
-                  name="startAt"
-                  type="date"
-                  value={discount.startAt}
-                  onChange={handleDiscountChange}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm">
-                <span className="text-[var(--theme-text-muted)]">Fin</span>
-                <input
-                  name="endAt"
-                  type="date"
-                  value={discount.endAt}
-                  onChange={handleDiscountChange}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm">
-                <span className="text-[var(--theme-text-muted)]">Min amount</span>
-                <input
-                  name="minAmount"
-                  type="number"
-                  value={discount.minAmount}
-                  onChange={handleDiscountChange}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm">
-                <span className="text-[var(--theme-text-muted)]">Max usos</span>
-                <input
-                  name="maxUses"
-                  type="number"
-                  value={discount.maxUses}
-                  onChange={handleDiscountChange}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-                />
-              </label>
-
-              <label className="grid gap-2 text-sm md:col-span-2">
-                <span className="text-[var(--theme-text-muted)]">Terminos descuento</span>
-                <textarea
-                  name="terms"
-                  rows="2"
-                  value={discount.terms}
-                  onChange={handleDiscountChange}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[var(--theme-text)]"
-                />
-              </label>
-            </div>
-          ) : null}
-        </div>
+        <ServiceDiscountForm
+          discount={discount}
+          showDiscount={showDiscount}
+          setShowDiscount={setShowDiscount}
+          onDiscountChange={handleDiscountChange}
+        />
 
         <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl border border-white/10 px-4 py-2 text-sm text-[var(--theme-text-muted)]"
-          >
+          <Button variant="cancel" onClick={onClose}>
             Cancelar
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-xl bg-[#1a56db] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
+          </Button>
+          <Button type="submit" variant="primary" disabled={loading}>
             {loading ? 'Guardando...' : isEdit ? 'Actualizar' : 'Crear'}
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

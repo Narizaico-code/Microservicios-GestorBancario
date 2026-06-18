@@ -1,13 +1,5 @@
 import { Modal } from '../../../shared/components/ui/Modal.jsx'
-
-const formatDate = (value) => {
-  if (!value) return 'N/D'
-  return new Date(value).toLocaleDateString('es-GT', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
+import { formatShortDate as formatDate } from '../../../shared/utils/format.js'
 
 export const ServiceDetailModal = ({ service, onClose }) => {
   if (!service) return null

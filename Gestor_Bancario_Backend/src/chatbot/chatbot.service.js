@@ -8,7 +8,7 @@ import Favorite from '../favorites/favorite.model.js';
 import { getAllRates } from '../../helpers/currency-logic.js';
 
 // Asegúrate de tener esta variable en el .env de backend: GEMINI_API_KEY
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 // Declaración de las tools (Function Calling)
 const tools = [

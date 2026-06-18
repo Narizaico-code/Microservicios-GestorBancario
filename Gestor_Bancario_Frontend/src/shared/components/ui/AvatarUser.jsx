@@ -35,7 +35,6 @@ export const AvatarUser = () => {
     const userName = user?.name || user?.username || "Usuario";
 
     return (
-        console.log(user),
         <div
             className="relative z-[9999]"
             ref={dropdownRef}

@@ -1,4 +1,5 @@
 import { Edit3, PauseCircle, PlayCircle, BarChart3, Ban, Eye } from 'lucide-react'
+import { formatShortDate as formatDate } from '../../../shared/utils/format.js'
 
 const statusStyles = {
   ACTIVE: 'bg-[var(--status-emerald-bg)] text-[var(--status-emerald-text)] border-[var(--status-emerald-border)]',
@@ -7,15 +8,6 @@ const statusStyles = {
   PAUSED: 'bg-[var(--status-amber-bg)] text-[var(--status-amber-text)] border-[var(--status-amber-border)]',
   EXPIRED: 'bg-[var(--status-rose-bg)] text-[var(--status-rose-text)] border-[var(--status-rose-border)]',
   CANCELLED: 'bg-[var(--status-rose-bg)] text-[var(--status-rose-text)] border-[var(--status-rose-border)]',
-}
-
-const formatDate = (value) => {
-  if (!value) return 'N/D'
-  return new Date(value).toLocaleDateString('es-GT', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
 }
 
 export const PromotionCard = ({ promotion, isAdmin, onEdit, onToggle, onStats, onCancel, onView }) => {

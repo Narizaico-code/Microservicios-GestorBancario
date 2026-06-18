@@ -1,4 +1,4 @@
-import { formatCurrency } from '../utils/profileFormat.js'
+import { formatCurrency } from '../../../shared/utils/format.js'
 
 export const AccountsSummaryCard = ({
   accounts,

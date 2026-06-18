@@ -5,7 +5,7 @@ import {
   getUpdateRequestsWithAuthService,
   rejectUpdateRequestWithAuthService,
 } from '../../../shared/api/auth.js'
-import { formatDate, getStatusBadge } from '../utils/profileFormat.js'
+import { formatDate, getStatusBadge } from '../../../shared/utils/format.js'
 
 export const AdminUpdateRequests = ({ token }) => {
   const [requests, setRequests] = useState([])

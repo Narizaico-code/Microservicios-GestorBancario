@@ -142,7 +142,9 @@ export const ClientDashboard = ({ session, onLogout }) => {
                   <p className="text-[20px] font-black text-[color:var(--theme-text)] leading-none mb-1.5">
                     {account.moneda || 'GTQ'} {Number(account.saldo).toLocaleString()}
                   </p>
-                  <p className="text-[12px] text-emerald-500 font-semibold">Activa</p>
+                  <p className={`text-[12px] font-semibold ${account.estado ? 'text-emerald-500' : 'text-rose-500'}`}>
+                    {account.estado ? 'Activa' : 'Inactiva'}
+                  </p>
                 </div>
               </div>
             ))}

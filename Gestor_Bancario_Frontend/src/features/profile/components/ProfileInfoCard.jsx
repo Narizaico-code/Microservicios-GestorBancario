@@ -7,7 +7,7 @@ import {
   ShieldCheck,
   UserCircle,
 } from 'lucide-react'
-import { formatDate } from '../utils/profileFormat.js'
+import { formatDate } from '../../../shared/utils/format.js'
 
 export const ProfileInfoCard = ({
   profile,

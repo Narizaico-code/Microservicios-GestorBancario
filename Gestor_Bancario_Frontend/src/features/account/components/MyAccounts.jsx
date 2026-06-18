@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { useAccountStore } from '../store/useAccountStore'
 import { Wallet, CreditCard, LayoutGrid, TrendingUp, Plus } from 'lucide-react'
 import { requestAccountCreation } from '../../../shared/api/account.js'
+import { formatNumber } from '../../../shared/utils/format.js'
+import { StatusBadge } from '../../../shared/components/ui/StatusBadge.jsx'
 import CreateAccountRequestModal from './CreateAccountRequestModal.jsx'
-
-const fmt = (n) => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2 })
 
 export const MyAccounts = () => {
   const { accounts, loading, error, getAccounts } = useAccountStore()
@@ -100,12 +100,12 @@ export const MyAccounts = () => {
               <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-[color:var(--theme-text-muted)] mb-1">Saldo disponible</p>
               <p className="text-[28px] font-black leading-none text-[color:var(--theme-text)]">
                 <span className="text-[14px] font-bold text-[color:var(--theme-text-muted)] mr-1.5">{account.moneda || 'GTQ'}</span>
-                {fmt(account.saldo)}
+                {formatNumber(account.saldo)}
               </p>
               <div className="flex items-center justify-between mt-3">
-                <span className="inline-block text-[11px] font-bold text-emerald-600 bg-emerald-500/10 rounded-[6px] px-2.5 py-1">
-                  Activa
-                </span>
+                <StatusBadge tone={account.estado ? 'emerald' : 'rose'}>
+                  {account.estado ? 'Activa' : 'Inactiva'}
+                </StatusBadge>
                 <button
                   onClick={() => navigate("../transacciones", { state: { cuentaOrigen: account.numeroCuenta } })}
                   className="rounded-[8px] border border-[color:var(--theme-border)] bg-[color:var(--theme-surface-alt)] px-3 py-1 text-[12px] font-bold text-[color:var(--theme-text)] transition hover:opacity-80"

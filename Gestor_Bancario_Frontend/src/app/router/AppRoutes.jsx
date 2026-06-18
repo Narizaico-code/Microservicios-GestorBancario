@@ -16,7 +16,6 @@ import { AdminAccounts } from '../../features/account/components/AdminAccounts.j
 import { MyAccounts } from '../../features/account/components/MyAccounts.jsx'
 import { Help } from '../../shared/components/layout/Help.jsx'
 import { ProfilePage } from '../../features/profile/pages/ProfilePage.jsx'
-import { ClientProfilePage } from '../../features/profile/pages/ClientProfilePage.jsx'
 import { AdminAuthPage } from '../../features/admin/pages/AdminAuthPage.jsx'
 import { ClientFavoritesPage } from '../../features/favorites/pages/ClientFavoritesPage.jsx'
 import { AdminServicesPage } from '../../features/services/pages/AdminServicesPage.jsx'
@@ -68,7 +67,7 @@ export const AppRoutes = () => {
             <Route path="promociones" element={<ClientPromotionsPage />} />
             <Route path="help" element={<Help />} />
             <Route path="ayuda" element={<Help />} />
-            <Route path="perfil" element={<ClientProfilePage />} />
+            <Route path="perfil" element={<ProfilePage />} />
             <Route path="favoritos" element={<ClientFavoritesPage />} />
             <Route path="transacciones" element={<TransactionsPage />} />
             <Route path="divisas" element={<CurrenciesPage />} />
